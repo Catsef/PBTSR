@@ -6,6 +6,7 @@ realm = "shared"
 
 [dependencies]
 Knit = "sleitnick/knit@1.7.0"
+testez = "roblox/testez@0.4.1"
 
 [server-dependencies]
 ProfileService = "firecam702/profileservice@1.0.0"

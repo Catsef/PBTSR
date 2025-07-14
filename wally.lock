@@ -15,7 +15,12 @@ dependencies = []
 [[package]]
 name = "rbtek/pbtsr"
 version = "0.1.0"
-dependencies = [["Knit", "sleitnick/knit@1.7.0"], ["ProfileService", "firecam702/profileservice@1.0.0"]]
+dependencies = [["Knit", "sleitnick/knit@1.7.0"], ["testez", "roblox/testez@0.4.1"], ["ProfileService", "firecam702/profileservice@1.0.0"]]
+
+[[package]]
+name = "roblox/testez"
+version = "0.4.1"
+dependencies = []
 
 [[package]]
 name = "sleitnick/comm"
