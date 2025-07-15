@@ -39,6 +39,30 @@ GameState.Round.BallPool = {
 	},
 }
 
-function GameState.Round.StepStats() end
+GameState.AllBallsStep = {
+	Doomling = function()
+		GameState.Round.BallPool[1].Stats.ApproachingWaves += (1 / 3)
+		GameState.Round.BallPool[1].Stats.MovementSpeed += 0.5
+		GameState.Round.BallPool[1].Stats.Delay -= 0.1
+		GameState.Round.BallPool[1].Stats.Health += 0.2
+		GameState.Round.BallPool[1].Stats.RangeOfToxin += 0.5
+		GameState.Round.BallPool[1].Stats.ToxinDamage += 0.2
+	end,
+}
+
+function GameState.Round.StepStats()
+	GameState.Round.SpawnRange += 3
+	if GameState.RoundCount % 3 == 0 then
+		GameState.Round.RoundDuration += 1
+		GameState.Round.WaveDelay *= 0.7
+		GameState.Round.BallsToSpawn += 1
+	end
+	if GameState.RoundCount % 10 == 0 then
+		GameState.Round.BallsToSpawn *= 2
+	end
+	for name, func in pairs(GameState.AllBallsStep) do
+		func()
+	end
+end
 
 return GameState
