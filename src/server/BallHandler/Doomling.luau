@@ -1,4 +1,3 @@
-local Model = game.ServerStorage.Model.Doomling
 local BallFolder = game.Workspace.Balls
 
 local Helper = require(game.ServerScriptService.Util.UtilityFunctions)
@@ -11,15 +10,17 @@ local Doomling = {}
 Doomling.__index = Doomling
 
 local SupportedBallActions = {
-	ToxinCloud = require(game.ServerScriptService.Util.BallActions.ToxinCloud),
+	ToxinCloud = require(game.ServerScriptService.Util.BallActions.Hurt.ToxinCloud),
+	Tweening = require(game.ServerScriptService.Util.BallActions.StateChange.Tweening),
+	PropertiesSet = require(game.ServerScriptService.Util.BallActions.StateChange.PropertiesSet),
 }
 
 -- Action Format
 -- {
--- ["ActionName"]: {args... DamageDealer: DamageDealer}
+-- ["ActionName"]: {args... Async = true/false}
 -- }
 
-function Doomling.New(Position: Vector3, FadeInTime: number, Action: {}, Repetition: number, Delay: number)
+function Doomling.New(Model: Part, Position: Vector3, FadeInTime: number, Action: {}, Repetition: number, Delay: number)
 	local self = setmetatable({}, Doomling)
 
 	self.Instance = Model:Clone()
@@ -35,13 +36,13 @@ function Doomling.New(Position: Vector3, FadeInTime: number, Action: {}, Repetit
 	self.Tweens = {
 		start_FadeIn_Part = t:Create(self.Instance, TweenInfo.new(FadeInTime, s.Linear, d.InOut), { Transparency = 0 }),
 		start_FadeIn_Decal = t:Create(
-			self.Instance.Frown,
+			self.Instance.Face,
 			TweenInfo.new(FadeInTime, s.Linear, d.InOut),
 			{ Transparency = 0 }
 		),
 		end_FadeOut_Part = t:Create(self.Instance, TweenInfo.new(FadeInTime, s.Linear, d.InOut), { Transparency = 1 }),
 		end_FadeOut_Decal = t:Create(
-			self.Instance.Frown,
+			self.Instance.Face,
 			TweenInfo.new(FadeInTime, s.Linear, d.InOut),
 			{ Transparency = 1 }
 		),
@@ -66,9 +67,28 @@ function Doomling:Start()
 						Arguments.DamageRadius,
 						Arguments.DamageDealer
 					)
-					task.spawn(function()
+
+					if Arguments.Async then
+						task.spawn(function()
+							tox:Start()
+						end)
+					else
 						tox:Start()
-					end)
+					end
+				end,
+				Tweening = function()
+					local twn = SupportedBallActions.Tweening.New(self.Instance, Arguments.TweenInfo, Arguments.Result)
+					if Arguments.Async then
+						task.spawn(function()
+							twn:Play()
+						end)
+					else
+						twn:Play()
+					end
+				end,
+				PropertiesSet = function()
+					local propSet = SupportedBallActions.PropertiesSet.New(self.Instance, Arguments.Properties)
+					propSet:Apply()
 				end,
 				-- ...add more actions here
 				default = function()
