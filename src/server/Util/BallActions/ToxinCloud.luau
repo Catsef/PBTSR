@@ -55,6 +55,7 @@ function ToxinCloud:Start()
 	end
 
 	self.Tweens.end_fadeout:Play()
+	self.Instance:Destroy()
 end
 
 export type ToxinCloud = {

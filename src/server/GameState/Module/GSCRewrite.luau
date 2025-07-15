@@ -60,7 +60,7 @@ function GameState.Round.StepStats()
 	if GameState.RoundCount % 10 == 0 then
 		GameState.Round.BallsToSpawn *= 2
 	end
-	for name, func in pairs(GameState.AllBallsStep) do
+	for _, func in pairs(GameState.AllBallsStep) do
 		func()
 	end
 end
