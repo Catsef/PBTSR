@@ -36,3 +36,17 @@ function WeightedChoice:Choose()
 	error("Error in WeightedChoice:Choose - no choice made, check weights...")
 	return nil -- In case no choice is made, though this should not happen with valid weights.
 end
+
+export type WeightedChoice = {
+	Choices: { weight: number, value: any }?,
+	Random: Random,
+	New: (ExistingChoices: { weight: number, value: any }?) -> WeightedChoice,
+	AddChoice: (self: WeightedChoice, weight: number, value: any) -> (),
+	UseRandomObject: (self: WeightedChoice, random: Random) -> (),
+	Choose: (self: WeightedChoice) -> any,
+}
+
+return {
+	New = WeightedChoice.New,
+	WeightedChoice = WeightedChoice,
+}

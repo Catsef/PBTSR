@@ -20,10 +20,19 @@ local SupportedBallActions = {
 -- ["ActionName"]: {args... Async = true/false}
 -- }
 
-function Doomling.New(Model: Part, Position: Vector3, FadeInTime: number, Action: {}, Repetition: number, Delay: number)
+function Doomling.New(
+	ModelRef: Part,
+	Position: Vector3,
+	FadeInTime: number,
+	Action: {},
+	Repetition: number,
+	Delay: number
+)
 	local self = setmetatable({}, Doomling)
-
-	self.Instance = Model:Clone()
+	if not ModelRef:IsA("Part") then
+		error("Doomling.New: ModelRef must be a Part!")
+	end
+	self.Instance = ModelRef:Clone()
 	self.Instance.Parent = BallFolder
 	self.Instance.Position = Position
 
