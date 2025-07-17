@@ -85,6 +85,8 @@ function g.SpawnRoundWave(OriginPosition: Vector3)
 
 		local cloneOfModel = model:Clone()
 
+		table.insert(g.AllExistingBalls, cloneOfModel)
+
 		cloneOfModel.Position = ValidOrigin
 			+ Vector3.new(
 				r:NextNumber(-g.stats.waveArea, g.stats.waveArea),

@@ -1,6 +1,7 @@
 local ActionHandler = {}
 
 local DefaultTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+local ServerScriptService = game:GetService("ServerScriptService")
 local TweenService = game:GetService("TweenService")
 
 function ActionHandler.Actioner(part: BasePart, actions)
