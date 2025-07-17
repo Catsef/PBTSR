@@ -1,9 +1,9 @@
-local a = {}
+local ActionHandler = {}
 
-local DTI = TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
-local t = game:GetService("TweenService")
+local DefaultTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+local TweenService = game:GetService("TweenService")
 
-function a.Actioner(part: BasePart, actions)
+function ActionHandler.Actioner(part: BasePart, actions)
 	for _, v in ipairs(actions) do
 		local ActionFunction = require(script.Parent[v.action]).Action
 		if ActionFunction then
@@ -14,23 +14,34 @@ function a.Actioner(part: BasePart, actions)
 	end
 end
 
-function a.Doomling(doomling, actions)
-	local _tt = t:Create(doomling, DTI, { Transparency = 0 })
-	local _dt = t:Create(doomling.Face, DTI, { Transparency = 0 })
-	_tt:Play()
-	_dt:Play()
+function ActionHandler.Doomling(doomling, actions)
+	local FadeInDoomlingPart = TweenService:Create(doomling, DefaultTweenInfo, { Transparency = 0 })
+	local FadeInDoomlingFace = TweenService:Create(doomling.Face, DefaultTweenInfo, { Transparency = 0 })
+	FadeInDoomlingPart:Play()
+	FadeInDoomlingFace:Play()
 
-	_tt.Completed:Wait()
+	FadeInDoomlingPart.Completed:Wait()
 
-	a.Actioner(doomling, actions)
+	FadeInDoomlingPart.Actioner(doomling, actions)
 
-	_tt = t:Create(doomling, DTI, { Transparency = 1 })
-	_dt = t:Create(doomling.Face, DTI, { Transparency = 1 })
-	_tt:Play()
-	_dt:Play()
+	local FadeOutDoomlingPart = TweenService:Create(doomling, DefaultTweenInfo, { Transparency = 1 })
+	local FadeOutDoomlingFace = TweenService:Create(doomling.Face, DefaultTweenInfo, { Transparency = 1 })
+	FadeOutDoomlingPart:Play()
+	FadeOutDoomlingFace:Play()
 
-	_tt.Completed:Wait()
+	FadeOutDoomlingPart.Completed:Wait()
 	doomling:Destroy()
 end
 
-return a
+function ActionHandler.Blessling(blessling, actions)
+	local FadeInBlessling = TweenService:Create(blessling, DefaultTweenInfo, { Transparency = 0 })
+	FadeInBlessling:Play()
+	FadeInBlessling.Completed:Wait()
+	ActionHandler.Actioner(blessling, actions)
+	local FadeOutBlessling = TweenService:Create(blessling, DefaultTweenInfo, { Transparency = 1 })
+	FadeOutBlessling:Play()
+	FadeOutBlessling.Completed:Wait()
+	blessling:Destroy()
+end
+
+return ActionHandler

@@ -1,14 +1,66 @@
+local ServerScriptService = game:GetService("ServerScriptService")
 local TweenService = game:GetService("TweenService")
+local UtilityFunctions = require(ServerScriptService.Util.UtilityFunctions)
 local t = {}
+
+function t.Create(
+	target: string,
+	by: number,
+	tweenInfo: TweenInfo,
+	rotateToFacePlayer: boolean,
+	toMaxDist: number?,
+	posOffset: Vector3?,
+	pos: Vector3?
+)
+	local Action = {}
+	Action.action = "TweenMove"
+
+	Action.to = {}
+	Action.tweenInfo = tweenInfo
+	Action.rotateToFacePlayer = rotateToFacePlayer
+
+	UtilityFunctions.SwitchWithCaseTable(target, {
+		["NEAREST_PLAYER"] = function()
+			Action.to.target = target
+			Action.to.by = by
+			if toMaxDist then
+				Action.to.maxDistance = toMaxDist
+			end
+		end,
+		["POSITION_OFFSET"] = function()
+			Action.to.target = target
+			Action.to.by = by
+			Action.to.positionOffset = posOffset
+		end,
+		["POSITION_ABSOLUTE"] = function()
+			Action.to.target = target
+			Action.to.by = by
+			Action.to.position = pos
+		end,
+		default = function()
+			error(
+				"TweenMove.Create(): Unrecognized target..."
+					.. target
+					.. "; only support NEAREST_PLAYER, POSITION_OFFSET, or POSITION_ABSOLUTE"
+			)
+		end,
+	})
+
+	return Action
+end
 
 function t.Action(part: Part, Action)
 	-- TweenMove
 	-- 	{
 	-- 	["action"] = "TweenMove",
 	-- 	["to"] = {
-	-- 		["target"] = "NEAREST_PLAYER",
+	-- 		["target"] = "NEAREST_PLAYER" or "POSITION_OFFSET" or "POSITION_ABSOLUTE",
 	-- 		["by"] = 0.3,
+	-- 		["maxDistance"] = 20, -- optional, only used for NEAREST_PLAYER
+	-- 		["positionOffset"] = Vector3.new(0, 0, 0), -- optional, only used for POSITION_OFFSET
+	-- 		["position"] = Vector3.new(0, 0, 0), -- optional, only used for POSITION_ABSOLUTE
 	-- 	},
+	-- 	["tweenInfo"] = TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
 	-- 	["speed"] = 2,
 	-- 	["rotateToFacePlayer"] = true,
 	-- },
