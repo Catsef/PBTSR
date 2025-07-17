@@ -47,14 +47,6 @@ end
 function m.RoundStarted()
 	g.currentRound += 1
 
-	local function OnBallDeath(Ball)
-		for i, v in ipairs(g.AllExistingBalls) do
-			if Ball == v then
-				table.remove(g.AllExistingBalls, i)
-			end
-		end
-	end
-
 	for _ = 1, g.stats.waves do
 		g.SpawnRoundWave(Vector3.new(0, 5, 0))
 		task.wait(g.stats.waveDelay)
@@ -71,6 +63,8 @@ function m.RoundStarted()
 	g.roundStarted = false
 	g.buyPhase = true
 	g.AllRoundReadiedPlayers = {}
+	m.UpdatePlayerButtons()
+	g.StepDifficulty()
 end
 
 return m

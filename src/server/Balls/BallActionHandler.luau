@@ -23,7 +23,7 @@ function ActionHandler.Doomling(doomling, actions)
 
 	FadeInDoomlingPart.Completed:Wait()
 
-	FadeInDoomlingPart.Actioner(doomling, actions)
+	ActionHandler.Actioner(doomling, actions)
 
 	local FadeOutDoomlingPart = TweenService:Create(doomling, DefaultTweenInfo, { Transparency = 1 })
 	local FadeOutDoomlingFace = TweenService:Create(doomling.Face, DefaultTweenInfo, { Transparency = 1 })
