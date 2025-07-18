@@ -46,6 +46,20 @@ function m.UpdateRoundCounter()
 	end
 end
 
+function m.CloseAllBuyGuis()
+	local Players = ps:GetPlayers()
+	for _, Player in ipairs(Players) do
+		local BuyGui = Player.PlayerGui:WaitForChild("BuyGUI")
+		if not BuyGui.Enabled then
+			continue -- you're a good boy
+		end
+		BuyGui.Enabled = false
+	end
+end
+
+--[[
+	this function should ONLY be ran from GameStart.server.luau
+]]
 function m.NotGameStarted()
 	g.AllPlayers = ps:GetPlayers()
 	if UtilityFunctions.CompareUnorderedSets(g.AllPlayers, g.AllGameReadiedPlayers) then
@@ -56,6 +70,9 @@ function m.NotGameStarted()
 	end
 end
 
+--[[
+	this function should ONLY be ran from GameStart.server.luau
+]]
 function m.BuyPhase()
 	g.AllPlayers = ps:GetPlayers()
 	if UtilityFunctions.CompareUnorderedSets(g.AllPlayers, g.AllRoundReadiedPlayers) then
@@ -66,7 +83,12 @@ function m.BuyPhase()
 	end
 end
 
+--[[
+	this function should ONLY be ran from GameStart.server.luau
+]]
 function m.RoundStarted()
+	-- close all buyguis
+	m.CloseAllBuyGuis()
 	g.currentRound += 1
 	m.UpdateRoundCounter()
 

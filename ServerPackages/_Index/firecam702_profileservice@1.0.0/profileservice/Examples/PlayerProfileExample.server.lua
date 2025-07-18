@@ -10,10 +10,9 @@ local ProfileTemplate = {
 
 local Players = game:GetService("Players")
 local ServerScriptService = game:GetService("ServerScriptService")
+local ProfileService = require(ServerScriptService.ServerPackages.ProfileService)
 
 ----- Loaded Modules -----
-
-local ProfileService = require(ServerScriptService.ProfileService)
 
 ----- Private Variables -----
 

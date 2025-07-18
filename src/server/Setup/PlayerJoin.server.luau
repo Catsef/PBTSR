@@ -16,6 +16,9 @@ local ButtonSendEvent: BindableEvent = game:GetService("ServerStorage").Bindings
 --  └── Round (Start Round textbutton), string attribute "sendid" for remote event trigger - "round"
 --  └── Game (Start Game textbutton), string attribute "sendid" for remote event trigger - "game"
 
+--[[
+	initializes the buttons gui for the player, and attaches event listeners to it
+]]
 function InitialiseButtonsGui(player: Player)
 	if not player:WaitForChild("PlayerGui"):FindFirstChild("StartButtons") then
 		local ButtonsGuiForPlayer = ButtonsGui:Clone()
@@ -36,6 +39,9 @@ function InitialiseButtonsGui(player: Player)
 	print("InitialiseButtonsGui - added buttons to player; attached event listeners: " .. player.Name)
 end
 
+--[[
+	initializes the round counter for the player
+]]
 function InitialiseRoundCounter(player: Player)
 	if not player:WaitForChild("PlayerGui"):FindFirstChild("RoundCounter") then
 		local RoundCounterForPlayer: ScreenGui = RoundCounter:Clone()
@@ -44,6 +50,9 @@ function InitialiseRoundCounter(player: Player)
 	end
 end
 
+--[[
+	initializes the buy triggers for the entire server, has checks if the buytriggers already exists or not
+]]
 function InitialiseBuyTriggers()
 	if BuyGuiTriggerConnection then
 		return
@@ -66,6 +75,9 @@ function InitialiseBuyTriggers()
 	end)
 end
 
+--[[
+	initializes the buy gui for player, adds event listener for textbuttons, exit button has special case
+]]
 function InitialiseBuyGui(player: Player)
 	-- BuyGUI -- triggered enable from ProxPrompt
 	-- 		MF

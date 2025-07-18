@@ -1,6 +1,7 @@
 local ServerScriptService = game:GetService("ServerScriptService")
 local WeightedChoice = require(ServerScriptService.Util.Random.WeightedChoice)
 local BallActions = require(ServerScriptService.Balls.BallActionHandler)
+local Grapple = require(ServerScriptService.Balls.Grapple)
 
 local ToxinCloud = require(ServerScriptService.Balls.ToxinCloud)
 local TweenMove = require(ServerScriptService.Balls.TweenMove)
@@ -29,6 +30,10 @@ g.stats.balls = WeightedChoice.New({
 	{
 		weight = 10,
 		value = "Blessling",
+	},
+	{
+		weight = 50,
+		value = "Grappler",
 	},
 })
 
@@ -69,6 +74,12 @@ g.stats.ballActions = {
 		),
 		ToxinCloud.Create(30, -10, Color3.fromRGB(30, 207, 74)),
 	},
+	["Grappler"] = {
+		-- turn towards player
+		TweenMove.Create("NEAREST_PLAYER", 0.01, TweenInfo.new(1), true, 10000),
+		-- grappler.create()
+		Grapple.Create("NEAREST_PLAYER", 2500, 10000),
+	},
 }
 
 g.stats.waveBalls = 3
@@ -76,6 +87,9 @@ g.stats.waveDelay = 10
 g.stats.waves = 3
 g.stats.waveArea = 10
 
+--[[
+	onballdeath should be attached to destroying event of every ball spawned.
+]]
 local function OnBallDeath(Ball)
 	for i, v in ipairs(g.AllExistingBalls) do
 		if Ball == v then
@@ -84,6 +98,9 @@ local function OnBallDeath(Ball)
 	end
 end
 
+--[[
+	StepDifficulty steps up the difficulty. This function will be HEAVILY modified across development
+]]
 function g.StepDifficulty()
 	-- Increase number of balls per wave
 	g.stats.waveBalls += 1
@@ -103,11 +120,17 @@ function g.StepDifficulty()
 	)
 	table.insert(g.stats.ballActions.Doomling, ToxinCloud.Create(30, 10, Color3.fromRGB(0, 0, 0)))
 
+	table.insert(g.stats.ballActions.Grappler, TweenMove.Create("NEAREST_PLAYER", 0.01, TweenInfo.new(1), true, 10000))
+	table.insert(g.stats.ballActions.Grappler, Grapple.Create("NEAREST_PLAYER", 2500, 10000))
+
 	-- You can also make waves faster or increase area, etc.
 	g.stats.waveDelay = math.max(0.5, g.stats.waveDelay - 0.1)
 	g.stats.waveArea += 30
 end
 
+--[[
+	SpawnRoundWave spawns the wave of a round.
+]]
 function g.SpawnRoundWave(OriginPosition: Vector3)
 	local ValidOrigin = OriginPosition or Vector3.new(0, 0.5, 0)
 	for _ = 1, g.stats.waveBalls do
