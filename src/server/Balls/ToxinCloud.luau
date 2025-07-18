@@ -1,6 +1,12 @@
 local TweenService = game:GetService("TweenService")
 local t = {}
 
+--[[
+	the Create function should be a function in every action defined within Balls and used in GameState.
+	@param rad - radius
+	@param dmg - damage of toxin cloud when player caught in it
+	@param col - an optional, color of which the toxin cloud. defaults to red
+]]
 function t.Create(rad: number, dmg: number, col: Color3?)
 	local Action = {}
 	Action.action = "ToxinCloud"
@@ -17,6 +23,10 @@ end
 --  ["damage"] = 5, -- remember to add player to ignore list so that it doesnt get
 -- -- hurt more than one time
 
+--[[
+	The action function is what runs from BallActionHandler.
+	if detect any part of a player, hurts it using action context
+]]
 function t.Action(part: Part, Action)
 	if Action.action ~= "ToxinCloud" then
 		error("Action type not supported: " .. tostring(Action.action))
@@ -39,7 +49,6 @@ function t.Action(part: Part, Action)
 	local AlreadyHurtPlayers = {}
 	for _, v in ipairs(game.Workspace:GetPartBoundsInRadius(ToxinCloud.Position, ToxinCloud.Size.Y / 2)) do
 		local player = game.Players:GetPlayerFromCharacter(v.Parent)
-		print("ToxinCloud touched part: " .. v.Name)
 		if player and not AlreadyHurtPlayers[player] then
 			AlreadyHurtPlayers[player] = true
 			local humanoid: Humanoid = v.Parent:FindFirstChild("Humanoid")

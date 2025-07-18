@@ -3,6 +3,16 @@ local TweenService = game:GetService("TweenService")
 local UtilityFunctions = require(ServerScriptService.Util.UtilityFunctions)
 local t = {}
 
+--[[
+	the Create function should be a function in every action defined within Balls and used in GameState.
+	@param target - the target. supports "NEAREST_PLAYER" or "POSITION_OFFSET" or "POSITION_ABSOLUTE"
+	@param by - how much should the ball move by? from 0.000000...1 to 1. when set to 0, bugs out.
+	@param tweenInfo - default setting. If manually creating list, can use "speed". but not recommended. just use tween info please
+	@param rotateToFacePlayer - does it rotate to face the player? (does not tween btw)
+	@param toMaxDist - an optional, but is used in "NEAREST_PLAYER" to see if the ball should travel there or not (too far)
+	@param posOffset - an optional, but needed when doing "POSITION_OFFSET"
+	@param pos - an optional, but needed when doing "POSITION_ABSOLUTE"
+]]
 function t.Create(
 	target: string,
 	by: number,
@@ -49,6 +59,10 @@ function t.Create(
 	return Action
 end
 
+--[[
+	The action function is what runs from BallActionHandler.
+	moves the part according to action context
+]]
 function t.Action(part: Part, Action)
 	-- TweenMove
 	-- 	{

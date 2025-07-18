@@ -28,6 +28,12 @@ ButtonEvent.Event:Connect(function(sendId: string, player: Player)
 				print("Game readied by player: " .. player.Name .. "!")
 			end
 		end,
+		["annihilatorstat"] = function()
+			-- TODO: finish annihilator stat
+		end,
+		["annihilatorbuy"] = function()
+			-- TODO: finish annihilator buy, item system
+		end,
 		default = function()
 			error("GameStateGui - ButtonEvent: unrecognized sendId:" .. sendId)
 		end,
