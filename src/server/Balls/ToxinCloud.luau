@@ -39,7 +39,6 @@ function t.Action(part: Part, Action)
 	local AlreadyHurtPlayers = {}
 	for _, v in ipairs(game.Workspace:GetPartBoundsInRadius(ToxinCloud.Position, ToxinCloud.Size.Y / 2)) do
 		local player = game.Players:GetPlayerFromCharacter(v.Parent)
-		print("ToxinCloud touched part: " .. v.Name)
 		if player and not AlreadyHurtPlayers[player] then
 			AlreadyHurtPlayers[player] = true
 			local humanoid: Humanoid = v.Parent:FindFirstChild("Humanoid")

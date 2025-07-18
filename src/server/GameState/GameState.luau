@@ -106,7 +106,6 @@ function g.StepDifficulty()
 	-- You can also make waves faster or increase area, etc.
 	g.stats.waveDelay = math.max(0.5, g.stats.waveDelay - 0.1)
 	g.stats.waveArea += 30
-	g.stats.waveBalls += 5
 end
 
 function g.SpawnRoundWave(OriginPosition: Vector3)
@@ -119,7 +118,7 @@ function g.SpawnRoundWave(OriginPosition: Vector3)
 		local cloneOfModel = model:Clone()
 
 		table.insert(g.AllExistingBalls, cloneOfModel)
-		cloneOfModel.Destroying:Connect(function(...: any)
+		cloneOfModel.Destroying:Connect(function(_: any)
 			OnBallDeath(cloneOfModel)
 		end)
 

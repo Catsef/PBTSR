@@ -1,4 +1,8 @@
-local ButtonsGui = game:GetService("ServerStorage").GUI.StartButtons
+local ServerScriptService = game:GetService("ServerScriptService")
+local ServerStorage = game:GetService("ServerStorage")
+local GameStateRunner = require(ServerScriptService.GameState.GameStateRunner)
+local ButtonsGui = ServerStorage.GUI.StartButtons
+local RoundCounter = ServerStorage.GUI.RoundCounter
 local ButtonSendEvent: BindableEvent = game:GetService("ServerStorage").Bindings.GUI.ButtonSend
 
 -- startbuttons hierarchy:
@@ -23,12 +27,27 @@ function InitialiseButtonsGui(player: Player)
 			end
 		end
 	end
+	print("InitialiseButtonsGui - added buttons to player; attached event listeners: " .. player.Name)
+end
+
+function InitialiseRoundCounter(player: Player)
+	if not player:WaitForChild("PlayerGui"):FindFirstChild("RoundCounter") then
+		local RoundCounterForPlayer: ScreenGui = RoundCounter:Clone()
+		RoundCounterForPlayer.Parent = player:WaitForChild("PlayerGui")
+		print("InitialiseRoundCounter - added round counter to player: " .. player.Name)
+	end
 end
 
 game:GetService("Players").PlayerAdded:Connect(function(player: Player)
+	print("player joined, initiating GUI...")
 	InitialiseButtonsGui(player)
+	InitialiseRoundCounter(player)
+	print("..done")
 
 	player.CharacterAppearanceLoaded:Connect(function(_char: Model)
 		InitialiseButtonsGui(player)
+		InitialiseRoundCounter(player)
+		GameStateRunner.UpdatePlayerButtons()
+		GameStateRunner.UpdateRoundCounter()
 	end)
 end)
