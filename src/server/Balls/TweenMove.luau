@@ -98,10 +98,9 @@ function t.Action(part: Part, Action)
 			nearestPlayer = v
 		end
 
-		if not nearestPlayer then
+		if (not nearestPlayer) or not nearestPlayer.Character or not nearestPlayer.Character.HumanoidRootPart then
 			return
 		end
-
 		target = part.Position + (nearestPlayer.Character.HumanoidRootPart.Position - part.Position) * Action.to.by
 	elseif Action.to.target == "POSITION_OFFSET" then
 		target = part.Position + Action.to.positionOffset

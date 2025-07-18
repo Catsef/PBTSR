@@ -82,6 +82,54 @@ g.stats.ballActions = {
 	},
 }
 
+g.stepperFunctions = {
+	StepDoomlingA = function()
+		table.insert(
+			g.stats.ballActions.Doomling,
+			TweenMove.Create(
+				"NEAREST_PLAYER",
+				0.3,
+				TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+				true,
+				1000
+			)
+		)
+		table.insert(g.stats.ballActions.Doomling, ToxinCloud.Create(30, 10, Color3.fromRGB(255, 0, 0)))
+	end,
+	StepDoomlingB = function()
+		table.insert(
+			g.stats.ballActions.Doomling,
+			TweenMove.Create(
+				"NEAREST_PLAYER",
+				0.9,
+				TweenInfo.new(2, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+				true,
+				10000
+			)
+		)
+		table.insert(g.stats.ballActions.Doomling, ToxinCloud.Create(50, 30, Color3.fromRGB(0, 0, 0)))
+	end,
+	StepBlesslingA = function()
+		table.insert(g.stats.ballActions.Blessling, ToxinCloud.Create(30, -10, Color3.fromRGB(30, 207, 74)))
+		table.insert(
+			TweenMove.Create(
+				"NEAREST_PLAYER",
+				0.9,
+				TweenInfo.new(2, Enum.EasingStyle.Exponential, Enum.EasingDirection.InOut),
+				false,
+				500
+			)
+		)
+	end,
+	StepGrapplingA = function()
+		table.insert(
+			g.stats.ballActions.Grappler,
+			TweenMove.Create("NEAREST_PLAYER", 0.01, TweenInfo.new(1), true, 10000)
+		)
+		table.insert(g.stats.ballActions.Grappler, Grapple.Create("NEAREST_PLAYER", 2500, 10000))
+	end,
+}
+
 g.stats.waveBalls = 3
 g.stats.waveDelay = 10
 g.stats.waves = 3
@@ -108,20 +156,14 @@ function g.StepDifficulty()
 	-- Make "Doomling" more likely and "Blessling" less likely
 
 	-- Optionally, add a new action to each ball type to make them harder
-	table.insert(
-		g.stats.ballActions.Doomling,
-		TweenMove.Create(
-			"NEAREST_PLAYER",
-			0.3,
-			TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
-			true,
-			1000
-		)
-	)
-	table.insert(g.stats.ballActions.Doomling, ToxinCloud.Create(30, 10, Color3.fromRGB(0, 0, 0)))
+	g.stepperFunctions.StepDoomlingA()
+	g.stepperFunctions.StepGrapplingA()
 
-	table.insert(g.stats.ballActions.Grappler, TweenMove.Create("NEAREST_PLAYER", 0.01, TweenInfo.new(1), true, 10000))
-	table.insert(g.stats.ballActions.Grappler, Grapple.Create("NEAREST_PLAYER", 2500, 10000))
+	if g.currentRound % 5 == 0 then
+		print("STEP B!")
+		g.stepperFunctions.StepDoomlingB()
+		g.stepperFunctions.StepBlesslingA()
+	end
 
 	-- You can also make waves faster or increase area, etc.
 	g.stats.waveDelay = math.max(0.5, g.stats.waveDelay - 0.1)

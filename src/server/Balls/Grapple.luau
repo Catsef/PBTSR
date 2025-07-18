@@ -85,6 +85,9 @@ function t.Action(part: Part, Action)
 			end
 
 			GrappleEventToClient:FireClient(nearestPlayer, part.Position, Action.force)
+			if not (nearestPlayer and nearestPlayer.Character and nearestPlayer.Character.HumanoidRootPart) then
+				return
+			end
 			task.spawn(TweenBeam, part, nearestPlayer.Character.HumanoidRootPart)
 		end,
 		["MULTIPLE_PLAYERS"] = function()
@@ -95,6 +98,9 @@ function t.Action(part: Part, Action)
 				if #PooledPlayers <= Action.maxP then
 					table.insert(PooledPlayers, player)
 					GrappleEventToClient:FireClient(player, part.Position, Action.force)
+					if not (player and player.Character and player.Character.HumanoidRootPart) then
+						continue
+					end
 					task.spawn(TweenBeam, part, player.Character.HumanoidRootPart)
 				else
 					continue
