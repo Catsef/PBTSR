@@ -1,10 +1,12 @@
 local ServerScriptService = game:GetService("ServerScriptService")
 local WeightedChoice = require(ServerScriptService.Util.Random.WeightedChoice)
 local BallActions = require(ServerScriptService.Balls.BallActionHandler)
+local EffectCloud = require(ServerScriptService.Balls.EffectCloud)
 local Grapple = require(ServerScriptService.Balls.Grapple)
 
 local ToxinCloud = require(ServerScriptService.Balls.ToxinCloud)
 local TweenMove = require(ServerScriptService.Balls.TweenMove)
+local Slow = require(ServerScriptService.Effects.Slow)
 
 local g = {}
 local r = Random.new()
@@ -24,16 +26,20 @@ g.currentRound = 0
 g.stats = {}
 g.stats.balls = WeightedChoice.New({
 	{
-		weight = 90,
+		weight = 0, -- 90
 		value = "Doomling",
 	},
 	{
-		weight = 10,
+		weight = 0, -- 10
 		value = "Blessling",
 	},
 	{
-		weight = 50,
+		weight = 0, -- 10
 		value = "Grappler",
+	},
+	{
+		weight = 10,
+		value = "Shivering",
 	},
 })
 
@@ -80,6 +86,16 @@ g.stats.ballActions = {
 		-- grappler.create()
 		Grapple.Create("NEAREST_PLAYER", 2500, 10000),
 	},
+	["Shivering"] = {
+		TweenMove.Create(
+			"NEAREST_PLAYER",
+			0.95,
+			TweenInfo.new(5, Enum.EasingStyle.Bounce, Enum.EasingDirection.Out),
+			true,
+			100000
+		),
+		EffectCloud.Create(10, Slow.Effect(1, 10), Slow, Color3.new(0.584314, 0.937255, 1)),
+	},
 }
 
 g.stepperFunctions = {
@@ -95,6 +111,22 @@ g.stepperFunctions = {
 			)
 		)
 		table.insert(g.stats.ballActions.Doomling, ToxinCloud.Create(30, 10, Color3.fromRGB(255, 0, 0)))
+	end,
+	StepShiveringA = function()
+		table.insert(
+			g.stats.ballActions.Shivering,
+			TweenMove.Create(
+				"NEAREST_PLAYER",
+				0.99,
+				TweenInfo.new(3, Enum.EasingStyle.Bounce, Enum.EasingDirection.Out),
+				true,
+				100000
+			)
+		)
+		table.insert(
+			g.stats.ballActions.Shivering,
+			EffectCloud.Create(10, Slow.Effect(2, 10), Slow, Color3.new(0.584314, 0.937255, 1))
+		)
 	end,
 	StepDoomlingB = function()
 		table.insert(
@@ -112,6 +144,7 @@ g.stepperFunctions = {
 	StepBlesslingA = function()
 		table.insert(g.stats.ballActions.Blessling, ToxinCloud.Create(30, -10, Color3.fromRGB(30, 207, 74)))
 		table.insert(
+			g.stats.ballActions.Blessing,
 			TweenMove.Create(
 				"NEAREST_PLAYER",
 				0.9,
@@ -158,6 +191,7 @@ function g.StepDifficulty()
 	-- Optionally, add a new action to each ball type to make them harder
 	g.stepperFunctions.StepDoomlingA()
 	g.stepperFunctions.StepGrapplingA()
+	g.stepperFunctions.StepShiveringA()
 
 	if g.currentRound % 5 == 0 then
 		print("STEP B!")
