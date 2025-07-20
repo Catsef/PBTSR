@@ -12,7 +12,7 @@ local PlayerProfileManager = require(ServerScriptService.Data.PlayerProfileManag
 ]]
 function ActionHandler.Actioner(part: BasePart, actions)
 	for _, v in ipairs(actions) do
-		if not part then
+		if not part or not part.Parent then
 			return
 		end
 		local ActionFunction = require(script.Parent[v.action]).Action
@@ -60,7 +60,8 @@ function ActionHandler.Default(
 				PlayerProfileManager.HANGING_UpdateBalanceGui(player)
 				p:Destroy()
 			else
-				local newSize = ((currentLives / lives) * (p.Size.Y - livesMinSize) + livesMinSize) * Vector3.one
+				local scale = ((currentLives / lives) * (p.Size.Y - livesMinSize) + livesMinSize) / p.Size.Y
+				local newSize = p.Size * scale
 				p.Size = newSize
 			end
 		end)
