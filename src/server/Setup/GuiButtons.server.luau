@@ -1,6 +1,8 @@
 local Players = game:GetService("Players")
 local ServerScriptService = game:GetService("ServerScriptService")
 local ServerStorage = game:GetService("ServerStorage")
+local PlayerProfileManager = require(ServerScriptService.Data.PlayerProfileManager)
+local PBTS = require(ServerScriptService.Enumeration.PBTS)
 local GameState = require(ServerScriptService.GameState.GameState)
 local UtilityFunctions = require(ServerScriptService.Util.UtilityFunctions)
 local ButtonEvent: BindableEvent = ServerStorage.Bindings.GUI.ButtonSend
@@ -33,6 +35,10 @@ ButtonEvent.Event:Connect(function(sendId: string, player: Player)
 		end,
 		["annihilatorbuy"] = function()
 			-- TODO: finish annihilator buy, item system
+			local result = PlayerProfileManager.TransactMoney(player, -50)
+			if PBTS.MoneyTransactionResult.Success then
+				print("Add da AnniHilator to da player inv")
+			end
 		end,
 		default = function()
 			error("GameStateGui - ButtonEvent: unrecognized sendId:" .. sendId)

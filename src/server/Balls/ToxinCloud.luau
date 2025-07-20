@@ -1,4 +1,6 @@
+local ServerScriptService = game:GetService("ServerScriptService")
 local TweenService = game:GetService("TweenService")
+local PBTS = require(ServerScriptService.Enumeration.PBTS)
 local t = {}
 
 --[[
@@ -9,7 +11,7 @@ local t = {}
 ]]
 function t.Create(rad: number, dmg: number, col: Color3?)
 	local Action = {}
-	Action.action = "ToxinCloud"
+	Action.action = PBTS.BallActions.ToxinCloud
 	Action.radius = rad
 	Action.damage = dmg
 	if col then
@@ -28,7 +30,7 @@ end
 	if detect any part of a player, hurts it using action context
 ]]
 function t.Action(part: Part, Action)
-	if Action.action ~= "ToxinCloud" then
+	if Action.action ~= PBTS.BallActions.ToxinCloud then
 		error("Action type not supported: " .. tostring(Action.action))
 	end
 

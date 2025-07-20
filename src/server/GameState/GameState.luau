@@ -1,10 +1,12 @@
 local ServerScriptService = game:GetService("ServerScriptService")
 local WeightedChoice = require(ServerScriptService.Util.Random.WeightedChoice)
 local BallActions = require(ServerScriptService.Balls.BallActionHandler)
+local EffectCloud = require(ServerScriptService.Balls.EffectCloud)
 local Grapple = require(ServerScriptService.Balls.Grapple)
 
 local ToxinCloud = require(ServerScriptService.Balls.ToxinCloud)
 local TweenMove = require(ServerScriptService.Balls.TweenMove)
+local Slow = require(ServerScriptService.Effects.Slow)
 
 local g = {}
 local r = Random.new()
@@ -22,20 +24,25 @@ g.AllExistingBalls = {}
 g.currentRound = 0
 
 g.stats = {}
-g.stats.balls = WeightedChoice.New({
+g.stats.ballsWeights = {
 	{
-		weight = 90,
+		weight = 90, -- 90
 		value = "Doomling",
 	},
 	{
-		weight = 10,
+		weight = 30, -- 10
 		value = "Blessling",
 	},
 	{
-		weight = 50,
+		weight = 15, -- 10
 		value = "Grappler",
 	},
-})
+	{
+		weight = 10,
+		value = "Shivering",
+	},
+}
+g.stats.balls = WeightedChoice.New(g.stats.ballsWeights)
 
 g.stats.ballActions = {
 	["Doomling"] = {
@@ -50,7 +57,7 @@ g.stats.ballActions = {
 		TweenMove.Create(
 			"NEAREST_PLAYER",
 			0.5,
-			TweenInfo.new(0.6, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+			TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
 			true,
 			200
 		),
@@ -60,7 +67,7 @@ g.stats.ballActions = {
 		TweenMove.Create(
 			"NEAREST_PLAYER",
 			0.9,
-			TweenInfo.new(2, Enum.EasingStyle.Exponential, Enum.EasingDirection.InOut),
+			TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.InOut),
 			false,
 			500
 		),
@@ -68,7 +75,7 @@ g.stats.ballActions = {
 		TweenMove.Create(
 			"NEAREST_PLAYER",
 			0.9,
-			TweenInfo.new(2, Enum.EasingStyle.Exponential, Enum.EasingDirection.InOut),
+			TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.InOut),
 			false,
 			500
 		),
@@ -80,6 +87,81 @@ g.stats.ballActions = {
 		-- grappler.create()
 		Grapple.Create("NEAREST_PLAYER", 2500, 10000),
 	},
+	["Shivering"] = {
+		TweenMove.Create(
+			"NEAREST_PLAYER",
+			0.95,
+			TweenInfo.new(5, Enum.EasingStyle.Bounce, Enum.EasingDirection.Out),
+			true,
+			100000
+		),
+		EffectCloud.Create(10, Slow.Effect(1, 10), Slow, Color3.new(0.584314, 0.937255, 1)),
+	},
+}
+
+g.stepperFunctions = {
+	StepDoomlingA = function()
+		table.insert(
+			g.stats.ballActions.Doomling,
+			TweenMove.Create(
+				"NEAREST_PLAYER",
+				0.1,
+				TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+				true,
+				1000
+			)
+		)
+		table.insert(g.stats.ballActions.Doomling, ToxinCloud.Create(30, 10, Color3.fromRGB(255, 0, 0)))
+	end,
+	StepShiveringA = function()
+		table.insert(
+			g.stats.ballActions.Shivering,
+			TweenMove.Create(
+				"NEAREST_PLAYER",
+				0.99,
+				TweenInfo.new(3, Enum.EasingStyle.Bounce, Enum.EasingDirection.Out),
+				true,
+				100000
+			)
+		)
+		table.insert(
+			g.stats.ballActions.Shivering,
+			EffectCloud.Create(10, Slow.Effect(2, 10), Slow, Color3.new(0.584314, 0.937255, 1))
+		)
+	end,
+	StepDoomlingB = function()
+		table.insert(
+			g.stats.ballActions.Doomling,
+			TweenMove.Create(
+				"NEAREST_PLAYER",
+				0.9,
+				TweenInfo.new(2, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+				true,
+				10000
+			)
+		)
+		table.insert(g.stats.ballActions.Doomling, ToxinCloud.Create(50, 30, Color3.fromRGB(0, 0, 0)))
+	end,
+	StepBlesslingA = function()
+		table.insert(g.stats.ballActions.Blessling, ToxinCloud.Create(30, -10, Color3.fromRGB(30, 207, 74)))
+		table.insert(
+			g.stats.ballActions.Blessling,
+			TweenMove.Create(
+				"NEAREST_PLAYER",
+				0.9,
+				TweenInfo.new(2, Enum.EasingStyle.Exponential, Enum.EasingDirection.InOut),
+				false,
+				500
+			)
+		)
+	end,
+	StepGrapplingA = function()
+		table.insert(
+			g.stats.ballActions.Grappler,
+			TweenMove.Create("NEAREST_PLAYER", 0.01, TweenInfo.new(1), true, 10000)
+		)
+		table.insert(g.stats.ballActions.Grappler, Grapple.Create("NEAREST_PLAYER", 2500, 10000))
+	end,
 }
 
 g.stats.waveBalls = 3
@@ -108,20 +190,15 @@ function g.StepDifficulty()
 	-- Make "Doomling" more likely and "Blessling" less likely
 
 	-- Optionally, add a new action to each ball type to make them harder
-	table.insert(
-		g.stats.ballActions.Doomling,
-		TweenMove.Create(
-			"NEAREST_PLAYER",
-			0.3,
-			TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
-			true,
-			1000
-		)
-	)
-	table.insert(g.stats.ballActions.Doomling, ToxinCloud.Create(30, 10, Color3.fromRGB(0, 0, 0)))
+	g.stepperFunctions.StepDoomlingA()
+	g.stepperFunctions.StepGrapplingA()
+	g.stepperFunctions.StepShiveringA()
 
-	table.insert(g.stats.ballActions.Grappler, TweenMove.Create("NEAREST_PLAYER", 0.01, TweenInfo.new(1), true, 10000))
-	table.insert(g.stats.ballActions.Grappler, Grapple.Create("NEAREST_PLAYER", 2500, 10000))
+	if g.currentRound % 5 == 0 then
+		print("STEP B!")
+		g.stepperFunctions.StepDoomlingB()
+		g.stepperFunctions.StepBlesslingA()
+	end
 
 	-- You can also make waves faster or increase area, etc.
 	g.stats.waveDelay = math.max(0.5, g.stats.waveDelay - 0.1)

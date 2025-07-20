@@ -5,16 +5,20 @@ local GameStateRunner = require(ServerScriptService.GameState.GameStateRunner)
 local ButtonsGui = ServerStorage.GUI.StartButtons
 local RoundCounter = ServerStorage.GUI.RoundCounter
 local BuyGui = ServerStorage.GUI.BuyGUI
+local Balance = ServerStorage.GUI.Money
 
 local BuyGuiTrigger: ProximityPrompt = game.Workspace.Shop.Shop
 local BuyGuiTriggerConnection: RBXScriptConnection
 
 local ButtonSendEvent: BindableEvent = game:GetService("ServerStorage").Bindings.GUI.ButtonSend
 
--- startbuttons hierarchy:
--- StartButtons
---  └── Round (Start Round textbutton), string attribute "sendid" for remote event trigger - "round"
---  └── Game (Start Game textbutton), string attribute "sendid" for remote event trigger - "game"
+function InitialiseBalance(player: Player)
+	if not player:WaitForChild("PlayerGui"):FindFirstChild("Money") then
+		local BalanceForPlayer: ScreenGui = Balance:Clone()
+		BalanceForPlayer.Parent = player:WaitForChild("PlayerGui")
+		print("InitialiseBalance - added balance to player: " .. player.Name)
+	end
+end
 
 --[[
 	initializes the buttons gui for the player, and attaches event listeners to it
@@ -121,7 +125,7 @@ game:GetService("Players").PlayerAdded:Connect(function(player: Player)
 	print("player joined, initiating GUI...")
 	InitialiseButtonsGui(player)
 	InitialiseRoundCounter(player)
-	InitialiseBuyGui(player)
+	InitialiseBalance(player)
 	InitialiseBuyTriggers()
 	print("..done")
 
@@ -129,6 +133,7 @@ game:GetService("Players").PlayerAdded:Connect(function(player: Player)
 		InitialiseButtonsGui(player)
 		InitialiseRoundCounter(player)
 		InitialiseBuyGui(player)
+		InitialiseBalance(player)
 		GameStateRunner.UpdatePlayerButtons()
 		GameStateRunner.UpdateRoundCounter()
 	end)

@@ -1,7 +1,9 @@
 local ActionHandler = {}
 
 local DefaultTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+local ServerScriptService = game:GetService("ServerScriptService")
 local TweenService = game:GetService("TweenService")
+local PlayerProfileManager = require(ServerScriptService.Data.PlayerProfileManager)
 
 --[[
 	Actioner - a function that runs actions within the parent folder (balls) according to the actions list.
@@ -10,6 +12,9 @@ local TweenService = game:GetService("TweenService")
 ]]
 function ActionHandler.Actioner(part: BasePart, actions)
 	for _, v in ipairs(actions) do
+		if not part or not part.Parent then
+			return
+		end
 		local ActionFunction = require(script.Parent[v.action]).Action
 		if ActionFunction then
 			ActionFunction(part, v)
@@ -19,55 +24,88 @@ function ActionHandler.Actioner(part: BasePart, actions)
 	end
 end
 
+--[[
+	Default - a function that runs the default action for a ball. It fades in the ball, runs the actions, and then fades it out.
+	@param p - the part that will be actioned upon.
+	@param actions - Actions list. Is unordered, and will be run in order from top to bottom.
+	@param hasFace - whether the part has a face to fade in/out.
+	@param tweenInfo - TweenInfo for the fade in/out.
+	@param hasClickDetector - whether the part has a ClickDetector to handle mouse clicks.
+	@param lives - number of lives for the part, if applicable.
+	@param livesMinSize - minimum size of the part when lives reach 0.
+]]
+function ActionHandler.Default(
+	p,
+	actions,
+	hasFace: boolean,
+	tweenInfo: TweenInfo,
+	hasClickDetector: boolean,
+	lives: number?,
+	price: number?,
+	livesMinSize: number?
+)
+	if hasClickDetector and p.ClickDetector then
+		local CDT: ClickDetector = p.ClickDetector
+		local currentLives = lives
+		-- lives: 5 to 0
+		-- size: currentSize to 2
+		-- lives -> size:  ( currentLives / lives ) * (currentSize - 2) + 2
+		-- lives: any to 0
+		-- size: any to 2
+		-- lives -> size: (currentLives / lives) * (p.Size.X - minSize) + minSize
+		CDT.MouseClick:Connect(function(player: Player)
+			currentLives -= 1
+			if currentLives <= 0 then
+				PlayerProfileManager.TransactMoney(player, price)
+				PlayerProfileManager.HANGING_UpdateBalanceGui(player)
+				p:Destroy()
+			else
+				local scale = ((currentLives / lives) * (p.Size.Y - livesMinSize) + livesMinSize) / p.Size.Y
+				local newSize = p.Size * scale
+				p.Size = newSize
+			end
+		end)
+	end
+
+	local pA = TweenService:Create(p, tweenInfo, { Transparency = 0 })
+	pA:Play()
+	if hasFace and p:FindFirstChild("Face") then
+		local pB = TweenService:Create(p.Face, tweenInfo, { Transparency = 0 })
+		pB:Play()
+	end
+	pA.Completed:Wait()
+
+	ActionHandler.Actioner(p, actions)
+
+	local dA = TweenService:Create(p, tweenInfo, { Transparency = 1 })
+	dA:Play()
+	if hasFace and p:FindFirstChild("Face") then
+		local dB = TweenService:Create(p.Face, tweenInfo, { Transparency = 1 })
+		dB:Play()
+	end
+	dA.Completed:Wait()
+	p:Destroy()
+end
+
 ----- CUSTOM BALL FUNCTIONS -----
 
 --[[
 	Doomling - a function for code for a specific ball. Every ball that is referenced inside GameState's ball lists should have a function here. Also, every function for a specific ball should run Actioner as well. (for it to work properly)
 ]]
 function ActionHandler.Doomling(doomling, actions)
-	local FadeInDoomlingPart = TweenService:Create(doomling, DefaultTweenInfo, { Transparency = 0 })
-	local FadeInDoomlingFace = TweenService:Create(doomling.Face, DefaultTweenInfo, { Transparency = 0 })
-	FadeInDoomlingPart:Play()
-	FadeInDoomlingFace:Play()
-
-	FadeInDoomlingPart.Completed:Wait()
-
-	ActionHandler.Actioner(doomling, actions)
-
-	local FadeOutDoomlingPart = TweenService:Create(doomling, DefaultTweenInfo, { Transparency = 1 })
-	local FadeOutDoomlingFace = TweenService:Create(doomling.Face, DefaultTweenInfo, { Transparency = 1 })
-	FadeOutDoomlingPart:Play()
-	FadeOutDoomlingFace:Play()
-
-	FadeOutDoomlingPart.Completed:Wait()
-	doomling:Destroy()
+	ActionHandler.Default(doomling, actions, true, DefaultTweenInfo, true, 1, 2, 2)
 end
 
 function ActionHandler.Blessling(blessling, actions)
-	local FadeInBlessling = TweenService:Create(blessling, DefaultTweenInfo, { Transparency = 0 })
-	FadeInBlessling:Play()
-	FadeInBlessling.Completed:Wait()
-	ActionHandler.Actioner(blessling, actions)
-	local FadeOutBlessling = TweenService:Create(blessling, DefaultTweenInfo, { Transparency = 1 })
-	FadeOutBlessling:Play()
-	FadeOutBlessling.Completed:Wait()
-	blessling:Destroy()
+	ActionHandler.Default(blessling, actions, false, DefaultTweenInfo, false)
 end
 
 function ActionHandler.Grappler(grappler, actions)
-	local FadeInGrappler = TweenService:Create(grappler, DefaultTweenInfo, { Transparency = 0 })
-	local FadeInFace = TweenService:Create(grappler.Face, DefaultTweenInfo, { Transparency = 0 })
-	local FadeOutGrappler = TweenService:Create(grappler, DefaultTweenInfo, { Transparency = 1 })
-	local FadeOutFace = TweenService:Create(grappler.Face, DefaultTweenInfo, { Transparency = 1 })
+	ActionHandler.Default(grappler, actions, true, DefaultTweenInfo, true, 3, 5, 2)
+end
 
-	FadeInGrappler:Play()
-	FadeInFace:Play()
-	FadeInGrappler.Completed:Wait()
-	ActionHandler.Actioner(grappler, actions)
-	FadeOutGrappler:Play()
-	FadeOutFace:Play()
-	FadeOutGrappler.Completed:Wait()
-	grappler:Destroy()
+function ActionHandler.Shivering(shivering, actions)
+	ActionHandler.Default(shivering, actions, true, DefaultTweenInfo, true, 5, 7, 2)
 end
 
 return ActionHandler
