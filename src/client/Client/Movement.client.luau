@@ -26,13 +26,13 @@ function slide(actionName: string, inputState: Enum.UserInputState, inputObject:
 
 	if inputState == Enum.UserInputState.Begin then
 		SlideAnimationTrack:Play(0)
-		cam.CameraType = Enum.CameraType.Custom
+		cam.CameraType = Enum.CameraType.Scriptable
 		humanoid.CameraOffset = Vector3.new(0, -5, 0)
 	end
 	if inputState == Enum.UserInputState.End then
 		SlideAnimationTrack:Stop(0)
 		humanoid.CameraOffset = Vector3.new(0, 0, 0)
-		cam.CameraType = Enum.CameraType.Custom
+		cam.CameraType = Enum.CameraType.Scriptable
 	end
 
 	return Enum.ContextActionResult.Pass
