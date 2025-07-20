@@ -3,6 +3,7 @@ local PPM = {}
 -- services
 local Players = game:GetService("Players")
 local ServerScriptService = game:GetService("ServerScriptService")
+local PBTS = require(ServerScriptService.Enumeration.PBTS)
 local ProfileService = require(ServerScriptService.ServerPackages.ProfileService)
 
 -- profiletemplate
@@ -11,8 +12,44 @@ PPM.Template = {
 	TopRoundsSurvived = 0,
 }
 
-local GameProfileStore = ProfileService.GetProfileStore("PlayerData_PA.3_", PPM.Template)
+local GameProfileStore = ProfileService.GetProfileStore(PBTS.ProfileStoreStrings.DataKey, PPM.Template)
 local Profiles = {}
+
+function PPM.HANGING_UpdateBalanceGui(player)
+	local gui = player.PlayerGui:WaitForChild(PBTS.GuiNames.Balance).TextLabel
+
+	local profile = Profiles[player]
+	if profile and profile.Data then
+		gui.Text = "$ " .. profile.Data.Money
+	else
+		warn("Profile doesn't exist in Profiles[] for player " .. player.Name .. ", cannot update balanceGUI.")
+	end
+end
+
+function PPM.TransactMoney(player, amount)
+	local profile = Profiles[player]
+	if profile and profile.Data then
+		if not ((profile.Data.Money + amount) < 0) then
+			return PBTS.MoneyTransactionResult.Declined
+		end
+		profile.Data.Money = profile.Data.Money + amount
+		task.spawn(PPM.HANGING_UpdateBalanceGui, player)
+		return PBTS.MoneyTransactionResult.Success
+	else
+		warn("Attempted to transact money for player without a loaded profile: " .. tostring(player))
+		return PBTS.MoneyTransactionResult.Errored
+	end
+end
+
+function PPM.GetBalance(player)
+	local profile = Profiles[player]
+	if profile and profile.Data then
+		return profile.Data.Money
+	else
+		warn("Attempted to get balance for player without a loaded profile: " .. tostring(player))
+		return 0 -- default balance if no profile
+	end
+end
 
 local function playerAdded(player)
 	local profile = GameProfileStore:LoadProfileAsync("player_" .. player.UserId)
@@ -25,6 +62,8 @@ local function playerAdded(player)
 			player:Kick("Profile released")
 		end)
 
+		Profiles[player] = profile
+
 		if player:IsDescendantOf(Players) then
 			-- do whatever at this point when game starts
 			print(player.Name .. " has " .. profile.Data.Money .. " money.")
@@ -35,6 +74,8 @@ local function playerAdded(player)
 		warn("Profile could not be loaded for " .. player.Name)
 		player:Kick("Profile loaded by other servers simultaeneously..? Unknown error!")
 	end
+
+	PPM.TransactMoney(player, 1)
 end
 
 Players.PlayerAdded:Connect(playerAdded)

@@ -2,6 +2,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 local TweenService = game:GetService("TweenService")
+local PBTS = require(ServerScriptService.Enumeration.PBTS)
 local UtilityFunctions = require(ServerScriptService.Util.UtilityFunctions)
 local r = Random.new()
 local t = {}
@@ -17,7 +18,7 @@ local GrappleEventToClient: RemoteEvent = ReplicatedStorage.Events.InsecureGrapp
 ]]
 function t.Create(target: string, force: number, rad: number, maximumPartsOrPlayers: number?)
 	local Action = {}
-	Action.action = "Grapple"
+	Action.action = PBTS.BallActions.Grapple.Name
 	Action.target = target
 	Action.force = force
 	Action.radius = rad
@@ -62,12 +63,12 @@ end
 	not implemented parts yet
 ]]
 function t.Action(part: Part, Action)
-	if Action.action ~= "Grapple" then
+	if Action.action ~= PBTS.BallActions.Grapple.Name then
 		error("Action type not supported: " .. Action.action)
 	end
 
 	UtilityFunctions.SwitchWithCaseTable(Action.target, {
-		["NEAREST_PLAYER"] = function()
+		[PBTS.BallActions.Grapple.Options.NearestPlayer] = function()
 			local maxDist = Action.rad or 10000
 			local nearestDist, nearestPlayer
 			for _, v in pairs(Players:GetPlayers()) do
@@ -90,7 +91,7 @@ function t.Action(part: Part, Action)
 			end
 			task.spawn(TweenBeam, part, nearestPlayer.Character.HumanoidRootPart)
 		end,
-		["MULTIPLE_PLAYERS"] = function()
+		[PBTS.BallActions.Grapple.Options.MultiplePlayers] = function()
 			local AllPlayers = Players:GetPlayers()
 			local ShuffledPlayers = r:Shuffle(AllPlayers:Clone())
 			local PooledPlayers = {}
@@ -107,10 +108,10 @@ function t.Action(part: Part, Action)
 				end
 			end
 		end,
-		["NEAREST_UNANCHORED_PART"] = function()
+		[PBTS.BallActions.Grapple.Options.NearestUnanchored] = function()
 			-- TODO: implement later
 		end,
-		["MULTIPLE_UNANCHORED_PARTS"] = function()
+		[PBTS.BallActions.Grapple.Options.MultipleUnanchored] = function()
 			-- TODO: implement later
 		end,
 		default = function()

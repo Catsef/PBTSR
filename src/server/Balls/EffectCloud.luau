@@ -1,11 +1,12 @@
 local ServerScriptService = game:GetService("ServerScriptService")
 local TweenService = game:GetService("TweenService")
+local PBTS = require(ServerScriptService.Enumeration.PBTS)
 local UtilityFunctions = require(ServerScriptService.Util.UtilityFunctions)
 local t = {}
 
 function t.Create(rad: number, effect, effectModule, col: Color3?)
 	local Action = {}
-	Action.action = "EffectCloud"
+	Action.action = PBTS.BallActions.EffectCloud
 	Action.radius = rad
 	Action.effect = effect
 	Action.effectModule = effectModule
@@ -16,7 +17,7 @@ function t.Create(rad: number, effect, effectModule, col: Color3?)
 end
 
 function t.Action(part: Part, Action)
-	if Action.action ~= "EffectCloud" then
+	if Action.action ~= PBTS.BallActions.EffectCloud then
 		error("Action type not supported: " .. Action.action)
 	end
 

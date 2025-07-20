@@ -1,3 +1,5 @@
+local ServerScriptService = game:GetService("ServerScriptService")
+local PBTS = require(ServerScriptService.Enumeration.PBTS)
 local EffectsModule = require(script.Parent.EffectsHandler)
 local m = {}
 m.WalkSpeedModifier = 5
@@ -6,7 +8,7 @@ local r = Random.new()
 
 function m.Effect(Strength: number, Time: number)
 	return {
-		effect = "Slow",
+		effect = PBTS.Effects.SLOW,
 		strength = Strength,
 		time = Time,
 		ended = false,
@@ -50,12 +52,14 @@ function m.End(Player, Effect)
 	if Player.Character.Humanoid then
 		local Humanoid: Humanoid = Player.Character.Humanoid
 		Humanoid.WalkSpeed += (m.WalkSpeedModifier * Effect.strength)
-		if Humanoid.WalkSpeed > m.BaseWalkSpeed then Humanoid.WalkSpeed = m.BaseWalkSpeed
+		if Humanoid.WalkSpeed > m.BaseWalkSpeed then
+			Humanoid.WalkSpeed = m.BaseWalkSpeed
+		end
 	else
 		print(Player)
 		print(Player.Character)
 		print(Player.Character.Humanoid)
-		-- error("Player: either has no Character, or has no Humanoid within Character (Slow.luau - End())")
+		error("Player: either has no Character, or has no Humanoid within Character (Slow.luau - End())")
 	end
 
 	print("Effect SLOW removed from " .. Player.Name)

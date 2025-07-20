@@ -21,27 +21,28 @@ g.AllRoundReadiedPlayers = {}
 g.DeadPlayers = {}
 g.AllExistingBalls = {}
 
-g.currentRound = 0
+g.currentRound = 4
 
 g.stats = {}
-g.stats.balls = WeightedChoice.New({
+g.stats.ballsWeights = {
 	{
-		weight = 0, -- 90
+		weight = 90, -- 90
 		value = "Doomling",
 	},
 	{
-		weight = 0, -- 10
+		weight = 10, -- 10
 		value = "Blessling",
 	},
 	{
-		weight = 0, -- 10
+		weight = 10, -- 10
 		value = "Grappler",
 	},
 	{
 		weight = 10,
 		value = "Shivering",
 	},
-})
+}
+g.stats.balls = WeightedChoice.New(g.stats.ballsWeights)
 
 g.stats.ballActions = {
 	["Doomling"] = {
@@ -144,7 +145,7 @@ g.stepperFunctions = {
 	StepBlesslingA = function()
 		table.insert(g.stats.ballActions.Blessling, ToxinCloud.Create(30, -10, Color3.fromRGB(30, 207, 74)))
 		table.insert(
-			g.stats.ballActions.Blessing,
+			g.stats.ballActions.Blessling,
 			TweenMove.Create(
 				"NEAREST_PLAYER",
 				0.9,

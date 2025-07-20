@@ -1,5 +1,6 @@
 local ServerScriptService = game:GetService("ServerScriptService")
 local TweenService = game:GetService("TweenService")
+local PBTS = require(ServerScriptService.Enumeration.PBTS)
 local UtilityFunctions = require(ServerScriptService.Util.UtilityFunctions)
 local t = {}
 
@@ -23,26 +24,26 @@ function t.Create(
 	pos: Vector3?
 )
 	local Action = {}
-	Action.action = "TweenMove"
+	Action.action = PBTS.BallActions.TweenMove.Name
 
 	Action.to = {}
 	Action.tweenInfo = tweenInfo
 	Action.rotateToFacePlayer = rotateToFacePlayer
 
 	UtilityFunctions.SwitchWithCaseTable(target, {
-		["NEAREST_PLAYER"] = function()
+		[PBTS.BallActions.TweenMove.Options.NearestPlayer] = function()
 			Action.to.target = target
 			Action.to.by = by
 			if toMaxDist then
 				Action.to.maxDistance = toMaxDist
 			end
 		end,
-		["POSITION_OFFSET"] = function()
+		[PBTS.BallActions.TweenMove.Options.PositionOffset] = function()
 			Action.to.target = target
 			Action.to.by = by
 			Action.to.positionOffset = posOffset
 		end,
-		["POSITION_ABSOLUTE"] = function()
+		[PBTS.BallActions.TweenMove.Options.PositionAbsolute] = function()
 			Action.to.target = target
 			Action.to.by = by
 			Action.to.position = pos
@@ -79,13 +80,13 @@ function t.Action(part: Part, Action)
 	-- 	["rotateToFacePlayer"] = true,
 	-- },
 
-	if Action.action ~= "TweenMove" then
+	if Action.action ~= PBTS.BallActions.TweenMove.Name then
 		error("Action type not supported: " .. tostring(Action.action))
 	end
 
 	local target: Vector3
 
-	if Action.to.target == "NEAREST_PLAYER" then
+	if Action.to.target == PBTS.BallActions.TweenMove.Options.NearestPlayer then
 		local maxDist = Action.to.maxDistance or 20
 		local nearestDist, nearestPlayer
 		for _, v in pairs(game:GetService("Players"):GetPlayers()) do
@@ -102,9 +103,9 @@ function t.Action(part: Part, Action)
 			return
 		end
 		target = part.Position + (nearestPlayer.Character.HumanoidRootPart.Position - part.Position) * Action.to.by
-	elseif Action.to.target == "POSITION_OFFSET" then
+	elseif Action.to.target == PBTS.BallActions.TweenMove.Options.PositionOffset then
 		target = part.Position + Action.to.positionOffset
-	elseif Action.to.target == "POSITION_ABSOLUTE" then
+	elseif Action.to.target == PBTS.BallActions.TweenMove.Options.PositionAbsolute then
 		target = Action.to.position
 	else
 		error("unrecognized Action.to.target...")
