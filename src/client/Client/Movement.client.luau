@@ -5,11 +5,12 @@ local cas = game:GetService("ContextActionService")
 local slideRE: RemoteEvent = ReplicatedStorage.Events.InsecureSlide
 local jumpRE: RemoteEvent = ReplicatedStorage.Events.InsecureJump
 -- local walkRE: RemoteEvent = ReplicatedStorage.Events.InsecureWalk
--- Commit Test 3
 local SlideChannel
 function slide(actionName: string, inputState: Enum.UserInputState, inputObject: InputObject): Enum.ContextActionResult?
+	local humanoid: Humanoid = P.Character.Humanoid
 	slideRE:FireServer(inputState)
-	local animator: Animator = P.Character.Humanoid.Animator
+
+	local animator = humanoid:WaitForChild("Animator")
 
 	local SlideAnimationTrack
 	if not SlideChannel then
@@ -24,9 +25,11 @@ function slide(actionName: string, inputState: Enum.UserInputState, inputObject:
 
 	if inputState == Enum.UserInputState.Begin then
 		SlideAnimationTrack:Play(0)
+		humanoid.CameraOffset += Vector3.new(0, -5, 0)
 	end
 	if inputState == Enum.UserInputState.End then
 		SlideAnimationTrack:Stop(0)
+		humanoid.CameraOffset -= Vector3.new(0, -5, 0)
 	end
 
 	return Enum.ContextActionResult.Pass
