@@ -1,7 +1,6 @@
 local Players = game:GetService("Players")
 local ServerScriptService = game:GetService("ServerScriptService")
 local ServerStorage = game:GetService("ServerStorage")
-local ToastNotificationService = game:GetService("ToastNotificationService")
 local PlayerProfileManager = require(ServerScriptService.Data.PlayerProfileManager)
 local PBTS = require(ServerScriptService.Enumeration.PBTS)
 local GameState = require(ServerScriptService.GameState.GameState)

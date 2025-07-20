@@ -2,21 +2,62 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
 local SlideRE: RemoteEvent = ReplicatedStorage.Events.InsecureSlide
+local JumpRE: RemoteEvent = ReplicatedStorage.Events.InsecureJump
+-- local WalkRE: RemoteEvent = ReplicatedStorage.Events.InsecureWalk
+-- local MaxWalkSpeed = 30
 local SlideVelocityFactor = 1.5
-local SlideAnimationTracks = {} -- [player] = animationtrack
+-- local SlideAnimationTracks = {} -- [player] = animationtrack
+local PlayerWalkSpeeds = {}
+-- local PlayerWalkTriggers = {}
 
 Players.PlayerAdded:Connect(function(P: Player)
 	P.CharacterAppearanceLoaded:Connect(function(a0)
 		local Human: Humanoid = a0:WaitForChild("Humanoid")
 		local Root = a0:WaitForChild("HumanoidRootPart")
 
-		Human.WalkSpeed = 30
+		Human.WalkSpeed = 25
 		Human.JumpHeight = 5
 
+		-- local function setWalkSpeedToA()
+		-- 	while task.wait() do
+		-- 		if not a0.Parent then
+		-- 			return
+		-- 		end
+		-- 		if PlayerWalkSpeeds[P] ~= nil then
+		-- 			Human.WalkSpeed = PlayerWalkSpeeds[P]
+		-- 		else
+		-- 			continue
+		-- 		end
+		-- 	end
+		-- end
+		-- task.spawn(setWalkSpeedToA)
+
 		Instance.new("Attachment", Root).Name = "Root"
-		local SlideAnimId = 100330252457760
+		-- local SlideAnimId = 100330252457760
 	end)
 end)
+
+-- WalkRE.OnServerEvent:Connect(function(P, i: Enum.UserInputState)
+-- 	PlayerWalkSpeeds[P] = 5
+
+-- 	local function stepWalkSpeedWhileHeld()
+-- 		while PlayerWalkTriggers[P] do
+-- 			if PlayerWalkSpeeds[P] + 1 < MaxWalkSpeed then
+-- 				PlayerWalkSpeeds[P] += 1
+-- 			end
+-- 			task.wait(0.01)
+-- 		end
+-- 	end
+
+-- 	if i == Enum.UserInputState.Begin then
+-- 		PlayerWalkTriggers[P] = true
+-- 		task.spawn(stepWalkSpeedWhileHeld)
+-- 	end
+-- 	if i == Enum.UserInputState.End then
+-- 		PlayerWalkTriggers[P] = false
+-- 		PlayerWalkSpeeds[P] = 5
+-- 	end
+-- end)
 
 SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 	if not P.Character then
@@ -29,23 +70,10 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 
 	local Animator: Animator = Humanoid.Animator
 
-	local SlideAnimationTrack
-	if not SlideAnimationTracks[P] then
-		local SlideAnimation = Instance.new("Animation")
-		SlideAnimation.AnimationId = "rbxassetid://100330252457760"
-
-		SlideAnimationTrack = Animator:LoadAnimation(SlideAnimation)
-		SlideAnimationTracks[P] = SlideAnimationTrack
-	else
-		SlideAnimationTrack = SlideAnimationTracks[P]
-	end
-
 	if inpState == Enum.UserInputState.End then
 		for _, RemainingChild in ipairs(HumanoidRoot:GetChildren()) do
 			if RemainingChild.Name == "SlideLinearVelocity" then
-				print("InputEnded")
 				RemainingChild:Destroy()
-				SlideAnimationTrack:Stop(0)
 				return
 			end
 		end
@@ -69,11 +97,6 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 		end
 	end
 
-	-- local RP = RaycastParams.new()
-	-- table.insert(RP.FilterDescendantsInstances, P.Character)
-	-- RP.FilterType = Enum.RaycastFilterType.Exclude
-	-- local RayDown = workspace:Raycast(HumanoidRoot, Vector3.new(0, -1, 0), RP)
-
 	if Humanoid.FloorMaterial == Enum.Material.Air then
 		warn("Tried to slide when FloorMaterial is air?")
 		return
@@ -96,7 +119,7 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 		return
 	end
 
-	print(RayResult)
+	-- the actual slide code here
 
 	local LookVector = HumanoidRoot.CFrame.LookVector
 	local UnitSlideDirection = Vector3.new(LookVector.X, 0, LookVector.Z).Unit
@@ -109,7 +132,7 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 		return
 	end
 
-	SlideAnimationTrack:Play(0, 5, 1)
+	-- SlideAnimationTrack:Play(0, 5, 1)
 
 	LinVelo.Visible = true
 	LinVelo.Color = BrickColor.Blue()
@@ -121,7 +144,7 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 	LinVelo.RelativeTo = Enum.ActuatorRelativeTo.World
 	LinVelo.Parent = HumanoidRoot
 
-	LinVelo.MaxForce = 10000000 -- Controls slide strength
+	LinVelo.MaxForce = 1000000 -- Controls slide strength
 
 	local function CheckIfStillOnGround()
 		while Humanoid.FloorMaterial ~= Enum.Material.Air do
@@ -144,9 +167,23 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 	tween:Play()
 	task.spawn(CheckIfStillOnGround)
 
+	local jumpInterrupt = JumpRE.OnServerEvent:Connect(function(P2: Player, i)
+		if P2.UserId == P.UserId then
+			if i == Enum.UserInputState.End then
+				return
+			end
+			print("Jump Interrupted")
+			local V = HumanoidRoot.AssemblyLinearVelocity
+			LinVelo:Destroy()
+
+			HumanoidRoot.AssemblyLinearVelocity = (V * 3) + Vector3.new(0, 5, 0)
+		end
+	end)
+
 	-- Auto-destroy when completed
 	tween.Completed:Connect(function()
 		LinVelo:Destroy()
+		jumpInterrupt:Disconnect()
 	end)
 end)
 
