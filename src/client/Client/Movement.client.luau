@@ -8,6 +8,7 @@ local jumpRE: RemoteEvent = ReplicatedStorage.Events.InsecureJump
 local SlideChannel
 function slide(actionName: string, inputState: Enum.UserInputState, inputObject: InputObject): Enum.ContextActionResult?
 	local humanoid: Humanoid = P.Character.Humanoid
+	local cam: Camera = game.Workspace.CurrentCamera
 	slideRE:FireServer(inputState)
 
 	local animator = humanoid:WaitForChild("Animator")
@@ -25,11 +26,13 @@ function slide(actionName: string, inputState: Enum.UserInputState, inputObject:
 
 	if inputState == Enum.UserInputState.Begin then
 		SlideAnimationTrack:Play(0)
+		cam.CameraType = Enum.CameraType.Custom
 		humanoid.CameraOffset = Vector3.new(0, -5, 0)
 	end
 	if inputState == Enum.UserInputState.End then
 		SlideAnimationTrack:Stop(0)
 		humanoid.CameraOffset = Vector3.new(0, 0, 0)
+		cam.CameraType = Enum.CameraType.Custom
 	end
 
 	return Enum.ContextActionResult.Pass
