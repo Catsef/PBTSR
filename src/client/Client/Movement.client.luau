@@ -6,7 +6,6 @@ local slideRE: RemoteEvent = ReplicatedStorage.Events.InsecureSlide
 local jumpRE: RemoteEvent = ReplicatedStorage.Events.InsecureJump
 -- local walkRE: RemoteEvent = ReplicatedStorage.Events.InsecureWalk
 local SlideChannel
-
 function slide(actionName: string, inputState: Enum.UserInputState, inputObject: InputObject): Enum.ContextActionResult?
 	slideRE:FireServer(inputState)
 	local animator: Animator = P.Character.Humanoid.Animator
