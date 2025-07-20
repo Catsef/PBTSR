@@ -2,8 +2,8 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local PBTS = require(ServerScriptService.Enumeration.PBTS)
 local EffectsModule = require(script.Parent.EffectsHandler)
 local m = {}
-m.WalkSpeedModifier = 5
-m.BaseWalkSpeed = 16
+m.WalkSpeedModifier = 10
+m.BaseWalkSpeed = 30
 local r = Random.new()
 
 function m.Effect(Strength: number, Time: number)
