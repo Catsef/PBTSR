@@ -30,11 +30,11 @@ g.stats.ballsWeights = {
 		value = "Doomling",
 	},
 	{
-		weight = 10, -- 10
+		weight = 30, -- 10
 		value = "Blessling",
 	},
 	{
-		weight = 10, -- 10
+		weight = 15, -- 10
 		value = "Grappler",
 	},
 	{
@@ -57,7 +57,7 @@ g.stats.ballActions = {
 		TweenMove.Create(
 			"NEAREST_PLAYER",
 			0.5,
-			TweenInfo.new(0.6, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+			TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
 			true,
 			200
 		),
@@ -67,7 +67,7 @@ g.stats.ballActions = {
 		TweenMove.Create(
 			"NEAREST_PLAYER",
 			0.9,
-			TweenInfo.new(2, Enum.EasingStyle.Exponential, Enum.EasingDirection.InOut),
+			TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.InOut),
 			false,
 			500
 		),
@@ -75,7 +75,7 @@ g.stats.ballActions = {
 		TweenMove.Create(
 			"NEAREST_PLAYER",
 			0.9,
-			TweenInfo.new(2, Enum.EasingStyle.Exponential, Enum.EasingDirection.InOut),
+			TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.InOut),
 			false,
 			500
 		),
@@ -105,8 +105,8 @@ g.stepperFunctions = {
 			g.stats.ballActions.Doomling,
 			TweenMove.Create(
 				"NEAREST_PLAYER",
-				0.3,
-				TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+				0.1,
+				TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
 				true,
 				1000
 			)

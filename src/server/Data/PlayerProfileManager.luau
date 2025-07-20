@@ -29,11 +29,12 @@ end
 function PPM.TransactMoney(player, amount)
 	local profile = Profiles[player]
 	if profile and profile.Data then
-		if not ((profile.Data.Money + amount) < 0) then
+		if (profile.Data.Money + amount) < 0 then
 			return PBTS.MoneyTransactionResult.Declined
 		end
 		profile.Data.Money = profile.Data.Money + amount
 		task.spawn(PPM.HANGING_UpdateBalanceGui, player)
+		print("player " .. player.Name .. " recieved racks")
 		return PBTS.MoneyTransactionResult.Success
 	else
 		warn("Attempted to transact money for player without a loaded profile: " .. tostring(player))
@@ -44,6 +45,7 @@ end
 function PPM.GetBalance(player)
 	local profile = Profiles[player]
 	if profile and profile.Data then
+		task.spawn(PPM.HANGING_UpdateBalanceGui, player)
 		return profile.Data.Money
 	else
 		warn("Attempted to get balance for player without a loaded profile: " .. tostring(player))
@@ -78,14 +80,16 @@ local function playerAdded(player)
 	PPM.TransactMoney(player, 1)
 end
 
-Players.PlayerAdded:Connect(playerAdded)
+function PPM.Init()
+	Players.PlayerAdded:Connect(playerAdded)
 
-Players.PlayerRemoving:Connect(function(player)
-	local profile = Profiles[player]
-	if profile ~= nil then
-		profile:Release()
-	end
-end)
+	Players.PlayerRemoving:Connect(function(player)
+		local profile = Profiles[player]
+		if profile ~= nil then
+			profile:Release()
+		end
+	end)
+end
 
 -- Module functions.....
 

@@ -1,7 +1,9 @@
 local ActionHandler = {}
 
 local DefaultTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+local ServerScriptService = game:GetService("ServerScriptService")
 local TweenService = game:GetService("TweenService")
+local PlayerProfileManager = require(ServerScriptService.Data.PlayerProfileManager)
 
 --[[
 	Actioner - a function that runs actions within the parent folder (balls) according to the actions list.
@@ -10,6 +12,9 @@ local TweenService = game:GetService("TweenService")
 ]]
 function ActionHandler.Actioner(part: BasePart, actions)
 	for _, v in ipairs(actions) do
+		if not part then
+			return
+		end
 		local ActionFunction = require(script.Parent[v.action]).Action
 		if ActionFunction then
 			ActionFunction(part, v)
@@ -36,6 +41,7 @@ function ActionHandler.Default(
 	tweenInfo: TweenInfo,
 	hasClickDetector: boolean,
 	lives: number?,
+	price: number?,
 	livesMinSize: number?
 )
 	if hasClickDetector and p.ClickDetector then
@@ -47,9 +53,11 @@ function ActionHandler.Default(
 		-- lives: any to 0
 		-- size: any to 2
 		-- lives -> size: (currentLives / lives) * (p.Size.X - minSize) + minSize
-		CDT.MouseClick:Connect(function(a0: Player)
+		CDT.MouseClick:Connect(function(player: Player)
 			currentLives -= 1
 			if currentLives <= 0 then
+				PlayerProfileManager.TransactMoney(player, price)
+				PlayerProfileManager.HANGING_UpdateBalanceGui(player)
 				p:Destroy()
 			else
 				local newSize = ((currentLives / lives) * (p.Size.Y - livesMinSize) + livesMinSize) * Vector3.one
@@ -60,7 +68,7 @@ function ActionHandler.Default(
 
 	local pA = TweenService:Create(p, tweenInfo, { Transparency = 0 })
 	pA:Play()
-	if hasFace and p.Face then
+	if hasFace and p:FindFirstChild("Face") then
 		local pB = TweenService:Create(p.Face, tweenInfo, { Transparency = 0 })
 		pB:Play()
 	end
@@ -70,7 +78,7 @@ function ActionHandler.Default(
 
 	local dA = TweenService:Create(p, tweenInfo, { Transparency = 1 })
 	dA:Play()
-	if hasFace and p.Face then
+	if hasFace and p:FindFirstChild("Face") then
 		local dB = TweenService:Create(p.Face, tweenInfo, { Transparency = 1 })
 		dB:Play()
 	end
@@ -84,7 +92,7 @@ end
 	Doomling - a function for code for a specific ball. Every ball that is referenced inside GameState's ball lists should have a function here. Also, every function for a specific ball should run Actioner as well. (for it to work properly)
 ]]
 function ActionHandler.Doomling(doomling, actions)
-	ActionHandler.Default(doomling, actions, true, DefaultTweenInfo, true, 1, 2)
+	ActionHandler.Default(doomling, actions, true, DefaultTweenInfo, true, 1, 2, 2)
 end
 
 function ActionHandler.Blessling(blessling, actions)
@@ -92,11 +100,11 @@ function ActionHandler.Blessling(blessling, actions)
 end
 
 function ActionHandler.Grappler(grappler, actions)
-	ActionHandler.Default(grappler, actions, true, DefaultTweenInfo, false)
+	ActionHandler.Default(grappler, actions, true, DefaultTweenInfo, true, 3, 5, 2)
 end
 
 function ActionHandler.Shivering(shivering, actions)
-	ActionHandler.Default(shivering, actions, true, DefaultTweenInfo, false)
+	ActionHandler.Default(shivering, actions, true, DefaultTweenInfo, true, 5, 7, 2)
 end
 
 return ActionHandler
