@@ -133,7 +133,6 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 		warn("Player found not on ground while in slide")
 		LinVelo:Destroy()
 		HumanoidRoot.AssemblyLinearVelocity = Vector3.zero
-		SlideAnimationTrack:Stop(0)
 	end
 
 	local tween = TweenService:Create(
@@ -148,7 +147,6 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 	-- Auto-destroy when completed
 	tween.Completed:Connect(function()
 		LinVelo:Destroy()
-		SlideAnimationTrack:Stop(0)
 	end)
 end)
 

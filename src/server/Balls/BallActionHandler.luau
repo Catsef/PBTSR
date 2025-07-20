@@ -1,6 +1,7 @@
 local ActionHandler = {}
 
 local DefaultTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
+local Players = game:GetService("Players")
 local ServerScriptService = game:GetService("ServerScriptService")
 local TweenService = game:GetService("TweenService")
 local PlayerProfileManager = require(ServerScriptService.Data.PlayerProfileManager)
@@ -35,7 +36,7 @@ end
 	@param livesMinSize - minimum size of the part when lives reach 0.
 ]]
 function ActionHandler.Default(
-	p,
+	p: BasePart,
 	actions,
 	hasFace: boolean,
 	tweenInfo: TweenInfo,
@@ -44,33 +45,67 @@ function ActionHandler.Default(
 	price: number?,
 	livesMinSize: number?
 )
-	if hasClickDetector and p.ClickDetector then
-		local CDT: ClickDetector = p.ClickDetector
+	if hasClickDetector and p:FindFirstChild("ClickDetector") then
+		local CDT = p:FindFirstChild("ClickDetector")
+		if not (CDT and CDT:IsA("ClickDetector")) then
+			error("ClickDetector isin't a ClickDetector???")
+		end
+
+		if not livesMinSize then
+			error("livesMinSize required!")
+		end
+
 		local currentLives = lives
-		-- lives: 5 to 0
-		-- size: currentSize to 2
-		-- lives -> size:  ( currentLives / lives ) * (currentSize - 2) + 2
-		-- lives: any to 0
-		-- size: any to 2
-		-- lives -> size: (currentLives / lives) * (p.Size.X - minSize) + minSize
+		p:SetAttribute("lives", currentLives)
+
+		local function TickCheck()
+			while task.wait() do
+				if not p.Parent then
+					return
+				end
+				if not p:GetAttribute("playerLastClickedBy") then
+					continue
+				end
+				local playerLastClickedBy = Players:GetPlayerByUserId(p:GetAttribute("playerLastClickedBy"))
+				if currentLives <= 0 then
+					PlayerProfileManager.TransactMoney(playerLastClickedBy, price)
+					PlayerProfileManager.HANGING_UpdateBalanceGui(playerLastClickedBy)
+					p:Destroy()
+					return
+				end
+			end
+		end
+
 		CDT.MouseClick:Connect(function(player: Player)
 			currentLives -= 1
-			if currentLives <= 0 then
-				PlayerProfileManager.TransactMoney(player, price)
-				PlayerProfileManager.HANGING_UpdateBalanceGui(player)
-				p:Destroy()
-			else
-				local scale = ((currentLives / lives) * (p.Size.Y - livesMinSize) + livesMinSize) / p.Size.Y
-				local newSize = p.Size * scale
-				p.Size = newSize
-			end
+			p:SetAttribute("lives", currentLives)
+			p:SetAttribute("playerLastClickedBy", player.UserId)
+
+			local scale = ((currentLives / lives) * (p.Size.Y - livesMinSize) + livesMinSize) / p.Size.Y
+			local newSize = p.Size * scale
+			p.Size = newSize
 		end)
+
+		p:GetAttributeChangedSignal("lives"):Connect(function()
+			currentLives = p:GetAttribute("lives")
+
+			local scale = ((currentLives / lives) * (p.Size.Y - livesMinSize) + livesMinSize) / p.Size.Y
+			local newSize = p.Size * scale
+			p.Size = newSize
+		end)
+
+		task.spawn(TickCheck)
 	end
 
 	local pA = TweenService:Create(p, tweenInfo, { Transparency = 0 })
 	pA:Play()
 	if hasFace and p:FindFirstChild("Face") then
-		local pB = TweenService:Create(p.Face, tweenInfo, { Transparency = 0 })
+		local face = p:FindFirstChild("Face")
+		if not face:IsA("Decal") then
+			return
+		end
+
+		local pB = TweenService:Create(face, tweenInfo, { Transparency = 0 })
 		pB:Play()
 	end
 	pA.Completed:Wait()
@@ -80,7 +115,11 @@ function ActionHandler.Default(
 	local dA = TweenService:Create(p, tweenInfo, { Transparency = 1 })
 	dA:Play()
 	if hasFace and p:FindFirstChild("Face") then
-		local dB = TweenService:Create(p.Face, tweenInfo, { Transparency = 1 })
+		local face = p:FindFirstChild("Face")
+		if not face:IsA("Decal") then
+			return
+		end
+		local dB = TweenService:Create(face, tweenInfo, { Transparency = 1 })
 		dB:Play()
 	end
 	dA.Completed:Wait()

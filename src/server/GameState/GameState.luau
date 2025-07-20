@@ -165,7 +165,7 @@ g.stepperFunctions = {
 }
 
 g.stats.waveBalls = 3
-g.stats.waveDelay = 10
+g.stats.waveDelay = 5
 g.stats.waves = 3
 g.stats.waveArea = 10
 

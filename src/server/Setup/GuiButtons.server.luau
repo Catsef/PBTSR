@@ -1,11 +1,14 @@
 local Players = game:GetService("Players")
 local ServerScriptService = game:GetService("ServerScriptService")
 local ServerStorage = game:GetService("ServerStorage")
+local ToastNotificationService = game:GetService("ToastNotificationService")
 local PlayerProfileManager = require(ServerScriptService.Data.PlayerProfileManager)
 local PBTS = require(ServerScriptService.Enumeration.PBTS)
 local GameState = require(ServerScriptService.GameState.GameState)
 local UtilityFunctions = require(ServerScriptService.Util.UtilityFunctions)
 local ButtonEvent: BindableEvent = ServerStorage.Bindings.GUI.ButtonSend
+
+local TOOL_ANNIHILATOR = ServerStorage.Tools.Annihilator
 
 -- startbuttons hierarchy:
 -- StartButtons
@@ -38,6 +41,9 @@ ButtonEvent.Event:Connect(function(sendId: string, player: Player)
 			local result = PlayerProfileManager.TransactMoney(player, -50)
 			if PBTS.MoneyTransactionResult.Success then
 				print("Add da AnniHilator to da player inv")
+
+				local annihi = TOOL_ANNIHILATOR:Clone()
+				annihi.Parent = player.Backpack
 			end
 		end,
 		default = function()
