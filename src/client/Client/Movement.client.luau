@@ -29,7 +29,7 @@ function slide(actionName: string, inputState: Enum.UserInputState, inputObject:
 		local cam: Camera = game.Workspace.CurrentCamera
 		cam.CameraSubject = humanoid
 		cam.CameraType = Enum.CameraType.Custom
-		humanoid.CameraOffset = Vector3.new(0, -5, 0)
+		humanoid.CameraOffset = Vector3.new(0, -1, 0)
 	end
 	if inputState == Enum.UserInputState.End then
 		SlideAnimationTrack:Stop(0)
