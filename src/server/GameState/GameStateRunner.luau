@@ -6,6 +6,8 @@ local ps = game:GetService("Players")
 local GameState = require(script.Parent.GameState)
 local UtilityFunctions = require(ServerScriptService.Util.UtilityFunctions)
 
+local BuyTrigger = workspace.Shop.Shop
+
 function m.UpdatePlayerButtons()
 	local Players = ps:GetPlayers()
 
@@ -74,6 +76,7 @@ end
 	this function should ONLY be ran from GameStart.server.luau
 ]]
 function m.BuyPhase()
+	BuyTrigger.Enabled = true
 	g.AllPlayers = ps:GetPlayers()
 	if UtilityFunctions.CompareUnorderedSets(g.AllPlayers, g.AllRoundReadiedPlayers) then
 		g.buyPhase = false
@@ -87,6 +90,7 @@ end
 	this function should ONLY be ran from GameStart.server.luau
 ]]
 function m.RoundStarted()
+	BuyTrigger.Enabled = false
 	-- close all buyguis
 	m.CloseAllBuyGuis()
 	g.currentRound += 1
