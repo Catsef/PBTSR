@@ -21,7 +21,7 @@ g.AllRoundReadiedPlayers = {}
 g.DeadPlayers = {}
 g.AllExistingBalls = {}
 
-g.currentRound = 4
+g.currentRound = 0
 
 g.stats = {}
 g.stats.ballsWeights = {
