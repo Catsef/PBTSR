@@ -102,6 +102,14 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 
 	LinVelo.MaxForce = 1000000 -- Controls slide strength
 
+	local tween = TweenService:Create(
+		LinVelo,
+		TweenInfo.new(2, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+		{ VectorVelocity = Vector3.zero }
+	)
+
+	tween:Play()
+
 	local function CheckIfStillOnGround()
 		while Humanoid.FloorMaterial ~= Enum.Material.Air do
 			task.wait()
@@ -114,14 +122,6 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 		LinVelo:Destroy()
 		HumanoidRoot.AssemblyLinearVelocity = Vector3.zero
 	end
-
-	local tween = TweenService:Create(
-		LinVelo,
-		TweenInfo.new(2, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
-		{ VectorVelocity = Vector3.zero }
-	)
-
-	tween:Play()
 	task.spawn(CheckIfStillOnGround)
 
 	local jumpInterrupt = JumpRE.OnServerEvent:Connect(function(P2: Player, i)
