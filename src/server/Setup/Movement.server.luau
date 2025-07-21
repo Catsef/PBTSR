@@ -110,6 +110,7 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 			return
 		end
 		warn("Player found not on ground while in slide")
+		tween:Destroy()
 		LinVelo:Destroy()
 		HumanoidRoot.AssemblyLinearVelocity = Vector3.zero
 	end
@@ -130,6 +131,7 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 			end
 			print("Jump Interrupted")
 			local V = HumanoidRoot.AssemblyLinearVelocity
+			tween:Destroy()
 			LinVelo:Destroy()
 
 			HumanoidRoot.AssemblyLinearVelocity = (V * 3) + Vector3.new(0, 5, 0)
