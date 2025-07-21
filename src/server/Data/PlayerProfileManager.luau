@@ -21,8 +21,6 @@ function PPM.HANGING_UpdateBalanceGui(player)
 	local profile = Profiles[player]
 	if profile and profile.Data then
 		gui.Text = "$ " .. profile.Data.Money
-	else
-		warn("Profile doesn't exist in Profiles[] for player " .. player.Name .. ", cannot update balanceGUI.")
 	end
 end
 
