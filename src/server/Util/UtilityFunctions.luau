@@ -56,4 +56,77 @@ function m.FindNearestPlayer(maxDist, refPart)
 	return nearestPlayer
 end
 
+function m.ChildGetter(ParentInstance: Instance, childName: string, className: string, usageInfo: string)
+	print(
+		"ChildGetter(): To "
+			.. usageInfo
+			.. ", we are attempting to safely retrieve "
+			.. childName
+			.. " which is a "
+			.. className
+			.. " directly from the children of "
+			.. ParentInstance.Name
+	)
+
+	if ParentInstance == nil or ParentInstance.Parent == nil then
+		error("ChildGetter(): parentClass is nil or parentClass's Parent is nil.")
+	end
+	local child = ParentInstance:WaitForChild(childName, 5)
+	if child == nil or child.Parent == nil then
+		warn("ChildGetter(): child is nil or child's Parent is nil!")
+	elseif not child:IsA(className) then
+		error("ChildGetter(): Child doesn't match class supplied with className.")
+	end
+
+	return child
+end
+
+function m.DescendantGetter(parent: Instance, rumouredDescendant: string, className: string, usageInfo: string)
+	print(
+		"DescendantGetter(): To "
+			.. usageInfo
+			.. ", we are attempting to safely retrieve "
+			.. rumouredDescendant
+			.. " which is a "
+			.. className
+			.. " directly from the children of "
+			.. parent.Name
+	)
+	if parent == nil or parent.Parent == nil then
+		error("DescendantGetter(): parent is nil or parent's Parent is nil.")
+	end
+
+	local Descendants = parent:GetDescendants()
+
+	if #Descendants == 0 then
+		warn("DescendantGetter(): " .. parent.Name .. "'s descendants contain 0 children!")
+	end
+
+	local result = nil
+	for _, descendant in ipairs(Descendants) do
+		if descendant.Name ~= rumouredDescendant then
+			continue
+		end
+
+		if descendant:IsA(className) then
+			result = descendant
+		else
+			warn(
+				"DescendantGetter(): Matched name, but type is different. Ref:"
+					.. className
+					.. "; Cur:"
+					.. descendant.ClassName
+			)
+		end
+	end
+
+	if result == nil then
+		warn(
+			"DescendantGetter(): Couldn't find result. Keep in mind that this doesn't use WaitForChild. Returning nil!"
+		)
+	end
+
+	return result
+end
+
 return m
