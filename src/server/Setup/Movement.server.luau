@@ -18,22 +18,7 @@ Players.PlayerAdded:Connect(function(P: Player)
 		Human.WalkSpeed = 25
 		Human.JumpHeight = 5
 
-		-- local function setWalkSpeedToA()
-		-- 	while task.wait() do
-		-- 		if not a0.Parent then
-		-- 			return
-		-- 		end
-		-- 		if PlayerWalkSpeeds[P] ~= nil then
-		-- 			Human.WalkSpeed = PlayerWalkSpeeds[P]
-		-- 		else
-		-- 			continue
-		-- 		end
-		-- 	end
-		-- end
-		-- task.spawn(setWalkSpeedToA)
-
 		Instance.new("Attachment", Root).Name = "Root"
-		-- local SlideAnimId = 100330252457760
 	end)
 end)
 SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
