@@ -83,7 +83,7 @@ end)
 
 SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 	if not P.Character then
-		warn("Character not found, returning")
+		-- warn("Character not found, returning")
 		return
 	end
 
@@ -98,24 +98,24 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 	end
 
 	if not Humanoid then
-		warn("Humanoid not found within Character")
+		-- warn("Humanoid not found within Character")
 		return
 	end
 
 	if not HumanoidRoot then
-		warn("HRP not found within Character")
+		-- warn("HRP not found within Character")
 		return
 	end
 
 	for _, RemainingChild in ipairs(HumanoidRoot:GetChildren()) do
 		if RemainingChild.Name == "SlideLinearVelocity" then
-			warn("Existing LinearVelocity found.")
+			-- warn("Existing LinearVelocity found.")
 			return -- so u cant just spam slide
 		end
 	end
 
 	if Humanoid.FloorMaterial == Enum.Material.Air then
-		warn("Tried to slide when FloorMaterial is air?")
+		-- warn("Tried to slide when FloorMaterial is air?")
 		return
 	end
 
@@ -132,7 +132,7 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 
 	local RayResult = workspace:Raycast(RayStart, RayDirection * RayLength, RayParams)
 	if not RayResult then
-		warn("RayResult returned nothing!")
+		-- warn("RayResult returned nothing!")
 		return
 	end
 
@@ -148,7 +148,7 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 			return
 		end
 		DestroySlide(P)
-		warn("Player found not on ground while in slide")
+		-- warn("Player found not on ground while in slide")
 	end
 	task.spawn(CheckIfStillOnGround)
 
