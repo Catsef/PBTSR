@@ -3,7 +3,7 @@ local RunService = game:GetService("RunService")
 local P = Players.LocalPlayer
 local Cam = workspace.CurrentCamera
 
-local TiltAmount = 0.01
+local TiltAmount = 0.05
 local CurrentTilt = 0
 local Lerp = 0.2
 
