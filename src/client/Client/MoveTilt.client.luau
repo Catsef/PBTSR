@@ -3,7 +3,7 @@ local RunService = game:GetService("RunService")
 local P = Players.LocalPlayer
 local Cam = workspace.CurrentCamera
 
-local MaxTilt = 0.15
+local TiltAmount = 0.15
 
 local function GetSideMovement_RelaCam()
 	local char = P.Character
@@ -17,4 +17,13 @@ local function GetSideMovement_RelaCam()
 		warn("could not find humanoid when running getSideMovement")
 		return
 	end
+
+	local moveDirection = h.MoveDirection
+	return Cam.CFrame.RightVector:Dot(moveDirection)
 end
+
+RunService:BindToRenderStep("TiltMovement", Enum.RenderPriority.Camera.Value + 1, function(_delt)
+	local tilt = -GetSideMovement_RelaCam() * TiltAmount
+
+	Cam.CFrame = Cam.CFrame * CFrame.Angles(0, 0, tilt)
+end)
