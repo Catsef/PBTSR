@@ -112,10 +112,12 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 	)
 
 	tween:Play()
+	PlayersSliding[P] = true
 
-	function DestroySlide()
+	local function DestroySlide()
 		tween:Destroy()
 		LinVelo:Destroy()
+		PlayersSliding[P] = false
 	end
 
 	local function CheckIfStillOnGround()
@@ -125,11 +127,12 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 		if not LinVelo then
 			return
 		end
+		DestroySlide()
 		warn("Player found not on ground while in slide")
 	end
 	task.spawn(CheckIfStillOnGround)
 
 	tween.Completed:Connect(function()
-		LinVelo:Destroy()
+		DestroySlide()
 	end)
 end)
