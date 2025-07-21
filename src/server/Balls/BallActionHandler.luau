@@ -147,4 +147,8 @@ function ActionHandler.Shivering(shivering, actions)
 	ActionHandler.Default(shivering, actions, true, DefaultTweenInfo, true, 5, 7, 2)
 end
 
+function ActionHandler.Bouncy(bouncy, actions)
+	ActionHandler.Default(bouncy, actions, true, DefaultTweenInfo, false)
+end
+
 return ActionHandler
