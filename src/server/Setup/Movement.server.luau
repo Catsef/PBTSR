@@ -3,11 +3,68 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
 local SlideRE: RemoteEvent = ReplicatedStorage.Events.InsecureSlide
 local JumpRE: RemoteEvent = ReplicatedStorage.Events.InsecureJump
--- local WalkRE: RemoteEvent = ReplicatedStorage.Events.InsecureWalk
--- local MaxWalkSpeed = 30
+
 local SlideVelocityFactor = 1.5
-local PlayersSliding = {}
--- local SlideAnimationTracks = {} -- [player] = animationtrack
+local PlayersSliding = {} -- [player] = bool
+local PlayersSlidingInfo = {} -- [player] = {t=tween, v=linvelo}
+local function DestroySlide(P: Player)
+	if not PlayersSliding[P] then
+		return
+	end
+	if not PlayersSlidingInfo[P] then
+		error("PlayersSliding[p] -> true but PlayersSlidingInfo[p] -> false")
+	end
+	PlayersSlidingInfo[P].t:Destroy()
+	PlayersSlidingInfo[P].v:Destroy()
+	PlayersSliding[P] = false
+	PlayersSlidingInfo[P] = nil
+end
+local function CreateSlide(P)
+	if not P.Character then
+		warn("Character not found, returning")
+		return
+	end
+	local HumanoidRoot = P.Character.HumanoidRootPart
+	local Humanoid = P.Character.Humanoid
+
+	if not Humanoid then
+		warn("Humanoid not found within Character")
+		return
+	end
+
+	local LookVector = HumanoidRoot.CFrame.LookVector
+	local UnitSlideDirection = Vector3.new(LookVector.X, 0, LookVector.Z).Unit
+
+	local LinVelo = Instance.new("LinearVelocity")
+	LinVelo.Name = "SlideLinearVelocity"
+
+	if not HumanoidRoot:FindFirstChild("Root") then
+		warn("Couldn't find Root attachment for attachment0 for linvelo")
+		return
+	end
+
+	LinVelo.Visible = true
+	LinVelo.Color = BrickColor.Blue()
+
+	LinVelo.Attachment0 = HumanoidRoot.Root
+
+	LinVelo.VectorVelocity = (UnitSlideDirection * Humanoid.WalkSpeed * SlideVelocityFactor)
+		+ HumanoidRoot.AssemblyLinearVelocity
+	LinVelo.RelativeTo = Enum.ActuatorRelativeTo.World
+	LinVelo.Parent = HumanoidRoot
+
+	LinVelo.MaxForce = 1000000 -- Controls slide strength
+
+	local tween = TweenService:Create(
+		LinVelo,
+		TweenInfo.new(2, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+		{ VectorVelocity = Vector3.zero }
+	)
+
+	tween:Play()
+	PlayersSliding[P] = true
+	PlayersSlidingInfo[P] = { t = tween, v = LinVelo }
+end
 
 Players.PlayerAdded:Connect(function(P: Player)
 	P.CharacterAppearanceLoaded:Connect(function(a0)
@@ -15,6 +72,7 @@ Players.PlayerAdded:Connect(function(P: Player)
 		local Root = a0:WaitForChild("HumanoidRootPart")
 
 		PlayersSliding[P] = false
+		PlayersSlidingInfo[P] = nil
 
 		Human.WalkSpeed = 25
 		Human.JumpHeight = 5
@@ -22,6 +80,7 @@ Players.PlayerAdded:Connect(function(P: Player)
 		Instance.new("Attachment", Root).Name = "Root"
 	end)
 end)
+
 SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 	if not P.Character then
 		warn("Character not found, returning")
@@ -32,11 +91,8 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 	local HumanoidRoot = P.Character:FindFirstChild("HumanoidRootPart")
 
 	if inpState == Enum.UserInputState.End then
-		for _, RemainingChild in ipairs(HumanoidRoot:GetChildren()) do
-			if RemainingChild.Name == "SlideLinearVelocity" then
-				RemainingChild:Destroy()
-				return
-			end
+		if PlayersSliding[P] then
+			DestroySlide(P)
 		end
 		return
 	end
@@ -82,57 +138,32 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 
 	-- the actual slide code here
 
-	local LookVector = HumanoidRoot.CFrame.LookVector
-	local UnitSlideDirection = Vector3.new(LookVector.X, 0, LookVector.Z).Unit
-
-	local LinVelo = Instance.new("LinearVelocity")
-	LinVelo.Name = "SlideLinearVelocity"
-
-	if not HumanoidRoot:FindFirstChild("Root") then
-		warn("Couldn't find Root attachment for attachment0 for linvelo")
-		return
-	end
-
-	LinVelo.Visible = true
-	LinVelo.Color = BrickColor.Blue()
-
-	LinVelo.Attachment0 = HumanoidRoot.Root
-
-	LinVelo.VectorVelocity = (UnitSlideDirection * Humanoid.WalkSpeed * SlideVelocityFactor)
-		+ HumanoidRoot.AssemblyLinearVelocity
-	LinVelo.RelativeTo = Enum.ActuatorRelativeTo.World
-	LinVelo.Parent = HumanoidRoot
-
-	LinVelo.MaxForce = 1000000 -- Controls slide strength
-
-	local tween = TweenService:Create(
-		LinVelo,
-		TweenInfo.new(2, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
-		{ VectorVelocity = Vector3.zero }
-	)
-
-	tween:Play()
-	PlayersSliding[P] = true
-
-	local function DestroySlide()
-		tween:Destroy()
-		LinVelo:Destroy()
-		PlayersSliding[P] = false
-	end
+	CreateSlide(P)
 
 	local function CheckIfStillOnGround()
 		while Humanoid.FloorMaterial ~= Enum.Material.Air do
 			task.wait()
 		end
-		if not LinVelo then
+		if not PlayersSliding[P] then
 			return
 		end
-		DestroySlide()
+		DestroySlide(P)
 		warn("Player found not on ground while in slide")
 	end
 	task.spawn(CheckIfStillOnGround)
 
-	tween.Completed:Connect(function()
-		DestroySlide()
+	PlayersSlidingInfo[P].t.Completed:Connect(function()
+		DestroySlide(P)
 	end)
+end)
+
+JumpRE.OnServerEvent:Connect(function(P: Player, ...: any)
+	local PlayerSliding = PlayersSliding[P]
+	if not PlayerSliding then
+		return
+	end
+	if not PlayersSlidingInfo[P] then
+		error("PlayersSliding but not PlayersSlidingInfo?")
+	end
+	DestroySlide(P)
 end)
