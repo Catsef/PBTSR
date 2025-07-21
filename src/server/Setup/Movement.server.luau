@@ -132,8 +132,6 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 		return
 	end
 
-	-- SlideAnimationTrack:Play(0, 5, 1)
-
 	LinVelo.Visible = true
 	LinVelo.Color = BrickColor.Blue()
 
@@ -180,36 +178,8 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 		end
 	end)
 
-	-- Auto-destroy when completed
 	tween.Completed:Connect(function()
 		LinVelo:Destroy()
 		jumpInterrupt:Disconnect()
 	end)
 end)
-
--- SlideRE.OnServerEvent:Connect(function(P)
--- 	print("SlideRE triggered")
--- 	local YouGoodMud, Err = pcall(function(...)
--- 		local HRP = P.Character.HumanoidRootPart
--- 		local LV = P.Character.Torso.CFrame.LookVector
--- 		local SBV: BodyVelocity = Instance.new("BodyVelocity")
--- 		SBV.P = 1000000
--- 		SBV.Parent = HRP
--- 		local Velo = LV * SlideVelocityFactor * P.Character.Humanoid.WalkSpeed
--- 		Velo = Vector3.new(Velo.X, 0, Velo.Z)
--- 		SBV.Velocity = Velo
-
--- 		local TVTZ = TweenService:Create(
--- 			SBV,
--- 			TweenInfo.new(2, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
--- 			{ Velocity = Vector3.zero }
--- 		)
-
--- 		TVTZ:Play()
--- 		TVTZ.Completed:Wait()
--- 		SBV:Destroy()
--- 	end)
--- 	if not YouGoodMud then
--- 		warn(Err)
--- 	end
--- end)
