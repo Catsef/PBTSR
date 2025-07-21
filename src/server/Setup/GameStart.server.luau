@@ -3,7 +3,6 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local DeathChecker = require(ServerScriptService.GameState.DeathChecker)
 local GameState = require(ServerScriptService.GameState.GameState)
 local GameStateRunner = require(ServerScriptService.GameState.GameStateRunner)
-DeathChecker
 
 while task.wait() do
 	if not GameState.gameStarted then
