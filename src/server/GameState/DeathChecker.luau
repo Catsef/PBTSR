@@ -20,6 +20,8 @@ function m.INROUND()
 
 		GameState.AlivePlayersDeathConnections[player] = Humanoid.Died:Connect(function(...: any)
 			table.insert(GameState.DeadPlayers, player)
+
+			-- GET NEXT PLAYER TO SPECTATE, IF NOT FOUND, GAME END
 		end)
 	end
 end

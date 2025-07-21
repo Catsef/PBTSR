@@ -191,6 +191,8 @@ g.stats.waveDelay = 5
 g.stats.waves = 3
 g.stats.waveArea = 10
 
+g.OriginalStats = table.clone(g.stats)
+
 --[[
 	onballdeath should be attached to destroying event of every ball spawned.
 ]]
