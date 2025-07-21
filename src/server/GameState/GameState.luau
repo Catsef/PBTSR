@@ -178,7 +178,7 @@ g.stepperFunctions = {
 	StepBouncyA = function()
 		table.insert(g.stats.ballActions.Bouncy, PhysicsPull.Create(1))
 		table.insert(g.stats.ballActions.Bouncy, Delay.Create(2))
-		table.insert(g.stats.ballActions.Bouncy, ToxinCloud.Create(15, 25, Color3.fromRGB(236, 108, 226)))
+		table.insert(g.stats.ballActions.Bouncy, ToxinCloud.Create(50, 25, Color3.fromRGB(236, 108, 226)))
 	end,
 }
 
