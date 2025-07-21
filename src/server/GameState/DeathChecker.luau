@@ -16,6 +16,10 @@ local function respawn(player)
 	end
 	warn("RESPAWN RAN FOR " .. player.Name)
 
+	if player.Character then
+		return
+	end
+
 	player:LoadCharacter()
 	RespawnRE:FireClient(player)
 end
