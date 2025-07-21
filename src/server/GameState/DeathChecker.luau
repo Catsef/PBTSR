@@ -104,6 +104,7 @@ end
 
 Players.PlayerAdded:Connect(function(P: Player)
 	P.CharacterAdded:Connect(function(C: Model)
+		print("attaching died to humanoid....")
 		local Humanoid = C:WaitForChild("Humanoid")
 		if not (Humanoid:IsA("Humanoid")) then
 			return
