@@ -56,7 +56,7 @@ function m.FindNearestPlayer(maxDist, refPart)
 	return nearestPlayer
 end
 
-function m.ChildGetter(ParentInstance: Instance, childName: string, className: string, usageInfo: string)
+function m.ChildGetter(ParentInstance: Instance, childName: string, className: string, maxTime, usageInfo: string)
 	print(
 		"ChildGetter(): To "
 			.. usageInfo
@@ -71,7 +71,7 @@ function m.ChildGetter(ParentInstance: Instance, childName: string, className: s
 	if ParentInstance == nil or ParentInstance.Parent == nil then
 		error("ChildGetter(): parentClass is nil or parentClass's Parent is nil.")
 	end
-	local child = ParentInstance:WaitForChild(childName, 5)
+	local child = ParentInstance:WaitForChild(childName, maxTime)
 	if child == nil or child.Parent == nil then
 		warn("ChildGetter(): child is nil or child's Parent is nil!")
 	elseif not child:IsA(className) then
