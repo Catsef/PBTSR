@@ -20,8 +20,8 @@ function t.Action(part: Part, Action)
 	end
 	local nearestPlayer = UtilityFunctions.FindNearestPlayer(1000000, part)
 	local nPHRP = nearestPlayer.Character.HumanoidRootPart
-	local target = part.Position + (nPHRP.Position - part.Position) * Action.force
-	part.AssemblyLinearVelocity = target
+	local target = (part.Position + (nPHRP.Position - part.Position)) * Action.force
+	part.AssemblyLinearVelocity = Vector3.new(target.X, 0, target.Z)
 end
 
 return t
