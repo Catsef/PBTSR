@@ -10,12 +10,14 @@ local SpectateRE: RemoteEvent = ReplicatedStorage.Events.Spectate
 local RespawnRE: RemoteEvent = ReplicatedStorage.Events.Respawn
 
 local function respawn(player)
+	warn("RESPAWN RAN FOR " .. player.Name)
 	player:LoadCharacter()
 	local human = player:WaitForChild("Character"):WaitForChild("Humanoid")
 	RespawnRE:FireClient(human)
 end
 
 local function ResetGame()
+	warn("RESET GAME RAN")
 	GameState.gameStarted = false
 	GameState.buyPhase = false
 	GameState.roundStarted = false
@@ -46,6 +48,8 @@ local function GetAlivePlayers()
 			table.insert(alive, p)
 		end
 	end
+	warn("ALL ALIVE:")
+	print(alive)
 	return alive
 end
 
@@ -54,6 +58,7 @@ local function SelectSpectateTarget()
 	if #alive == 0 then
 		return nil
 	else
+		warn("SELECTED SPEC TARGET:" .. alive[1].Name)
 		return alive[1]
 	end
 end
@@ -61,6 +66,7 @@ end
 local function SetSpectateTarget(spectator, target)
 	GameState.SpectateTargets[spectator] = target
 	if spectator and target then
+		warn("SUCCESSFULLY FIRED SPECTATERE")
 		SpectateRE:FireClient(spectator, target)
 	end
 end
@@ -68,7 +74,7 @@ end
 local function OnPlayerDeath(deadPlayer)
 	if GameState.roundStarted then
 		table.insert(GameState.DeadPlayers, deadPlayer)
-		print("Player died!!")
+		warn("Player died!!")
 
 		for spectator, target in pairs(GameState.SpectateTargets) do
 			if target == deadPlayer then
@@ -104,6 +110,7 @@ Players.PlayerAdded:Connect(function(P: Player)
 		end
 		Humanoid.Died:Connect(function(_)
 			OnPlayerDeath(P)
+			print("attached strings to player death")
 		end)
 	end)
 end)
