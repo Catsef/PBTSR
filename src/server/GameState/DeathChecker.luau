@@ -129,3 +129,5 @@ function m.HANGING_DeathChecker()
 		end
 	end
 end
+
+return m
