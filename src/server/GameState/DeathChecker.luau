@@ -151,12 +151,17 @@ Players.PlayerAdded:Connect(function(player)
 end)
 
 function m.HANGING_DeathChecker()
-	while task.wait(2) do -- Check less frequently
+	while task.wait(2) do
 		if GameState.roundStarted then
-			-- Check if all players are dead
 			local alive = GetAlivePlayers()
 			if #alive == 0 and #Players:GetPlayers() > 0 then
 				ResetGame()
+			end
+		end
+		if GameState.buyPhase then
+			local PS = Players:GetPlayers()
+			for _, p in ipairs(PS) do
+				respawn(p)
 			end
 		end
 	end
