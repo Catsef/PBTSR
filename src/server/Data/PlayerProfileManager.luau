@@ -32,7 +32,6 @@ function PPM.TransactMoney(player, amount)
 		end
 		profile.Data.Money = profile.Data.Money + amount
 		task.spawn(PPM.HANGING_UpdateBalanceGui, player)
-		print("player " .. player.Name .. " recieved racks")
 		return PBTS.MoneyTransactionResult.Success
 	else
 		warn("Attempted to transact money for player without a loaded profile: " .. tostring(player))
