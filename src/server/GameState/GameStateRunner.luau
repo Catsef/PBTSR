@@ -109,6 +109,12 @@ function m.RoundStarted()
 		end
 	end
 
+	if not g.gameStarted then
+		m.UpdatePlayerButtons()
+		warn("Resetting game, not stepping difficulty")
+		return
+	end
+
 	g.roundStarted = false
 	g.buyPhase = true
 	g.AllRoundReadiedPlayers = {}
