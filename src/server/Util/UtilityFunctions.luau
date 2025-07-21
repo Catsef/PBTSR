@@ -31,12 +31,12 @@ function m.CompareUnorderedSets(ListA, ListB)
 	return true
 end
 
-function m.FindNearestPlayer()
-	local maxDist = Action.to.maxDistance or 20
+function m.FindNearestPlayer(maxDist, refPart)
+	local maxDist = maxDist or 100000
 	local nearestDist, nearestPlayer
 	for _, v in pairs(game:GetService("Players"):GetPlayers()) do
 		local char = v.Character
-		local dist = v:DistanceFromCharacter(part.Position)
+		local dist = v:DistanceFromCharacter(refPart.Position)
 		if not char or dist > maxDist or (nearestDist and dist >= nearestDist) then
 			continue
 		end
@@ -45,8 +45,10 @@ function m.FindNearestPlayer()
 	end
 
 	if (not nearestPlayer) or not nearestPlayer.Character or not nearestPlayer.Character.HumanoidRootPart then
-		return
+		error("Nearest player missing some components!")
 	end
+
+	return nearestPlayer
 end
 
 return m
