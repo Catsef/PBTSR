@@ -2,6 +2,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 
 local DeathChecker = require(ServerScriptService.GameState.DeathChecker)
 task.spawn(DeathChecker.HANGING_DeathChecker)
+print("AttachedDeath checker")
 local GameState = require(ServerScriptService.GameState.GameState)
 local GameStateRunner = require(ServerScriptService.GameState.GameStateRunner)
 
