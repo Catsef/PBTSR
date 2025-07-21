@@ -12,7 +12,7 @@ local RespawnRE: RemoteEvent = ReplicatedStorage.Events.Respawn
 local function respawn(player)
 	warn("RESPAWN RAN FOR " .. player.Name)
 	player:LoadCharacter()
-	local human = player:WaitForChild("Character").Humanoid
+	local human = player:WaitForChild("Character"):WaitForChild("Humanoid")
 	RespawnRE:FireClient(human)
 end
 
