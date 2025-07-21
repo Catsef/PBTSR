@@ -114,8 +114,6 @@ function PPM.SetProfileData(player, data)
 		for key, value in pairs(data) do
 			profile.Data[key] = value
 		end
-	else
-		warn("Attempted to set profile data for player without a loaded profile: " .. tostring(player))
 	end
 end
 
