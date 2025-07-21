@@ -56,7 +56,7 @@ RunService:BindToRenderStep("TiltMovement", Enum.RenderPriority.Camera.Value + 1
 	CurrentTilt = CurrentTilt + (targetTilt - CurrentTilt) * TiltLerp
 	Cam.CFrame = Cam.CFrame * CFrame.Angles(0, 0, CurrentTilt)
 
-	local targetFov = 105 + (FovAddAmount * GFM)
+	local targetFov = BaseFOV + (FovAddAmount * GFM)
 	CurrentFovAdded = CurrentFovAdded + (targetFov - CurrentFovAdded) * FovLerp
 	Cam.FieldOfView = CurrentFovAdded
 end)
