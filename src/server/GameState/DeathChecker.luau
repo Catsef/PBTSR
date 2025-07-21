@@ -67,6 +67,7 @@ end
 
 local function OnPlayerDeath(deadPlayer)
 	if GameState.roundStarted then
+		table.insert(GameState.DeadPlayers, deadPlayer)
 		print("Player died!!")
 
 		for spectator, target in pairs(GameState.SpectateTargets) do
@@ -79,8 +80,6 @@ local function OnPlayerDeath(deadPlayer)
 				end
 			end
 		end
-
-		table.insert(GameState.DeadPlayers, deadPlayer)
 
 		-- GET NEXT PLAYER TO SPECTATE, IF NOT FOUND, GAME END
 
