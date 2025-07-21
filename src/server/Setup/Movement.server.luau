@@ -36,29 +36,6 @@ Players.PlayerAdded:Connect(function(P: Player)
 		-- local SlideAnimId = 100330252457760
 	end)
 end)
-
--- WalkRE.OnServerEvent:Connect(function(P, i: Enum.UserInputState)
--- 	PlayerWalkSpeeds[P] = 5
-
--- 	local function stepWalkSpeedWhileHeld()
--- 		while PlayerWalkTriggers[P] do
--- 			if PlayerWalkSpeeds[P] + 1 < MaxWalkSpeed then
--- 				PlayerWalkSpeeds[P] += 1
--- 			end
--- 			task.wait(0.01)
--- 		end
--- 	end
-
--- 	if i == Enum.UserInputState.Begin then
--- 		PlayerWalkTriggers[P] = true
--- 		task.spawn(stepWalkSpeedWhileHeld)
--- 	end
--- 	if i == Enum.UserInputState.End then
--- 		PlayerWalkTriggers[P] = false
--- 		PlayerWalkSpeeds[P] = 5
--- 	end
--- end)
-
 SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 	if not P.Character then
 		warn("Character not found, returning")
