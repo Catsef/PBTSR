@@ -106,7 +106,7 @@ g.stats.ballActions = {
 	["Bouncy"] = {
 		PhysicsPull.Create(1),
 		Delay.Create(2),
-		ToxinCloud.Create(15, 25, Color3.fromRGB(236, 108, 226)),
+		ToxinCloud.Create(50, 25, Color3.fromRGB(236, 108, 226)),
 		PhysicsPull.Create(1),
 		Delay.Create(2),
 	},
