@@ -25,7 +25,7 @@ function slide(actionName: string, inputState: Enum.UserInputState, inputObject:
 	if inputState == Enum.UserInputState.Begin then
 		SlideAnimationTrack:Play(0)
 		local cam: Camera = game.Workspace.CurrentCamera
-		cam.FieldOfView = 110
+		cam.FieldOfView = 105
 		cam.CameraSubject = humanoid
 		cam.CameraType = Enum.CameraType.Custom
 		humanoid.CameraOffset = Vector3.new(0, -2, 0)
