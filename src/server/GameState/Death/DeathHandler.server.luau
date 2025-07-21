@@ -5,7 +5,7 @@ local UtilityFunctions = require(ServerScriptService.Util.UtilityFunctions)
 local DeathFunctions = require(script.Parent.DeathFunctions)
 
 local function PlayerAdded(Player: Player)
-	local Character = UtilityFunctions.ChildGetter(Player, "Character", "Model", 10, "attach death event")
+	local Character = Player.CharacterAdded:Wait()
 end
 
 Players.PlayerAdded:Connect(PlayerAdded)
