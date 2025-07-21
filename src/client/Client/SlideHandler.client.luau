@@ -5,7 +5,7 @@ local slideRE: RemoteEvent = ReplicatedStorage.Events.InsecureSlide
 local cas = game:GetService("ContextActionService")
 
 local SlideChannel
-function slide(actionName: string, inputState: Enum.UserInputState, inputObject: InputObject): Enum.ContextActionResult?
+function slide(_an: string, inputState: Enum.UserInputState, _io: InputObject): Enum.ContextActionResult?
 	local humanoid: Humanoid = P.Character.Humanoid
 	slideRE:FireServer(inputState)
 
