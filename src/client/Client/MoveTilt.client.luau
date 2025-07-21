@@ -4,6 +4,8 @@ local P = Players.LocalPlayer
 local Cam = workspace.CurrentCamera
 
 local TiltAmount = 0.01
+local CurrentTilt = 0
+local Lerp = 0.2
 
 local function GetSideMovement_RelaCam()
 	local char = P.Character
@@ -27,7 +29,7 @@ RunService:BindToRenderStep("TiltMovement", Enum.RenderPriority.Camera.Value + 1
 	if not GSM then
 		return
 	end
-	local tilt = -GSM * TiltAmount
-
-	Cam.CFrame = Cam.CFrame * CFrame.Angles(0, 0, tilt)
+	local targetTilt = -GSM * TiltAmount
+	CurrentTilt = CurrentTilt + (targetTilt - CurrentTilt) * Lerp
+	Cam.CFrame = Cam.CFrame * CFrame.Angles(0, 0, CurrentTilt)
 end)
