@@ -17,11 +17,15 @@ g.gameStarted = false
 g.roundStarted = false
 g.buyPhase = false
 
-g.AllPlayers = {}
-g.AllGameReadiedPlayers = {}
-g.AllRoundReadiedPlayers = {}
-g.DeadPlayers = {}
-g.AllExistingBalls = {}
+g.AllPlayers = {} -- [player]
+
+g.AllGameReadiedPlayers = {} -- [player]
+g.AllRoundReadiedPlayers = {} -- [player]
+
+g.AlivePlayersDeathConnections = {} -- [player] = rbxscriptconnection
+g.DeadPlayers = {} -- [player]
+
+g.AllExistingBalls = {} -- [part]
 
 g.currentRound = 0
 
