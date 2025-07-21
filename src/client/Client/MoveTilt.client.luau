@@ -9,7 +9,7 @@ local TiltLerp = 0.2
 
 local CurrentFovAdded = 0
 local FovAddAmount = 15
-local FovLerp = 0.5
+local FovLerp = 0.1
 local BaseFOV = 105
 
 local function GetSideMovement_RelaCam()
