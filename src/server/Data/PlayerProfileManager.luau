@@ -21,8 +21,6 @@ function PPM.HANGING_UpdateBalanceGui(player)
 	local profile = Profiles[player]
 	if profile and profile.Data then
 		gui.Text = "$ " .. profile.Data.Money
-	else
-		warn("Profile doesn't exist in Profiles[] for player " .. player.Name .. ", cannot update balanceGUI.")
 	end
 end
 
@@ -34,7 +32,6 @@ function PPM.TransactMoney(player, amount)
 		end
 		profile.Data.Money = profile.Data.Money + amount
 		task.spawn(PPM.HANGING_UpdateBalanceGui, player)
-		print("player " .. player.Name .. " recieved racks")
 		return PBTS.MoneyTransactionResult.Success
 	else
 		warn("Attempted to transact money for player without a loaded profile: " .. tostring(player))
@@ -114,8 +111,6 @@ function PPM.SetProfileData(player, data)
 		for key, value in pairs(data) do
 			profile.Data[key] = value
 		end
-	else
-		warn("Attempted to set profile data for player without a loaded profile: " .. tostring(player))
 	end
 end
 

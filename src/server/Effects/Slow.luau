@@ -32,7 +32,10 @@ function m.Start(Player, Effect)
 	end
 
 	print("Effect SLOW applied to " .. Player.Name)
-
+	if Player.Parent == nil or EffectsModule.PlayersEffects[Player] == nil then
+		warn("Slow effect player nil")
+		return
+	end
 	table.insert(EffectsModule.PlayersEffects[Player], Effect)
 
 	local function EndWhenTimerExpires()

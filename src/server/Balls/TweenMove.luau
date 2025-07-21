@@ -88,18 +88,17 @@ function t.Action(part: Part, Action)
 
 	if Action.to.target == PBTS.BallActions.TweenMove.Options.NearestPlayer then
 		local maxDist = Action.to.maxDistance or 20
-		local nearestDist, nearestPlayer
-		for _, v in pairs(game:GetService("Players"):GetPlayers()) do
-			local char = v.Character
-			local dist = v:DistanceFromCharacter(part.Position)
-			if not char or dist > maxDist or (nearestDist and dist >= nearestDist) then
-				continue
-			end
-			nearestDist = dist
-			nearestPlayer = v
+		local nearestPlayer = UtilityFunctions.FindNearestPlayer(maxDist, part)
+		if not nearestPlayer then
+			warn("Nearest player doesnt exist")
+			return
 		end
-
-		if (not nearestPlayer) or not nearestPlayer.Character or not nearestPlayer.Character.HumanoidRootPart then
+		if not nearestPlayer.Character then
+			warn("Nearest player's character doesnt exist")
+			return
+		end
+		if not nearestPlayer.Character.HumanoidRootPart then
+			warn("Nearest player's HRP doesn't exist")
 			return
 		end
 		target = part.Position + (nearestPlayer.Character.HumanoidRootPart.Position - part.Position) * Action.to.by

@@ -1,8 +1,10 @@
 local ServerScriptService = game:GetService("ServerScriptService")
 local WeightedChoice = require(ServerScriptService.Util.Random.WeightedChoice)
 local BallActions = require(ServerScriptService.Balls.BallActionHandler)
+local Delay = require(ServerScriptService.Balls.Delay)
 local EffectCloud = require(ServerScriptService.Balls.EffectCloud)
 local Grapple = require(ServerScriptService.Balls.Grapple)
+local PhysicsPull = require(ServerScriptService.Balls.PhysicsPull)
 
 local ToxinCloud = require(ServerScriptService.Balls.ToxinCloud)
 local TweenMove = require(ServerScriptService.Balls.TweenMove)
@@ -15,11 +17,16 @@ g.gameStarted = false
 g.roundStarted = false
 g.buyPhase = false
 
-g.AllPlayers = {}
-g.AllGameReadiedPlayers = {}
-g.AllRoundReadiedPlayers = {}
-g.DeadPlayers = {}
-g.AllExistingBalls = {}
+g.AllPlayers = {} -- [player]
+
+g.AllGameReadiedPlayers = {} -- [player]
+g.AllRoundReadiedPlayers = {} -- [player]
+
+g.AlivePlayersDeathConnections = {} -- [player] = rbxscriptconnection
+g.DeadPlayers = {} -- [player]
+g.SpectateTargets = {} -- [dead-spectatorPlayer] = currentSpectateTargetPlayer
+
+g.AllExistingBalls = {} -- [part]
 
 g.currentRound = 0
 
@@ -40,6 +47,10 @@ g.stats.ballsWeights = {
 	{
 		weight = 10,
 		value = "Shivering",
+	},
+	{
+		weight = 20,
+		value = "Bouncy",
 	},
 }
 g.stats.balls = WeightedChoice.New(g.stats.ballsWeights)
@@ -96,6 +107,13 @@ g.stats.ballActions = {
 			100000
 		),
 		EffectCloud.Create(10, Slow.Effect(1, 10), Slow, Color3.new(0.584314, 0.937255, 1)),
+	},
+	["Bouncy"] = {
+		PhysicsPull.Create(1),
+		Delay.Create(2),
+		ToxinCloud.Create(50, 25, Color3.fromRGB(236, 108, 226)),
+		PhysicsPull.Create(1),
+		Delay.Create(2),
 	},
 }
 
@@ -162,12 +180,19 @@ g.stepperFunctions = {
 		)
 		table.insert(g.stats.ballActions.Grappler, Grapple.Create("NEAREST_PLAYER", 2500, 10000))
 	end,
+	StepBouncyA = function()
+		table.insert(g.stats.ballActions.Bouncy, PhysicsPull.Create(1))
+		table.insert(g.stats.ballActions.Bouncy, Delay.Create(2))
+		table.insert(g.stats.ballActions.Bouncy, ToxinCloud.Create(50, 25, Color3.fromRGB(236, 108, 226)))
+	end,
 }
 
 g.stats.waveBalls = 3
 g.stats.waveDelay = 5
 g.stats.waves = 3
 g.stats.waveArea = 10
+
+g.OriginalStats = table.clone(g.stats)
 
 --[[
 	onballdeath should be attached to destroying event of every ball spawned.
@@ -193,6 +218,7 @@ function g.StepDifficulty()
 	g.stepperFunctions.StepDoomlingA()
 	g.stepperFunctions.StepGrapplingA()
 	g.stepperFunctions.StepShiveringA()
+	g.stepperFunctions.StepBouncyA()
 
 	if g.currentRound % 5 == 0 then
 		print("STEP B!")

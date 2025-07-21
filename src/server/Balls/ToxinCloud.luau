@@ -55,7 +55,6 @@ function t.Action(part: Part, Action)
 			AlreadyHurtPlayers[player] = true
 			local humanoid: Humanoid = v.Parent:FindFirstChild("Humanoid")
 			if humanoid then
-				print("ToxinCloud hit player: " .. player.Name)
 				humanoid.Health = humanoid.Health - Action.damage
 			end
 		end
