@@ -1,8 +1,10 @@
 local ServerScriptService = game:GetService("ServerScriptService")
 local WeightedChoice = require(ServerScriptService.Util.Random.WeightedChoice)
 local BallActions = require(ServerScriptService.Balls.BallActionHandler)
+local Delay = require(ServerScriptService.Balls.Delay)
 local EffectCloud = require(ServerScriptService.Balls.EffectCloud)
 local Grapple = require(ServerScriptService.Balls.Grapple)
+local PhysicsPull = require(ServerScriptService.Balls.PhysicsPull)
 
 local ToxinCloud = require(ServerScriptService.Balls.ToxinCloud)
 local TweenMove = require(ServerScriptService.Balls.TweenMove)
@@ -101,7 +103,13 @@ g.stats.ballActions = {
 		),
 		EffectCloud.Create(10, Slow.Effect(1, 10), Slow, Color3.new(0.584314, 0.937255, 1)),
 	},
-	["Bouncy"] = {},
+	["Bouncy"] = {
+		PhysicsPull.Create(1200),
+		Delay.Create(2),
+		ToxinCloud.Create(15, 25, Color3.fromRGB(236, 108, 226)),
+		PhysicsPull.Create(1200),
+		Delay.Create(2),
+	},
 }
 
 g.stepperFunctions = {
@@ -167,6 +175,11 @@ g.stepperFunctions = {
 		)
 		table.insert(g.stats.ballActions.Grappler, Grapple.Create("NEAREST_PLAYER", 2500, 10000))
 	end,
+	StepBouncyA = function()
+		table.insert(g.stats.ballActions.Bouncy, PhysicsPull.Create(1200))
+		table.insert(g.stats.ballActions.Bouncy, Delay.Create(2))
+		table.insert(g.stats.ballActions.Bouncy, ToxinCloud.Create(15, 25, Color3.fromRGB(236, 108, 226)))
+	end,
 }
 
 g.stats.waveBalls = 3
@@ -198,6 +211,7 @@ function g.StepDifficulty()
 	g.stepperFunctions.StepDoomlingA()
 	g.stepperFunctions.StepGrapplingA()
 	g.stepperFunctions.StepShiveringA()
+	g.stepperFunctions.StepBouncyA()
 
 	if g.currentRound % 5 == 0 then
 		print("STEP B!")
