@@ -19,6 +19,9 @@ function t.Action(part: Part, Action)
 		error("Unsupported action type (PhysicsPull)")
 	end
 	local nearestPlayer = UtilityFunctions.FindNearestPlayer(1000000, part)
+	if not nearestPlayer then
+		return
+	end
 	local nPHRP = nearestPlayer.Character.HumanoidRootPart
 	local target = (part.Position + (nPHRP.Position - part.Position)) * Action.force
 	part.AssemblyLinearVelocity = Vector3.new(target.X, 0, target.Z)
