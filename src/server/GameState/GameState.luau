@@ -24,6 +24,7 @@ g.AllRoundReadiedPlayers = {} -- [player]
 
 g.AlivePlayersDeathConnections = {} -- [player] = rbxscriptconnection
 g.DeadPlayers = {} -- [player]
+g.SpectateTargets = {} -- [dead-spectatorPlayer] = currentSpectateTargetPlayer
 
 g.AllExistingBalls = {} -- [part]
 
