@@ -18,6 +18,10 @@ function t.Action(part: Part, Action)
 	if Action.action ~= PBTS.BallActions.PhysicsPull then
 		error("Unsupported action type (PhysicsPull)")
 	end
+	local nearestPlayer = UtilityFunctions.FindNearestPlayer(1000000, part)
+	local nPHRP = nearestPlayer.Character.HumanoidRootPart
+	local target = part.Position + (nPHRP.Position - part.Position) * Action.force
+	part.AssemblyLinearVelocity = target
 end
 
 return t
