@@ -6,12 +6,15 @@ local JumpRE: RemoteEvent = ReplicatedStorage.Events.InsecureJump
 -- local WalkRE: RemoteEvent = ReplicatedStorage.Events.InsecureWalk
 -- local MaxWalkSpeed = 30
 local SlideVelocityFactor = 1.5
+local PlayersSliding = {}
 -- local SlideAnimationTracks = {} -- [player] = animationtrack
 
 Players.PlayerAdded:Connect(function(P: Player)
 	P.CharacterAppearanceLoaded:Connect(function(a0)
 		local Human: Humanoid = a0:WaitForChild("Humanoid")
 		local Root = a0:WaitForChild("HumanoidRootPart")
+
+		PlayersSliding[P] = false
 
 		Human.WalkSpeed = 25
 		Human.JumpHeight = 5
@@ -110,6 +113,11 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 
 	tween:Play()
 
+	function DestroySlide()
+		tween:Destroy()
+		LinVelo:Destroy()
+	end
+
 	local function CheckIfStillOnGround()
 		while Humanoid.FloorMaterial ~= Enum.Material.Air do
 			task.wait()
@@ -118,28 +126,10 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 			return
 		end
 		warn("Player found not on ground while in slide")
-		tween:Destroy()
-		LinVelo:Destroy()
-		HumanoidRoot.AssemblyLinearVelocity = Vector3.zero
 	end
 	task.spawn(CheckIfStillOnGround)
 
-	local jumpInterrupt = JumpRE.OnServerEvent:Connect(function(P2: Player, i)
-		if P2.UserId == P.UserId then
-			if i == Enum.UserInputState.End then
-				return
-			end
-			print("Jump Interrupted")
-			local V = HumanoidRoot.AssemblyLinearVelocity
-			tween:Destroy()
-			LinVelo:Destroy()
-
-			HumanoidRoot.AssemblyLinearVelocity = (V * 3) + Vector3.new(0, 5, 0)
-		end
-	end)
-
 	tween.Completed:Connect(function()
 		LinVelo:Destroy()
-		jumpInterrupt:Disconnect()
 	end)
 end)
