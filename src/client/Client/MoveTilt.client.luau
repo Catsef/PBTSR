@@ -23,7 +23,11 @@ local function GetSideMovement_RelaCam()
 end
 
 RunService:BindToRenderStep("TiltMovement", Enum.RenderPriority.Camera.Value + 1, function(_delt)
-	local tilt = -GetSideMovement_RelaCam() * TiltAmount
+	local GSM = GetSideMovement_RelaCam()
+	if not GSM then
+		return
+	end
+	local tilt = -GSM * TiltAmount
 
 	Cam.CFrame = Cam.CFrame * CFrame.Angles(0, 0, tilt)
 end)
