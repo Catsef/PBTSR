@@ -109,8 +109,8 @@ Players.PlayerAdded:Connect(function(P: Player)
 			return
 		end
 		Humanoid.Died:Connect(function(_)
+			print("player died")
 			OnPlayerDeath(P)
-			print("attached strings to player death")
 		end)
 	end)
 end)
@@ -131,6 +131,7 @@ end
 function m.HANGING_DeathChecker()
 	while task.wait() do
 		if GameState.roundStarted then
+			print("ran INROUND")
 			m.INROUND()
 		end
 	end
