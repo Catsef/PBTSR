@@ -104,10 +104,10 @@ g.stats.ballActions = {
 		EffectCloud.Create(10, Slow.Effect(1, 10), Slow, Color3.new(0.584314, 0.937255, 1)),
 	},
 	["Bouncy"] = {
-		PhysicsPull.Create(1200),
+		PhysicsPull.Create(200),
 		Delay.Create(2),
 		ToxinCloud.Create(15, 25, Color3.fromRGB(236, 108, 226)),
-		PhysicsPull.Create(1200),
+		PhysicsPull.Create(200),
 		Delay.Create(2),
 	},
 }
@@ -176,7 +176,7 @@ g.stepperFunctions = {
 		table.insert(g.stats.ballActions.Grappler, Grapple.Create("NEAREST_PLAYER", 2500, 10000))
 	end,
 	StepBouncyA = function()
-		table.insert(g.stats.ballActions.Bouncy, PhysicsPull.Create(1200))
+		table.insert(g.stats.ballActions.Bouncy, PhysicsPull.Create(200))
 		table.insert(g.stats.ballActions.Bouncy, Delay.Create(2))
 		table.insert(g.stats.ballActions.Bouncy, ToxinCloud.Create(15, 25, Color3.fromRGB(236, 108, 226)))
 	end,
