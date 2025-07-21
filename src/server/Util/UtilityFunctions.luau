@@ -45,7 +45,7 @@ function m.FindNearestPlayer(maxDist, refPart)
 	end
 
 	if (not nearestPlayer) or not nearestPlayer.Character or not nearestPlayer.Character.HumanoidRootPart then
-		error("Nearest player missing some components!")
+		warn("Nearest player missing some components!")
 	end
 
 	return nearestPlayer
