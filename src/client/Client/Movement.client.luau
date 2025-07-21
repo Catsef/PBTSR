@@ -5,6 +5,12 @@ local cas = game:GetService("ContextActionService")
 local slideRE: RemoteEvent = ReplicatedStorage.Events.InsecureSlide
 local jumpRE: RemoteEvent = ReplicatedStorage.Events.InsecureJump
 -- local walkRE: RemoteEvent = ReplicatedStorage.Events.InsecureWalk
+
+P.CharacterAdded:Connect(function(a0: Model)
+	local cam: Camera = game.Workspace.CurrentCamera
+	cam.FieldOfView = 105
+end)
+
 local SlideChannel
 function slide(actionName: string, inputState: Enum.UserInputState, inputObject: InputObject): Enum.ContextActionResult?
 	local humanoid: Humanoid = P.Character.Humanoid
