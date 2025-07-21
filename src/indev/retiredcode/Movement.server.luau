@@ -9,7 +9,7 @@ local PlayerAirstrafes = {} -- [Player] = {Airstrafe}
 Players.PlayerAdded:Connect(function(P: Player)
 	P.CharacterAppearanceLoaded:Connect(function(a0)
 		local Human: Humanoid = a0:WaitForChild("Humanoid")
-		local HRP = a0.HumanoidRootPart
+		local _hrp = a0.HumanoidRootPart
 
 		Human.WalkSpeed = 30
 		Human.JumpHeight = 5
@@ -17,7 +17,7 @@ Players.PlayerAdded:Connect(function(P: Player)
 end)
 
 function ApplyBoostVelo(Player)
-	local Success, Error = pcall(function(...)
+	local Success, Error = pcall(function(_)
 		local LookV = Player.Character.Head.CFrame.LookVector
 		local HRP = Player.Character.HumanoidRootPart
 		local BoostBodyVelo: BodyVelocity = Instance.new("BodyVelocity")

@@ -7,8 +7,6 @@ local JumpRE: RemoteEvent = ReplicatedStorage.Events.InsecureJump
 -- local MaxWalkSpeed = 30
 local SlideVelocityFactor = 1.5
 -- local SlideAnimationTracks = {} -- [player] = animationtrack
-local PlayerWalkSpeeds = {}
--- local PlayerWalkTriggers = {}
 
 Players.PlayerAdded:Connect(function(P: Player)
 	P.CharacterAppearanceLoaded:Connect(function(a0)
@@ -29,8 +27,6 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 
 	local Humanoid = P.Character:FindFirstChild("Humanoid")
 	local HumanoidRoot = P.Character:FindFirstChild("HumanoidRootPart")
-
-	local Animator: Animator = Humanoid.Animator
 
 	if inpState == Enum.UserInputState.End then
 		for _, RemainingChild in ipairs(HumanoidRoot:GetChildren()) do
