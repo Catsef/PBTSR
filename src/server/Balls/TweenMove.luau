@@ -90,6 +90,15 @@ function t.Action(part: Part, Action)
 		local maxDist = Action.to.maxDistance or 20
 		local nearestPlayer = UtilityFunctions.FindNearestPlayer(maxDist, part)
 		if not nearestPlayer then
+			warn("Nearest player doesnt exist")
+			return
+		end
+		if not nearestPlayer.Character then
+			warn("Nearest player's character doesnt exist")
+			return
+		end
+		if not nearestPlayer.Character.HumanoidRootPart then
+			warn("Nearest player's HRP doesn't exist")
 			return
 		end
 		target = part.Position + (nearestPlayer.Character.HumanoidRootPart.Position - part.Position) * Action.to.by

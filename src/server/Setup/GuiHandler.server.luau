@@ -16,7 +16,6 @@ function InitialiseBalance(player: Player)
 	if not player:WaitForChild("PlayerGui"):FindFirstChild("Money") then
 		local BalanceForPlayer: ScreenGui = Balance:Clone()
 		BalanceForPlayer.Parent = player:WaitForChild("PlayerGui")
-		print("InitialiseBalance - added balance to player: " .. player.Name)
 	end
 end
 
@@ -40,7 +39,6 @@ function InitialiseButtonsGui(player: Player)
 			end
 		end
 	end
-	print("InitialiseButtonsGui - added buttons to player; attached event listeners: " .. player.Name)
 end
 
 --[[
@@ -50,7 +48,6 @@ function InitialiseRoundCounter(player: Player)
 	if not player:WaitForChild("PlayerGui"):FindFirstChild("RoundCounter") then
 		local RoundCounterForPlayer: ScreenGui = RoundCounter:Clone()
 		RoundCounterForPlayer.Parent = player:WaitForChild("PlayerGui")
-		print("InitialiseRoundCounter - added round counter to player: " .. player.Name)
 	end
 end
 
@@ -97,7 +94,6 @@ function InitialiseBuyGui(player: Player)
 	if not player:WaitForChild("PlayerGui"):FindFirstChild("BuyGUI") then
 		local Buy: ScreenGui = BuyGui:Clone()
 		Buy.Parent = player:WaitForChild("PlayerGui")
-		print("InitialiseBuyGui - added buy gui to player: " .. player.Name)
 	end
 
 	local Buy = player.PlayerGui:WaitForChild("BuyGUI")
