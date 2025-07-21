@@ -3,7 +3,7 @@ local RunService = game:GetService("RunService")
 local P = Players.LocalPlayer
 local Cam = workspace.CurrentCamera
 
-local TiltAmount = 0.05
+local TiltAmount = 0.01
 
 local function GetSideMovement_RelaCam()
 	local char = P.Character
