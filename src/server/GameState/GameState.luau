@@ -41,6 +41,10 @@ g.stats.ballsWeights = {
 		weight = 10,
 		value = "Shivering",
 	},
+	{
+		weight = 20,
+		value = "Bouncy",
+	},
 }
 g.stats.balls = WeightedChoice.New(g.stats.ballsWeights)
 
@@ -97,6 +101,7 @@ g.stats.ballActions = {
 		),
 		EffectCloud.Create(10, Slow.Effect(1, 10), Slow, Color3.new(0.584314, 0.937255, 1)),
 	},
+	["Bouncy"] = {},
 }
 
 g.stepperFunctions = {

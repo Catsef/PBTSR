@@ -26,6 +26,8 @@ e.BallActions.TweenMove.Options.PositionAbsolute = "POSITION_ABSOLUTE"
 e.Effects = {}
 e.Effects.SLOW = "Slow"
 
+e.BallActions.PhysicsPull = "PhysicsPull"
+
 e.MoneyTransactionResult = {}
 e.MoneyTransactionResult.Success = 0
 e.MoneyTransactionResult.Errored = 1
