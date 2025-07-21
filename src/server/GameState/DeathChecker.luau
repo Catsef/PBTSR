@@ -120,26 +120,10 @@ function m.INROUND()
 		ResetGame()
 		return
 	end
-	for _, player: Player in ipairs(GameState.AllPlayers) do
-		local Character = player:WaitForChild("Character")
-		local Humanoid: Humanoid = Character:WaitForChild("Humanoid")
-
-		if GameState.AlivePlayersDeathConnections[player] ~= nil then
-			continue
-		end
-	end
 end
 
 function m.HANGING_DeathChecker()
 	while task.wait() do
-		if not GameState.gameStarted then
-			m.PREGAME()
-		end
-
-		if GameState.buyPhase then
-			m.PREROUND()
-		end
-
 		if GameState.roundStarted then
 			m.INROUND()
 		end
