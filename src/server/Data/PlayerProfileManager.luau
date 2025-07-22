@@ -38,14 +38,14 @@ function PPM.TransactMoney(player, amount)
 		-- Transact Effect:
 		local gui = player.PlayerGui:WaitForChild(PBTS.GuiNames.Balance).TextLabel
 		if amount > 0 then
-			gui.Color = Color3.fromRGB(18, 172, 57)
+			gui.TextColor = Color3.fromRGB(18, 172, 57)
 		elseif amount < 0 then
-			gui.Color = Color3.fromRGB(209, 76, 76)
+			gui.TextColor = Color3.fromRGB(209, 76, 76)
 		end
 		local TweenBackToWhite = TweenService:Create(
 			gui,
 			TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
-			{ Color = Color3.fromRGB(255, 255, 255) }
+			{ TextColor = Color3.fromRGB(255, 255, 255) }
 		)
 		TweenBackToWhite:Play()
 
