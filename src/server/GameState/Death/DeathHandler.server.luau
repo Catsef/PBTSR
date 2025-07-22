@@ -4,6 +4,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local ServerStorage = game:GetService("ServerStorage")
 
 local GameState = require(ServerScriptService.GameState.GameState)
+local GameStateRunner = require(ServerScriptService.GameState.GameStateRunner)
 local UtilityFunctions = require(ServerScriptService.Util.UtilityFunctions)
 
 local ReplicatedEvents = ReplicatedStorage.Events
@@ -12,6 +13,25 @@ local Respawn: RemoteEvent = ReplicatedEvents.Respawn
 local Spectate: RemoteEvent = ReplicatedEvents.Spectate
 local Death = require(script.Parent.DeathFunctions)
 
+function EndGame()
+	GameState.buyPhase = false
+	GameState.currentRound = false
+	GameState.gameStarted = false
+
+	GameState.AllGameReadiedPlayers = {}
+	GameState.AllRoundReadiedPlayers = {}
+	GameState.DeadPlayers = {}
+
+	for _, v in ipairs(GameState.AllExistingBalls) do
+		if v == nil or v.Parent == nil then
+			continue
+		end
+		v:Destroy()
+	end
+	GameStateRunner.UpdatePlayerButtons()
+	GameStateRunner.UpdateRoundCounter()
+end
+
 function FindNextAlivePlayer()
 	-- Get every player that's not inside GameState.DeadPlayers
 	local AllPlayers = Players:GetPlayers()
@@ -19,6 +39,8 @@ function FindNextAlivePlayer()
 
 	local Ref = {}
 	local Alive = {}
+
+	print("Finding next alive player...")
 
 	for _, player in ipairs(AllPlayers) do
 		local found = table.find(DeadPlayers, player)
@@ -29,17 +51,24 @@ function FindNextAlivePlayer()
 		end
 	end
 
+	print("Reference:")
+	print(Ref)
+
 	for player, dead in pairs(Ref) do
 		if dead == false then
 			table.insert(Alive, player)
 		end
 	end
 
+	print("Alive:")
+	print(Alive)
+
 	-- If the number of players that's not inside GameState.DeadPlayers is 0 then game end
 
 	if #Alive == 0 then
 		-- Game End
 		warn("Find Next Alive Player - 0 alive players; game end")
+
 		return
 	end
 
