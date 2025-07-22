@@ -44,11 +44,7 @@ function m.FindNearestPlayer(maxDist, refPart)
 		nearestPlayer = v
 	end
 
-	if
-		not nearestPlayer
-		or (not nearestPlayer:FindFirstChild("Character"))
-		or (not nearestPlayer:FindFirstChild("Character"):FindFirstChild("Humanoid"))
-	then
+	if not nearestPlayer or not nearestPlayer.Character or (not nearestPlayer.Character:FindFirstChild("Humanoid")) then
 		warn("Nearest player missing some components!")
 		return nil
 	end
