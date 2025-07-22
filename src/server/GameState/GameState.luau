@@ -237,6 +237,7 @@ end
 function g.SpawnRoundWave(OriginPosition: Vector3)
 	local ValidOrigin = OriginPosition or Vector3.new(0, 0.5, 0)
 	for _ = 1, g.stats.waveBalls do
+		task.wait(r:NextNumber(0, 0.1))
 		local type = g.stats.balls:Choose()
 		local model: Part = game.ServerStorage.Models[type]
 		local actions = g.stats.ballActions[type]
