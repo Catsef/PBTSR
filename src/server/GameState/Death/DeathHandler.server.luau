@@ -84,6 +84,7 @@ function PlayerDiedWithinRound(Player: Player)
 end
 
 local function PlayerAdded(Player: Player)
+	Player:LoadCharacter()
 	GameState.AllPlayers = Players:GetPlayers()
 	Death.WhoEveryoneSpectating[Player] = Death.StillAlive
 
