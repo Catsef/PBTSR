@@ -26,7 +26,7 @@ function slide(_an: string, inputState: Enum.UserInputState, _io: InputObject): 
 		SlideAnimationTrack = SlideChannel
 	end
 	if inputState == Enum.UserInputState.Begin then
-		SlideAnimationTrack:Play(0)
+		SlideAnimationTrack:Play(0, 1000)
 		local cam: Camera = game.Workspace.CurrentCamera
 		cam.FieldOfView = 105
 		cam.CameraSubject = humanoid
