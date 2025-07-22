@@ -1,10 +1,14 @@
 local m = {}
 
 local ServerScriptService = game:GetService("ServerScriptService")
+local ServerStorage = game:GetService("ServerStorage")
+
 local g = require(ServerScriptService.GameState.GameState)
 local ps = game:GetService("Players")
 local GameState = require(script.Parent.GameState)
 local UtilityFunctions = require(ServerScriptService.Util.UtilityFunctions)
+
+local Respawn: BindableEvent = ServerStorage.Bindings.GameState.RespawnPlayer
 
 local BuyTrigger = workspace.Shop.Shop
 
@@ -69,6 +73,7 @@ function m.NotGameStarted()
 		g.buyPhase = true
 		m.UpdatePlayerButtons()
 		m.UpdateRoundCounter()
+		Respawn:Fire()
 	end
 end
 
@@ -112,9 +117,9 @@ function m.RoundStarted()
 	if not g.gameStarted then
 		m.UpdatePlayerButtons()
 		warn("Resetting game, not stepping difficulty")
+		Respawn:Fire()
 		return
 	end
-
 	g.roundStarted = false
 	g.buyPhase = true
 	g.AllRoundReadiedPlayers = {}
