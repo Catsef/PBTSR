@@ -128,6 +128,19 @@ local function PlayerAdded(Player: Player)
 	print("Got character")
 	local Humanoid: Humanoid = UtilityFunctions.ChildGetter(Character, "Humanoid", "Humanoid", 2, "attach death events")
 	print("Got humanoid")
+
+	Humanoid.Died:Connect(function()
+		-- This event listener will be connected one time only
+		print("Humanoid died!")
+
+		if GameState.roundStarted then
+			PlayerDiedWithinRound(Player)
+			return
+		end
+
+		Player:LoadCharacter()
+	end)
+
 	Player.CharacterAdded:Connect(function(a0: Model)
 		print("Attached events to humanoid die")
 		Humanoid.Died:Connect(function()
