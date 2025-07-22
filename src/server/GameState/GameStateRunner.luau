@@ -102,6 +102,10 @@ function m.RoundStarted()
 	m.UpdateRoundCounter()
 
 	for _ = 1, g.stats.waves do
+		if not g.gameStarted then
+			return
+		end
+
 		g.SpawnRoundWave(Vector3.new(0, 5, 0))
 		task.wait(g.stats.waveDelay)
 	end
