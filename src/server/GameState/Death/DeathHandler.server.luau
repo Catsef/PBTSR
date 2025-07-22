@@ -88,8 +88,11 @@ local function PlayerAdded(Player: Player)
 	GameState.AllPlayers = Players:GetPlayers()
 	Death.WhoEveryoneSpectating[Player] = Death.StillAlive
 
+	print("Waiting for character!")
 	local Character = Player.CharacterAdded:Wait()
+	print("Got character")
 	local Humanoid: Humanoid = UtilityFunctions.ChildGetter(Character, "Humanoid", "Humanoid", 2, "attach death events")
+	print("Got humanoid")
 	Humanoid.Died:Connect(function()
 		-- This event listener will only be connected once.
 		print("Humanoid died!")
