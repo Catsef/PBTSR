@@ -24,6 +24,8 @@ function EndGame()
 	GameState.AllGameReadiedPlayers = {}
 	GameState.AllRoundReadiedPlayers = {}
 
+	GameState.stats = GameState.OriginalStats
+
 	for _, v in ipairs(GameState.AllExistingBalls) do
 		if v == nil or v.Parent == nil then
 			continue
