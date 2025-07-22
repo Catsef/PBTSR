@@ -30,6 +30,7 @@ function EndGame()
 	end
 	GameStateRunner.UpdatePlayerButtons()
 	GameStateRunner.UpdateRoundCounter()
+	RespawnPlayers:Fire()
 end
 
 function FindNextAlivePlayer()
