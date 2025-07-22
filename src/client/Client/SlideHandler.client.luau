@@ -14,11 +14,19 @@ P.CharacterAdded:Connect(function(a0: Model)
 	SlideChannel = nil
 end)
 
+local function EaseOutExpo(t)
+	if t == 1 then
+		return 1
+	end
+	return 1 - math.pow(2, -10 * t)
+end
+
 local function LerpCameraOffset(humanoid, targetOffset, duration)
 	local startOffset = CurrentCamOffset
 	local startTime = tick()
 	while tick() - startTime < duration do
-		local alpha = (tick() - startTime) / duration
+		local linearAlpha = (tick() - startTime) / duration
+		local alpha = EaseOutExpo(math.clamp(linearAlpha, 0, 1))
 		CurrentCamOffset = startOffset + (targetOffset - startOffset) * alpha
 		humanoid.CameraOffset = Vector3.new(0, CurrentCamOffset, 0)
 		task.wait()
