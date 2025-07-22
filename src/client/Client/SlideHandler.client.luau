@@ -6,7 +6,7 @@ local cas = game:GetService("ContextActionService")
 
 local CurrentCamOffset = 0
 local CamOffsetAmount = 2
-local CamOffsetLerp = 0.1
+local CamOffsetLerp = 1
 
 local SlideChannel
 
