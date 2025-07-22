@@ -5,7 +5,7 @@ local slideRE: RemoteEvent = ReplicatedStorage.Events.InsecureSlide
 local cas = game:GetService("ContextActionService")
 
 local CurrentCamOffset = 0
-local CamOffsetAmount = 2
+local CamOffsetAmount = -2
 local CamOffsetLerp = 1
 
 local SlideChannel
@@ -13,6 +13,20 @@ local SlideChannel
 P.CharacterAdded:Connect(function(a0: Model)
 	SlideChannel = nil
 end)
+
+local function LerpCameraOffset(humanoid, targetOffset, duration)
+	local startOffset = CurrentCamOffset
+	local startTime = tick()
+	while tick() - startTime < duration do
+		local alpha = (tick() - startTime) / duration
+		CurrentCamOffset = startOffset + (targetOffset - startOffset) * alpha
+		humanoid.CameraOffset = Vector3.new(0, CurrentCamOffset, 0)
+		task.wait()
+	end
+	CurrentCamOffset = targetOffset
+	humanoid.CameraOffset = Vector3.new(0, CurrentCamOffset, 0)
+end
+
 function slide(_an: string, inputState: Enum.UserInputState, _io: InputObject): Enum.ContextActionResult?
 	local humanoid: Humanoid = P.Character.Humanoid
 	slideRE:FireServer(inputState)
@@ -36,18 +50,18 @@ function slide(_an: string, inputState: Enum.UserInputState, _io: InputObject): 
 		cam.CameraSubject = humanoid
 		cam.CameraType = Enum.CameraType.Custom
 		humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
-		local targetOffset = -2
-		CurrentCamOffset = CurrentCamOffset + (targetOffset - CurrentCamOffset) * CamOffsetLerp
-		humanoid.CameraOffset = Vector3.new(0, CurrentCamOffset, 0) -- lerp this
+		task.spawn(function()
+			LerpCameraOffset(humanoid, CamOffsetAmount, 0.5)
+		end)
 	end
 	if inputState == Enum.UserInputState.End then
 		SlideAnimationTrack:Stop(0)
 		local cam: Camera = game.Workspace.CurrentCamera
 		cam.FieldOfView = 100
 		humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
-		local targetOffset = 0
-		CurrentCamOffset = CurrentCamOffset + (targetOffset - CurrentCamOffset) * CamOffsetLerp
-		humanoid.CameraOffset = Vector3.new(0, CurrentCamOffset, 0) -- lerp this
+		task.spawn(function()
+			LerpCameraOffset(humanoid, 0, 0.5)
+		end)
 	end
 
 	return Enum.ContextActionResult.Pass
