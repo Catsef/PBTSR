@@ -50,6 +50,7 @@ function slide(_an: string, inputState: Enum.UserInputState, _io: InputObject): 
 		cam.CameraSubject = humanoid
 		cam.CameraType = Enum.CameraType.Custom
 		humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
+		humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing, false)
 		humanoid:SetStateEnabled(Enum.HumanoidStateType.Running, false)
 		task.spawn(function()
 			LerpCameraOffset(humanoid, CamOffsetAmount, 0.5)
@@ -60,7 +61,8 @@ function slide(_an: string, inputState: Enum.UserInputState, _io: InputObject): 
 		local cam: Camera = game.Workspace.CurrentCamera
 		cam.FieldOfView = 100
 		humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
-		humanoid:SetStateEnabled(Enum.HumanoidStateType.Running, false)
+		humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing, true)
+		humanoid:SetStateEnabled(Enum.HumanoidStateType.Running, true)
 		task.spawn(function()
 			LerpCameraOffset(humanoid, 0, 0.5)
 		end)
