@@ -7,13 +7,23 @@ local JumpRE: RemoteEvent = ReplicatedStorage.Events.InsecureJump
 local SlideVelocityFactor = 1.5
 local PlayersSliding = {} -- [player] = bool
 local PlayersSlidingInfo = {} -- [player] = {t=tween, v=linvelo}
-local function DestroySlide(P: Player)
+
+local function DestroySlideStateLimitations(P)
+	if P.Character == nil then
+		warn("Character got destroyed while in slide")
+		P.CharacterAdded:Wait()
+		P.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
+	end
+	P.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
+end
+local function DestroySlide(P)
 	if not PlayersSliding[P] then
 		return
 	end
 	if not PlayersSlidingInfo[P] then
 		error("PlayersSliding[p] -> true but PlayersSlidingInfo[p] -> false")
 	end
+
 	PlayersSlidingInfo[P].t:Destroy()
 	PlayersSlidingInfo[P].v:Destroy()
 	PlayersSliding[P] = false
@@ -64,6 +74,8 @@ local function CreateSlide(P)
 	tween:Play()
 	PlayersSliding[P] = true
 	PlayersSlidingInfo[P] = { t = tween, v = LinVelo }
+
+	Humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
 end
 
 Players.PlayerAdded:Connect(function(P: Player)
@@ -93,6 +105,7 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 	if inpState == Enum.UserInputState.End then
 		if PlayersSliding[P] then
 			DestroySlide(P)
+			DestroySlideStateLimitations(P)
 		end
 		return
 	end
@@ -147,13 +160,12 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 		if not PlayersSliding[P] then
 			return
 		end
-		HumanoidRoot.AssemblyLinearVelocity = Vector3.zero
-		-- DestroySlide(P)
+		DestroySlide(P)
 		-- warn("Player found not on ground while in slide")
 	end
 	task.spawn(CheckIfStillOnGround)
 
-	PlayersSlidingInfo[P].t.Completed:Connect(function() end)
+	-- PlayersSlidingInfo[P].t.Completed:Connect(function() end)
 end)
 
 JumpRE.OnServerEvent:Connect(function(P: Player, ...: any)
