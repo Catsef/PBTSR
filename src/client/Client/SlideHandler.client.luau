@@ -55,7 +55,16 @@ function slide(_an: string, inputState: Enum.UserInputState, _io: InputObject): 
 		cam.CameraType = Enum.CameraType.Custom
 		humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
 		humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing, false)
-		cas:BindAction("DisableMovement", DISABLE, false)
+		cas:BindAction(
+			"DisableMovement",
+			DISABLE,
+			false,
+			Enum.KeyCode.A,
+			Enum.KeyCode.S,
+			Enum.KeyCode.W,
+			Enum.KeyCode.D,
+			Enum.KeyCode.Space
+		)
 		task.spawn(function()
 			LerpCameraOffset(humanoid, CamOffsetAmount, 0.5)
 		end)
