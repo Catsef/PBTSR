@@ -89,7 +89,10 @@ local function PlayerAdded(Player: Player)
 	Death.WhoEveryoneSpectating[Player] = Death.StillAlive
 
 	print("Waiting for character!")
-	local Character = Player.CharacterAdded:Wait()
+	local Character = Player.Character
+	if Character == nil or Character.Parent == nil then
+		Character = Player.CharacterAdded:Wait()
+	end
 	print("Got character")
 	local Humanoid: Humanoid = UtilityFunctions.ChildGetter(Character, "Humanoid", "Humanoid", 2, "attach death events")
 	print("Got humanoid")
