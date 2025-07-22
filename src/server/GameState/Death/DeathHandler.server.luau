@@ -15,7 +15,7 @@ local Death = require(script.Parent.DeathFunctions)
 
 function EndGame()
 	GameState.buyPhase = false
-	GameState.currentRound = false
+	GameState.currentRound = 0
 	GameState.gameStarted = false
 
 	GameState.AllGameReadiedPlayers = {}
