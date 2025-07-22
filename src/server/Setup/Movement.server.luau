@@ -152,9 +152,7 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 	end
 	task.spawn(CheckIfStillOnGround)
 
-	PlayersSlidingInfo[P].t.Completed:Connect(function()
-		DestroySlide(P)
-	end)
+	PlayersSlidingInfo[P].t.Completed:Connect(function() end)
 end)
 
 JumpRE.OnServerEvent:Connect(function(P: Player, ...: any)
