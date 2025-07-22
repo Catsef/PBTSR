@@ -42,7 +42,6 @@ function PPM.TransactMoney(player, amount)
 		elseif amount < 0 then
 			gui.Color = Color3.fromRGB(209, 76, 76)
 		end
-
 		local TweenBackToWhite = TweenService:Create(
 			gui,
 			TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
