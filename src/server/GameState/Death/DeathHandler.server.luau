@@ -14,6 +14,7 @@ local Spectate: RemoteEvent = ReplicatedEvents.Spectate
 local Death = require(script.Parent.DeathFunctions)
 
 function EndGame()
+	GameState.roundStarted = false
 	GameState.buyPhase = false
 	GameState.currentRound = 0
 	GameState.gameStarted = false
