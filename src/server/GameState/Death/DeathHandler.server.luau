@@ -14,6 +14,8 @@ local Spectate: RemoteEvent = ReplicatedEvents.Spectate
 local Death = require(script.Parent.DeathFunctions)
 
 function EndGame()
+	print("Ending game!")
+
 	GameState.roundStarted = false
 	GameState.buyPhase = false
 	GameState.currentRound = 0
@@ -21,7 +23,6 @@ function EndGame()
 
 	GameState.AllGameReadiedPlayers = {}
 	GameState.AllRoundReadiedPlayers = {}
-	GameState.DeadPlayers = {}
 
 	for _, v in ipairs(GameState.AllExistingBalls) do
 		if v == nil or v.Parent == nil then
