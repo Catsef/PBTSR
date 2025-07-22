@@ -8,14 +8,6 @@ local SlideVelocityFactor = 1.5
 local PlayersSliding = {} -- [player] = bool
 local PlayersSlidingInfo = {} -- [player] = {t=tween, v=linvelo}
 
-local function DestroySlideStateLimitations(P)
-	if P.Character == nil then
-		warn("Character got destroyed while in slide")
-		P.CharacterAdded:Wait()
-		P.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
-	end
-	P.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
-end
 local function DestroySlide(P)
 	if not PlayersSliding[P] then
 		return
@@ -105,7 +97,6 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 	if inpState == Enum.UserInputState.End then
 		if PlayersSliding[P] then
 			DestroySlide(P)
-			DestroySlideStateLimitations(P)
 		end
 		return
 	end
