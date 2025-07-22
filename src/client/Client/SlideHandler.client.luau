@@ -27,6 +27,10 @@ local function LerpCameraOffset(humanoid, targetOffset, duration)
 	humanoid.CameraOffset = Vector3.new(0, CurrentCamOffset, 0)
 end
 
+function DISABLE(_an, inputState, io)
+	return Enum.ContextActionResult.Sink
+end
+
 function slide(_an: string, inputState: Enum.UserInputState, _io: InputObject): Enum.ContextActionResult?
 	local humanoid: Humanoid = P.Character.Humanoid
 	slideRE:FireServer(inputState)
@@ -51,7 +55,7 @@ function slide(_an: string, inputState: Enum.UserInputState, _io: InputObject): 
 		cam.CameraType = Enum.CameraType.Custom
 		humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
 		humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing, false)
-		humanoid:SetStateEnabled(Enum.HumanoidStateType.Running, false)
+		cas:BindAction("DisableMovement", DISABLE, false)
 		task.spawn(function()
 			LerpCameraOffset(humanoid, CamOffsetAmount, 0.5)
 		end)
@@ -62,7 +66,7 @@ function slide(_an: string, inputState: Enum.UserInputState, _io: InputObject): 
 		cam.FieldOfView = 100
 		humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
 		humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing, true)
-		humanoid:SetStateEnabled(Enum.HumanoidStateType.Running, true)
+		cas:UnbindAction("DisableMovement")
 		task.spawn(function()
 			LerpCameraOffset(humanoid, 0, 0.5)
 		end)
