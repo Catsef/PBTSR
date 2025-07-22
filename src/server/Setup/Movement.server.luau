@@ -147,7 +147,8 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 		if not PlayersSliding[P] then
 			return
 		end
-		DestroySlide(P)
+		HumanoidRoot.AssemblyLinearVelocity = Vector3.zero
+		-- DestroySlide(P)
 		-- warn("Player found not on ground while in slide")
 	end
 	task.spawn(CheckIfStillOnGround)
