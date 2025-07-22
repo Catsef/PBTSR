@@ -129,6 +129,7 @@ function m.RoundStarted()
 	g.AllRoundReadiedPlayers = {}
 	m.UpdatePlayerButtons()
 	g.StepDifficulty()
+	Respawn:Fire()
 end
 
 return m
