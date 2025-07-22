@@ -67,8 +67,8 @@ function FindNextAlivePlayer()
 
 	if #Alive == 0 then
 		-- Game End
+		EndGame()
 		warn("Find Next Alive Player - 0 alive players; game end")
-
 		return
 	end
 
