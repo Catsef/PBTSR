@@ -83,6 +83,7 @@ Players.PlayerAdded:Connect(function(P: Player)
 	end)
 end)
 DashRE.OnServerEvent:Connect(function(P, ...: any)
+	print("Dash")
 	local HumanoidRoot = P.Character:FindFirstChild("HumanoidRootPart")
 	local LookVector = HumanoidRoot.CFrame.LookVector
 
@@ -95,7 +96,7 @@ DashRE.OnServerEvent:Connect(function(P, ...: any)
 	VForce.Attachment0 = HumanoidRoot.Root
 
 	VForce.RelativeTo = Enum.ActuatorRelativeTo.World
-	VForce.Force = LookVector * 10
+	VForce.Force = LookVector * 10000
 	VForce.Parent = HumanoidRoot
 
 	task.delay(1, function()
