@@ -1,8 +1,9 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 local SpeedlineHandler = require(script.Parent.SpeedlineHandler)
 local Camera = game.Workspace.CurrentCamera
-local Speedlines = game.StarterPlayer.SPEEDLINES:Clone()
+local Speedlines = ReplicatedStorage.Model.Speedlines:Clone()
 
 local P = game.Players.LocalPlayer
 local Char = P.Character or P.CharacterAdded:Wait()
