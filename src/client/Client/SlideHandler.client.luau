@@ -94,6 +94,7 @@ function slide(_an: string, inputState: Enum.UserInputState, _io: InputObject): 
 		cas:UnbindAction("DisableMovement")
 		local isW = UserInputService:IsKeyDown(Enum.KeyCode.W)
 		if isW then
+			print("walking")
 			humanoid:Move(Vector3.new(0, 0, 15), true)
 		end
 		task.spawn(function()
