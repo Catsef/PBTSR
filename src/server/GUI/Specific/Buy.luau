@@ -12,7 +12,10 @@ local ButtonEvent: BindableEvent = ServerStorage.Bindings.GUI.ButtonSend
 
 local TOOL_ANNIHILATOR = ServerStorage.Tools.Annihilator
 
-function g.TriggerRUN(player: Player) end
+function g.TriggerRUN(player)
+	local gui = player.PlayerGui.BuyGUI
+	gui.Enabled = true
+end
 
 function BoughtItem(RefItem, Price, Player, Message)
 	local result = PlayerProfileManager.TransactMoney(Player, -Price)
