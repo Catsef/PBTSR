@@ -118,11 +118,6 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 		end
 	end
 
-	if Humanoid.FloorMaterial == Enum.Material.Air then
-		-- warn("Tried to slide when FloorMaterial is air?")
-		return
-	end
-
 	-- add more checks
 
 	local RayStart = HumanoidRoot.Position + Vector3.new(0, -0.5, 0)
@@ -135,8 +130,9 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 	local RayLength = (PlayerHeight / 2)
 
 	local RayResult = workspace:Raycast(RayStart, RayDirection * RayLength, RayParams)
-	if not RayResult then
-		-- warn("RayResult returned nothing!")
+
+	if Humanoid.FloorMaterial == Enum.Material.Air or not RayResult then
+		HumanoidRoot.AssemblyLinearVelocity = HumanoidRoot.AssemblyLinearVelocity * 3
 		return
 	end
 
