@@ -96,6 +96,7 @@ DashRE.OnServerEvent:Connect(function(P, ...: any)
 
 	local VForce = Instance.new("LinearVelocity")
 	VForce.Attachment0 = HumanoidRoot.Root
+	VForce.Parent = HumanoidRoot
 
 	VForce.RelativeTo = Enum.ActuatorRelativeTo.World
 	VForce.MaxAxesForce = Vector3.new(1000000, 1000000, 1000000)
