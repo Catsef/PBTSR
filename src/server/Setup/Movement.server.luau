@@ -87,6 +87,7 @@ DashRE.OnServerEvent:Connect(function(P, ...: any)
 	print("Dash")
 	local HumanoidRoot = P.Character:FindFirstChild("HumanoidRootPart")
 	local LookVector = HumanoidRoot.CFrame.LookVector
+	local UnitSlideDirection = Vector3.new(LookVector.X, 0, LookVector.Z).Unit
 
 	if not HumanoidRoot:FindFirstChild("Root") then
 		warn("Couldn't find Root attachment for attachment0 for VF")
@@ -97,8 +98,8 @@ DashRE.OnServerEvent:Connect(function(P, ...: any)
 	VForce.Attachment0 = HumanoidRoot.Root
 
 	VForce.RelativeTo = Enum.ActuatorRelativeTo.World
-	VForce.MaxAxesForce = Vector3.new(100000, 100000, 100000)
-	VForce.VectorVelocity = LookVector * Humanoid.WalkSpeed
+	VForce.MaxAxesForce = Vector3.new(1000000, 1000000, 1000000)
+	VForce.VectorVelocity = UnitSlideDirection * Humanoid.WalkSpeed
 
 	task.delay(0.1, function()
 		VForce:Destroy()
