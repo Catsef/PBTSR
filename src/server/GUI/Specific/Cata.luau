@@ -38,7 +38,7 @@ function CloseCatalogue(P: Player)
 	local Offsetted = OriginalPosition + UDim2.new(0, 0, 1, 0)
 
 	local tween = TweenService:Create(
-		Catalogue,
+		Mainframe,
 		TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
 		{ Position = Offsetted }
 	)
@@ -79,7 +79,7 @@ function g.TriggerRUN(player: Player)
 	catalogue.Enabled = true
 	local OriginalPosition = Mainframe.Position
 	local Offsetted = OriginalPosition + UDim2.new(0, 0, 1, 0)
-	catalogue.Position = Offsetted
+	Mainframe.Position = Offsetted
 	local tween = TweenService:Create(
 		catalogue,
 		TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.In),
