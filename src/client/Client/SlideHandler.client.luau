@@ -44,7 +44,7 @@ function slide(_an: string, inputState: Enum.UserInputState, _io: InputObject): 
 	local humanoid: Humanoid = P.Character.Humanoid
 	if inputState == Enum.UserInputState.Begin then
 		if humanoid.FloorMaterial == Enum.Material.Air then
-			dashRE:FireServer()
+			dashRE:FireServer(P.Character.HumanoidRootPart.CFrame.LookVector)
 			return
 		end
 	end

@@ -83,11 +83,11 @@ Players.PlayerAdded:Connect(function(P: Player)
 		Instance.new("Attachment", Root).Name = "Root"
 	end)
 end)
-DashRE.OnServerEvent:Connect(function(P, ...: any)
+DashRE.OnServerEvent:Connect(function(P, LV)
 	local Humanoid = P.Character.Humanoid
 	print("Dash")
 	local HumanoidRoot = P.Character:FindFirstChild("HumanoidRootPart")
-	local LookVector = HumanoidRoot.CFrame.LookVector
+	local LookVector = LV
 	local UnitSlideDirection = Vector3.new(LookVector.X, 0, LookVector.Z).Unit
 
 	if not HumanoidRoot:FindFirstChild("Root") then
