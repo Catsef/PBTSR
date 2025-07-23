@@ -10,6 +10,8 @@ local DashVelocityFactor = 2
 local PlayersSliding = {} -- [player] = bool
 local PlayersSlidingInfo = {} -- [player] = {t=tween, v=linvelo}
 
+local WhenDidYouDash = {}
+
 local function DestroySlide(P)
 	if not PlayersSliding[P] then
 		return
@@ -76,6 +78,7 @@ Players.PlayerAdded:Connect(function(P: Player)
 
 		PlayersSliding[P] = false
 		PlayersSlidingInfo[P] = nil
+		WhenDidYouDash[P] = 0
 
 		Human.WalkSpeed = 25
 		Human.JumpHeight = 5
@@ -95,18 +98,36 @@ DashRE.OnServerEvent:Connect(function(P, LV)
 		return
 	end
 
+	if os.clock() - WhenDidYouDash[P] < 1 then
+		return
+	end
+
+	WhenDidYouDash[P] = os.clock()
+
 	local VForce = Instance.new("LinearVelocity")
 	VForce.Attachment0 = HumanoidRoot.Root
 	VForce.Parent = HumanoidRoot
-
 	VForce.RelativeTo = Enum.ActuatorRelativeTo.World
 	VForce.MaxForce = 1000000
 	VForce.VectorVelocity = UnitSlideDirection * Humanoid.WalkSpeed * DashVelocityFactor
 		+ HumanoidRoot.AssemblyLinearVelocity
-
 	task.delay(0.3, function()
 		VForce:Destroy()
 	end)
+	local PGui = P.PlayerGui
+	local IBLUR = Instance.new("ScreenGui")
+	IBLUR.Name = "DashCooldownEffect"
+	IBLUR.Parent = PGui
+	local F = Instance.new("Frame", IBLUR)
+	F.Size = UDim2.new(1, 0, 1, 0)
+	local TweenDown = TweenService:Create(
+		F,
+		TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+		{ BackgroundTransparency = 1 }
+	)
+	TweenDown:Play()
+	TweenDown.Completed:Wait()
+	IBLUR:Destroy()
 end)
 SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 	if not P.Character then
@@ -176,7 +197,6 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 
 	-- PlayersSlidingInfo[P].t.Completed:Connect(function() end)
 end)
-
 JumpRE.OnServerEvent:Connect(function(P: Player, ...: any)
 	local PlayerSliding = PlayersSliding[P]
 	if not PlayerSliding then
