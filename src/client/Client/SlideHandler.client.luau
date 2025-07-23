@@ -6,6 +6,8 @@ local slideRE: RemoteEvent = ReplicatedStorage.Events.InsecureSlide
 local dashRE: RemoteEvent = ReplicatedStorage.Events.InsecureDash
 local cas = game:GetService("ContextActionService")
 
+local SpeedlineHandler = require(script.Parent.SpeedlineHandler)
+
 local CurrentCamOffset = 0
 local CamOffsetAmount = -2
 local CamOffsetLerp = 1
@@ -46,16 +48,12 @@ function slide(_an: string, inputState: Enum.UserInputState, _io: InputObject): 
 	if inputState == Enum.UserInputState.Begin then
 		if humanoid.FloorMaterial == Enum.Material.Air then
 			dashRE:FireServer(P.Character.HumanoidRootPart.CFrame.LookVector)
-
-			local cam: Camera = game.Workspace.CurrentCamera
-			cam.FieldOfView = 145
-
-			local TweenDown = TweenService:Create(
-				cam,
+			SpeedlineHandler.Rate = 1000
+			local Tween = TweenService:Create(
+				SpeedlineHandler,
 				TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
-				{ FieldOfView = 105 }
+				{ Rate = 0 }
 			)
-
 			return
 		end
 	end
