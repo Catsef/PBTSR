@@ -114,6 +114,21 @@ DashRE.OnServerEvent:Connect(function(P, LV)
 	task.delay(0.3, function()
 		VForce:Destroy()
 	end)
+
+	local PGui = P.PlayerGui
+	local IBLUR = Instance.new("ScreenGui")
+	IBLUR.Name = "DashCooldownEffect"
+	IBLUR.Parent = PGui
+	local F = Instance.new("Frame", IBLUR)
+	F.Size = UDim2.new(1, 0, 1, 0)
+	local TDN = TweenService:Create(
+		F,
+		TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+		{ BackgroundTransparency = 1 }
+	)
+	TDN:Play()
+	TDN.Completed:Wait()
+	IBLUR:Destroy()
 end)
 SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 	if not P.Character then
