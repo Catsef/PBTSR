@@ -38,8 +38,6 @@ local function GetFrontMovement_RelaCam()
 		return
 	end
 
-	local hrp = char.HumanoidRootPart
-
 	local moveDirection = h.MoveDirection
 	return Cam.CFrame.LookVector:Dot(moveDirection)
 end
