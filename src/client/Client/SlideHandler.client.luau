@@ -54,6 +54,7 @@ function slide(_an: string, inputState: Enum.UserInputState, _io: InputObject): 
 				TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
 				{ Rate = 0 }
 			)
+			Tween:Play()
 			return
 		end
 	end
