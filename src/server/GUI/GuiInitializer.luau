@@ -36,8 +36,8 @@ function m.InitProximityPrompts(trigger, connectionName, runFunction)
 		return -- already existing connection
 	end
 
-	m.ProximityPromptConnections[connectionName] = trigger.Triggered:Connect(function()
-		print("proximity prompt connection fired: " .. connectionName)
+	m.ProximityPromptConnections[connectionName] = trigger.Triggered:Connect(function(player: Player)
+		print("proximity prompt connection fired: " .. connectionName .. " by player: " .. player.Name)
 		runFunction()
 	end)
 end
