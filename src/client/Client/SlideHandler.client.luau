@@ -99,4 +99,4 @@ function slide(_an: string, inputState: Enum.UserInputState, _io: InputObject): 
 	return Enum.ContextActionResult.Pass
 end
 
-cas:BindActionAtPriority("Slide", slide, true, 3, Enum.KeyCode.LeftShift)
+cas:BindActionAtPriority("Slide", slide, true, 3, Enum.KeyCode.Q)
