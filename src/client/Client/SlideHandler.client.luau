@@ -2,6 +2,7 @@ local Players = game:GetService("Players")
 local P = Players.LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local slideRE: RemoteEvent = ReplicatedStorage.Events.InsecureSlide
+local dashRE: RemoteEvent = ReplicatedStorage.Events.InsecureDash
 local cas = game:GetService("ContextActionService")
 
 local CurrentCamOffset = 0
@@ -41,6 +42,11 @@ end
 
 function slide(_an: string, inputState: Enum.UserInputState, _io: InputObject): Enum.ContextActionResult?
 	local humanoid: Humanoid = P.Character.Humanoid
+	if inputState == Enum.UserInputState.Begin then
+		if humanoid.FloorMaterial == Enum.Material.Air then
+			dashRE:FireServer()
+		end
+	end
 	slideRE:FireServer(inputState)
 
 	local animator = humanoid:WaitForChild("Animator")

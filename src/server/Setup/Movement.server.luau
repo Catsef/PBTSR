@@ -2,6 +2,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
 local SlideRE: RemoteEvent = ReplicatedStorage.Events.InsecureSlide
+local DashRE: RemoteEvent = ReplicatedStorage.Events.InsecureDash
 local JumpRE: RemoteEvent = ReplicatedStorage.Events.InsecureJump
 
 local SlideVelocityFactor = 1.5
@@ -84,6 +85,11 @@ Players.PlayerAdded:Connect(function(P: Player)
 		Instance.new("Attachment", Root).Name = "Root"
 	end)
 end)
+DashRE.OnServerEvent:Connect(function(P, ...: any)
+	local HumanoidRoot = P.Character:FindFirstChild("HumanoidRootPart")
+
+	HumanoidRoot.AssemblyLinearVelocity = HumanoidRoot.AssemblyLinearVelocity * 3
+end)
 
 SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 	if not P.Character then
@@ -132,7 +138,6 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 	local RayResult = workspace:Raycast(RayStart, RayDirection * RayLength, RayParams)
 
 	if Humanoid.FloorMaterial == Enum.Material.Air or not RayResult then
-		HumanoidRoot.AssemblyLinearVelocity = HumanoidRoot.AssemblyLinearVelocity * 3
 		return
 	end
 
