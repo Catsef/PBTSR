@@ -84,8 +84,23 @@ Players.PlayerAdded:Connect(function(P: Player)
 end)
 DashRE.OnServerEvent:Connect(function(P, ...: any)
 	local HumanoidRoot = P.Character:FindFirstChild("HumanoidRootPart")
+	local LookVector = HumanoidRoot.CFrame.LookVector
 
-	HumanoidRoot:ApplyImpulse(P.Character.Head.CFrame.LookVector * 50)
+	if not HumanoidRoot:FindFirstChild("Root") then
+		warn("Couldn't find Root attachment for attachment0 for VF")
+		return
+	end
+
+	local VForce = Instance.new("VectorForce")
+	VForce.Attachment0 = HumanoidRoot.Root
+
+	VForce.RelativeTo = Enum.ActuatorRelativeTo.World
+	VForce.Force = LookVector * 10
+	VForce.Parent = HumanoidRoot
+
+	task.delay(1, function()
+		VForce:Destroy()
+	end)
 end)
 SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 	if not P.Character then
