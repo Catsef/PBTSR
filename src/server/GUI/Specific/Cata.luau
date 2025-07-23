@@ -45,9 +45,9 @@ function CloseCatalogue(P: Player)
 
 	tween:Play()
 
-	tween.Completed:Wait()
-
-	Catalogue.Enabled = false
+	tween.Completed:Connect(function(a0: Enum.PlaybackState)
+		Catalogue.Enabled = false
+	end)
 end
 
 function g.TriggerRUN(player: Player)
