@@ -18,6 +18,7 @@ local BallCatalogueTrigger: ProximityPrompt = game.Workspace.Book.ProximityPromp
 Players.PlayerAdded:Connect(function(P: Player)
 	print("player joined, initating gui transfers")
 	init.InitGuiForPlayer(P, ButtonsGui, true)
+	init.InitGuiForPlayer(P, BuyGui, true)
 	init.InitGuiForPlayer(P, RoundCounter, false)
 	init.InitGuiForPlayer(P, Balance, false)
 	init.InitGuiForPlayer(P, Catalogue, true)
@@ -25,7 +26,13 @@ Players.PlayerAdded:Connect(function(P: Player)
 	init.InitProximityPrompts(BuyGuiTrigger, "buy", Buy.TriggerRUN)
 	init.InitProximityPrompts(BallCatalogueTrigger, "cata", Cata.TriggerRUN)
 
-	P.CharacterAdded:Connect(function(_C: Model) end)
+	P.CharacterAdded:Connect(function(_C: Model)
+		init.InitGuiForPlayer(P, ButtonsGui, true)
+		init.InitGuiForPlayer(P, BuyGui, true)
+		init.InitGuiForPlayer(P, RoundCounter, false)
+		init.InitGuiForPlayer(P, Balance, false)
+		init.InitGuiForPlayer(P, Catalogue, true)
+	end)
 end)
 
 local Specifics = script.Parent.Specific
