@@ -1,7 +1,7 @@
 local Players = game:GetService("Players")
 local P = Players.LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
 local slideRE: RemoteEvent = ReplicatedStorage.Events.InsecureSlide
 local dashRE: RemoteEvent = ReplicatedStorage.Events.InsecureDash
 local cas = game:GetService("ContextActionService")
@@ -46,6 +46,16 @@ function slide(_an: string, inputState: Enum.UserInputState, _io: InputObject): 
 	if inputState == Enum.UserInputState.Begin then
 		if humanoid.FloorMaterial == Enum.Material.Air then
 			dashRE:FireServer(P.Character.HumanoidRootPart.CFrame.LookVector)
+
+			local cam: Camera = game.Workspace.CurrentCamera
+			cam.FieldOfView = 145
+
+			local TweenDown = TweenService:Create(
+				cam,
+				TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+				{ FieldOfView = 105 }
+			)
+
 			return
 		end
 	end
@@ -69,8 +79,6 @@ function slide(_an: string, inputState: Enum.UserInputState, _io: InputObject): 
 		cam.FieldOfView = 105
 		cam.CameraSubject = humanoid
 		cam.CameraType = Enum.CameraType.Custom
-		humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
-		humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing, false)
 		cas:BindAction(
 			"DisableMovement",
 			DISABLE,
@@ -89,14 +97,7 @@ function slide(_an: string, inputState: Enum.UserInputState, _io: InputObject): 
 		SlideAnimationTrack:Stop(0)
 		local cam: Camera = game.Workspace.CurrentCamera
 		cam.FieldOfView = 100
-		humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
-		humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing, true)
 		cas:UnbindAction("DisableMovement")
-		local isW = UserInputService:IsKeyDown(Enum.KeyCode.W)
-		if isW then
-			print("walking")
-			humanoid:Move(Vector3.new(0, 0, 15))
-		end
 		task.spawn(function()
 			LerpCameraOffset(humanoid, 0, 0.5)
 		end)
