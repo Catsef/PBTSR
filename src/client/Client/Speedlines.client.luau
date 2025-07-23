@@ -22,6 +22,6 @@ RunService.RenderStepped:Connect(function()
 	end
 
 	Speedlines.CFrame = Camera.CFrame + Camera.CFrame.LookVector * (Offset / (Camera.FieldOfView / 70))
-	Speedlines.Attachment.ParticleEmitter.Rate = SpeedlineHandler.Rate
+	Speedlines.Attachment.ParticleEmitter.Rate = SpeedlineHandler.Rate.Value
 	Speedlines.Parent = Camera
 end)

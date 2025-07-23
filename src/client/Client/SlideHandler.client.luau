@@ -48,11 +48,11 @@ function slide(_an: string, inputState: Enum.UserInputState, _io: InputObject): 
 	if inputState == Enum.UserInputState.Begin then
 		if humanoid.FloorMaterial == Enum.Material.Air then
 			dashRE:FireServer(P.Character.HumanoidRootPart.CFrame.LookVector)
-			SpeedlineHandler.Rate = 1000
+			SpeedlineHandler.Rate.Value = 1500
 			local Tween = TweenService:Create(
-				SpeedlineHandler,
+				SpeedlineHandler.Rate,
 				TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
-				{ Rate = 0 }
+				{ Value = 0 }
 			)
 			Tween:Play()
 			return
