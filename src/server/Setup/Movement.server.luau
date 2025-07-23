@@ -83,6 +83,7 @@ Players.PlayerAdded:Connect(function(P: Player)
 	end)
 end)
 DashRE.OnServerEvent:Connect(function(P, ...: any)
+	local Humanoid = P.Character.Humanoid
 	print("Dash")
 	local HumanoidRoot = P.Character:FindFirstChild("HumanoidRootPart")
 	local LookVector = HumanoidRoot.CFrame.LookVector
@@ -92,12 +93,12 @@ DashRE.OnServerEvent:Connect(function(P, ...: any)
 		return
 	end
 
-	local VForce = Instance.new("VectorForce")
+	local VForce = Instance.new("LinearVelocity")
 	VForce.Attachment0 = HumanoidRoot.Root
 
 	VForce.RelativeTo = Enum.ActuatorRelativeTo.World
-	VForce.Force = LookVector * 1000
-	VForce.Parent = HumanoidRoot
+	VForce.MaxAxesForce = Vector3.new(100000, 100000, 100000)
+	VForce.VectorVelocity = LookVector * Humanoid.WalkSpeed
 
 	task.delay(0.1, function()
 		VForce:Destroy()
