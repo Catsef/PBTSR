@@ -85,9 +85,8 @@ end)
 DashRE.OnServerEvent:Connect(function(P, ...: any)
 	local HumanoidRoot = P.Character:FindFirstChild("HumanoidRootPart")
 
-	HumanoidRoot.AssemblyLinearVelocity = P.Character.Head.CFrame.LookVector * 1000000
+	HumanoidRoot:ApplyImpulse(P.Character.Head.CFrame.LookVector * 50)
 end)
-
 SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 	if not P.Character then
 		-- warn("Character not found, returning")
