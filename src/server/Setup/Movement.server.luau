@@ -86,7 +86,7 @@ DashRE.OnServerEvent:Connect(function(P, ...: any)
 	local HumanoidRoot = P.Character:FindFirstChild("HumanoidRootPart")
 
 	HumanoidRoot.AssemblyLinearVelocity = HumanoidRoot.AssemblyLinearVelocity
-		+ (P.Character.Head.CFrame.LookVector * 10000)
+		+ (P.Character.Head.CFrame.LookVector * 1000000)
 end)
 
 SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
