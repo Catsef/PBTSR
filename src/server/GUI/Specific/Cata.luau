@@ -35,7 +35,7 @@ function CloseCatalogue(P: Player)
 	local Mainframe: Frame = Catalogue:FindFirstChild("MF")
 
 	local OriginalPosition = UDim2.new(0.15, 0, 0.15, 0)
-	local Offsetted = UDim2.new(0, 0, 1, 0)
+	local Offsetted = UDim2.new(0.15, 0, 1, 0)
 
 	local tween = TweenService:Create(
 		Mainframe,
@@ -78,11 +78,11 @@ function g.TriggerRUN(player: Player)
 
 	catalogue.Enabled = true
 	local OriginalPosition = UDim2.new(0.15, 0, 0.15, 0)
-	local Offsetted = UDim2.new(0, 0, 1, 0)
+	local Offsetted = UDim2.new(0.15, 0, 1, 0)
 	Mainframe.Position = Offsetted
 	local tween = TweenService:Create(
 		Mainframe,
-		TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.In),
+		TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
 		{ Position = OriginalPosition }
 	)
 	tween:Play()
