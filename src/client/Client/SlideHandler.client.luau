@@ -45,6 +45,7 @@ function slide(_an: string, inputState: Enum.UserInputState, _io: InputObject): 
 	if inputState == Enum.UserInputState.Begin then
 		if humanoid.FloorMaterial == Enum.Material.Air then
 			dashRE:FireServer()
+			return
 		end
 	end
 	slideRE:FireServer(inputState)

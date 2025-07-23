@@ -46,9 +46,6 @@ local function CreateSlide(P)
 		return
 	end
 
-	LinVelo.Visible = true
-	LinVelo.Color = BrickColor.Blue()
-
 	LinVelo.Attachment0 = HumanoidRoot.Root
 
 	LinVelo.VectorVelocity = (UnitSlideDirection * Humanoid.WalkSpeed * SlideVelocityFactor)
