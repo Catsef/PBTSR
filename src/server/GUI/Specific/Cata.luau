@@ -4,6 +4,7 @@ local ButtonConnection
 local ServerScriptService = game:GetService("ServerScriptService")
 
 local ServerStorage = game:GetService("ServerStorage")
+local TweenService = game:GetService("TweenService")
 
 local UtilityFunctions = require(ServerScriptService.Util.UtilityFunctions)
 local ButtonEvent: BindableEvent = ServerStorage.Bindings.GUI.ButtonSend
@@ -17,11 +18,55 @@ function CloseCatalogue(P: Player)
 	local Catalogue = PGUI:FindFirstChild("Balltalogue")
 	if not Catalogue then
 		warn("couldnt close catalogue because catalogue doesnt exist in player")
+		return
 	end
+	if not Catalogue:IsA("ScreenGui") then
+		warn("couldnt close catalogue because catalogue in player isin't a screengui")
+	end
+	local OriginalPosition = Catalogue.AbsolutePosition
+	local Offsetted = OriginalPosition + Vector2.new(0, 3000)
+
+	local tween = TweenService:Create(
+		Catalogue,
+		TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+		{ AbsolutePosition = Offsetted }
+	)
+
+	tween:Play()
+
+	tween.Completed:Wait()
+
 	Catalogue.Enabled = false
 end
 
-function g.TriggerRUN() end
+function g.TriggerRUN(player: Player)
+	local playerGui = player:FindFirstChild("PlayerGui")
+	if playerGui == nil then
+		warn("couldn't open catalogue for player because playergui doesnt exist in player")
+		return
+	end
+	local catalogue = playerGui:FindFirstChild("Balltalogue")
+	if catalogue == nil then
+		warn("couldn't open catalogue for player because catalogue gui doesnt exist in playergui")
+		return
+	end
+
+	if not catalogue:IsA("ScreenGui") then
+		warn("couldn't open catalogue because player's catalogue is not a screengui")
+		return
+	end
+
+	catalogue.Enabled = true
+	local OriginalPosition = catalogue.AbsolutePosition
+	local Offsetted = OriginalPosition + Vector2.new(0, 3000)
+	catalogue.AbsolutePosition = Offsetted
+	local tween = TweenService:Create(
+		catalogue,
+		TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.In),
+		{ AbsolutePosition = OriginalPosition }
+	)
+	tween:Play()
+end
 
 function g.REG_BTN()
 	if ButtonConnection then
