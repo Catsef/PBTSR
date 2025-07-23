@@ -33,8 +33,6 @@ function CloseCatalogue(P: Player)
 	end
 
 	local Mainframe: Frame = Catalogue:FindFirstChild("MF")
-
-	local OriginalPosition = UDim2.new(0.15, 0, 0.15, 0)
 	local Offsetted = UDim2.new(0.15, 0, 1, 0)
 
 	local tween = TweenService:Create(
@@ -46,6 +44,7 @@ function CloseCatalogue(P: Player)
 	tween:Play()
 
 	tween.Completed:Connect(function(a0: Enum.PlaybackState)
+		print("finished tween")
 		Catalogue.Enabled = false
 	end)
 end
