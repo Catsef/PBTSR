@@ -22,14 +22,25 @@ function CloseCatalogue(P: Player)
 	end
 	if not Catalogue:IsA("ScreenGui") then
 		warn("couldnt close catalogue because catalogue in player isin't a screengui")
+		return
 	end
-	local OriginalPosition = Catalogue.AbsolutePosition
-	local Offsetted = OriginalPosition + Vector2.new(0, 3000)
+
+	if not Catalogue:FindFirstChild("MF") then
+		warn("couldn't tween catalogue close because mainframe doesnt exist")
+	end
+	if not Catalogue:FindFirstChild("MF"):IsA("Frame") then
+		warn("couldn't tween catalogue close because mainframe isint a frame")
+	end
+
+	local Mainframe: Frame = Catalogue:FindFirstChild("MF")
+
+	local OriginalPosition = Mainframe.Position
+	local Offsetted = OriginalPosition + UDim2.new(0, 0, 1, 0)
 
 	local tween = TweenService:Create(
 		Catalogue,
 		TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
-		{ AbsolutePosition = Offsetted }
+		{ Position = Offsetted }
 	)
 
 	tween:Play()
@@ -56,14 +67,23 @@ function g.TriggerRUN(player: Player)
 		return
 	end
 
+	if not catalogue:FindFirstChild("MF") then
+		warn("couldn't tween catalogue open because mainframe doesnt exist")
+	end
+	if not catalogue:FindFirstChild("MF"):IsA("Frame") then
+		warn("couldn't tween catalogue open because mainframe isint a frame")
+	end
+
+	local Mainframe: Frame = catalogue:FindFirstChild("MF")
+
 	catalogue.Enabled = true
-	local OriginalPosition = catalogue.AbsolutePosition
-	local Offsetted = OriginalPosition + Vector2.new(0, 3000)
-	catalogue.AbsolutePosition = Offsetted
+	local OriginalPosition = Mainframe.Position
+	local Offsetted = OriginalPosition + UDim2.new(0, 0, 1, 0)
+	catalogue.Position = Offsetted
 	local tween = TweenService:Create(
 		catalogue,
 		TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.In),
-		{ AbsolutePosition = OriginalPosition }
+		{ Position = OriginalPosition }
 	)
 	tween:Play()
 end
