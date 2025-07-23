@@ -6,9 +6,13 @@ local ButtonsGui = ServerStorage.GUI.StartButtons
 local RoundCounter = ServerStorage.GUI.RoundCounter
 local BuyGui = ServerStorage.GUI.BuyGUI
 local Balance = ServerStorage.GUI.Money
+local Catalogue = ServerStorage.GUI.Balltalogue
 
 local BuyGuiTrigger: ProximityPrompt = game.Workspace.Shop.Shop
 local BuyGuiTriggerConnection: RBXScriptConnection
+
+local BallCatalogueTrigger: ProximityPrompt = game.Workspace.Book.ProximityPrompt
+local BallCatalogueTriggerConnection: RBXScriptConnection
 
 local ButtonSendEvent: BindableEvent = game:GetService("ServerStorage").Bindings.GUI.ButtonSend
 
@@ -39,6 +43,20 @@ function InitialiseButtonsGui(player: Player)
 			end
 		end
 	end
+end
+
+function InitialiseBallCatalogue(player: Player)
+	if not player:WaitForChild("PlayerGui"):FindFirstChild("Balltalogue") then
+		local BallCatalogueForPlayer = Catalogue:Clone()
+		BallCatalogueForPlayer.Parent = player:WaitForChild("PlayerGui")
+	end
+
+	local gui = player.PlayerGui:WaitForChild("Balltalogue")
+	local exit = gui.MF.ExitF.TextButton
+	local sendid = exit:GetAttribute("sendid")
+	exit.MouseButton1Click:Connect(function()
+		ButtonSendEvent:Fire(sendid, player)
+	end)
 end
 
 --[[
