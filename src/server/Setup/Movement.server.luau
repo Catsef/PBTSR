@@ -96,10 +96,10 @@ DashRE.OnServerEvent:Connect(function(P, ...: any)
 	VForce.Attachment0 = HumanoidRoot.Root
 
 	VForce.RelativeTo = Enum.ActuatorRelativeTo.World
-	VForce.Force = LookVector * 10000
+	VForce.Force = LookVector * 1000000
 	VForce.Parent = HumanoidRoot
 
-	task.delay(1, function()
+	task.delay(0.1, function()
 		VForce:Destroy()
 	end)
 end)
