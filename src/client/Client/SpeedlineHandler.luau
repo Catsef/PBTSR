@@ -1,5 +1,10 @@
+local Players = game:GetService("Players")
 local m = {}
 
-m.Rate = 0
+local RATE = Instance.new("NumberValue")
+RATE.Parent = Players
+RATE.Name = "SpeedlineRate"
+
+m.Rate = RATE
 
 return m
