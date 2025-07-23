@@ -38,7 +38,9 @@ local function GetFrontMovement_RelaCam()
 		return
 	end
 
-	local moveDirection = h.MoveDirection
+	local hrp = char.HumanoidRootPart
+
+	local moveDirection = h.MoveDirection + hrp.AssemblyLinearVelocity
 	return Cam.CFrame.LookVector:Dot(moveDirection)
 end
 
