@@ -44,8 +44,10 @@ function CloseCatalogue(P: Player)
 	tween:Play()
 
 	tween.Completed:Connect(function(a0: Enum.PlaybackState)
-		print("finished tween")
-		Catalogue.Enabled = false
+		if a0 == Enum.PlaybackState.Completed then
+			print("finished tween")
+			Catalogue.Enabled = false
+		end
 	end)
 end
 
