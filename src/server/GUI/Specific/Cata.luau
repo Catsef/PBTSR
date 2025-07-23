@@ -81,7 +81,7 @@ function g.TriggerRUN(player: Player)
 	local Offsetted = OriginalPosition + UDim2.new(0, 0, 1, 0)
 	Mainframe.Position = Offsetted
 	local tween = TweenService:Create(
-		catalogue,
+		Mainframe,
 		TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.In),
 		{ Position = OriginalPosition }
 	)
