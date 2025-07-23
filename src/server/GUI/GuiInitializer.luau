@@ -37,6 +37,7 @@ function m.InitProximityPrompts(trigger, connectionName, runFunction)
 	end
 
 	m.ProximityPromptConnections[connectionName] = trigger.Triggered:Connect(function()
+		print("proximity prompt connection fired: " .. connectionName)
 		runFunction()
 	end)
 end
