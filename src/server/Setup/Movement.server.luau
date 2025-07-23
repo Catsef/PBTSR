@@ -6,7 +6,7 @@ local DashRE: RemoteEvent = ReplicatedStorage.Events.InsecureDash
 local JumpRE: RemoteEvent = ReplicatedStorage.Events.InsecureJump
 
 local SlideVelocityFactor = 1.5
-local DashVelocityFactor = 10
+local DashVelocityFactor = 1000
 local PlayersSliding = {} -- [player] = bool
 local PlayersSlidingInfo = {} -- [player] = {t=tween, v=linvelo}
 
