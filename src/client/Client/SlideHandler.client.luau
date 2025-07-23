@@ -1,6 +1,7 @@
 local Players = game:GetService("Players")
 local P = Players.LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UserInputService = game:GetService("UserInputService")
 local slideRE: RemoteEvent = ReplicatedStorage.Events.InsecureSlide
 local dashRE: RemoteEvent = ReplicatedStorage.Events.InsecureDash
 local cas = game:GetService("ContextActionService")
@@ -91,6 +92,10 @@ function slide(_an: string, inputState: Enum.UserInputState, _io: InputObject): 
 		humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
 		humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing, true)
 		cas:UnbindAction("DisableMovement")
+		local isW = UserInputService:IsKeyDown(Enum.KeyCode.W)
+		if isW then
+			humanoid:Move(Vector3.new(0, 0, 1), true)
+		end
 		task.spawn(function()
 			LerpCameraOffset(humanoid, 0, 0.5)
 		end)
