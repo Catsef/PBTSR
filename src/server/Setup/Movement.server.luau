@@ -113,7 +113,6 @@ DashRE.OnServerEvent:Connect(function(P, LV)
 		+ HumanoidRoot.AssemblyLinearVelocity
 	task.delay(1, function()
 		VForce:Destroy()
-		HumanoidRoot.AssemblyLinearVelocity = Vector3.zero
 	end)
 
 	local PGui = P.PlayerGui
