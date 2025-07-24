@@ -9,7 +9,7 @@ function E.InitiatePlayer(Player: Player)
 end
 
 Players.PlayerAdded:Connect(function(a0: Player)
-	a0.CharacterAdded:Connect(function(a1: Model)
+	a0.CharacterAdded:Connect(function(_: Model)
 		E.InitiatePlayer(a0)
 	end)
 end)

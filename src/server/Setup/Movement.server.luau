@@ -120,7 +120,8 @@ DashRE.OnServerEvent:Connect(function(P, LV)
 	local IBLUR = Instance.new("ScreenGui")
 	IBLUR.Name = "DashCooldownEffect"
 	IBLUR.Parent = PGui
-	local F = Instance.new("Frame", IBLUR)
+	local F = Instance.new("Frame")
+	F.Parent = IBLUR
 	F.Size = UDim2.new(1, 0, 1, 0)
 	local TDN = TweenService:Create(
 		F,
@@ -199,7 +200,7 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 
 	-- PlayersSlidingInfo[P].t.Completed:Connect(function() end)
 end)
-JumpRE.OnServerEvent:Connect(function(P: Player, ...: any)
+JumpRE.OnServerEvent:Connect(function(P: Player, _: any)
 	local PlayerSliding = PlayersSliding[P]
 	if not PlayerSliding then
 		return
