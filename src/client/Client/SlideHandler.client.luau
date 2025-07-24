@@ -81,16 +81,16 @@ function slide(_an: string, inputState: Enum.UserInputState, _io: InputObject): 
 		cam.FieldOfView = 105
 		cam.CameraSubject = humanoid
 		cam.CameraType = Enum.CameraType.Custom
-		cas:BindAction(
-			"DisableMovement",
-			DISABLE,
-			false,
-			Enum.KeyCode.A,
-			Enum.KeyCode.S,
-			Enum.KeyCode.W,
-			Enum.KeyCode.D,
-			Enum.KeyCode.Space
-		)
+		-- cas:BindAction(
+		-- 	"DisableMovement",
+		-- 	DISABLE,
+		-- 	false,
+		-- 	Enum.KeyCode.A,
+		-- 	Enum.KeyCode.S,
+		-- 	Enum.KeyCode.W,
+		-- 	Enum.KeyCode.D,
+		-- 	Enum.KeyCode.Space
+		-- )
 		task.spawn(function()
 			LerpCameraOffset(humanoid, CamOffsetAmount, 0.5)
 		end)
@@ -99,7 +99,7 @@ function slide(_an: string, inputState: Enum.UserInputState, _io: InputObject): 
 		SlideAnimationTrack:Stop(0)
 		local cam: Camera = game.Workspace.CurrentCamera
 		cam.FieldOfView = 100
-		cas:UnbindAction("DisableMovement")
+		-- cas:UnbindAction("DisableMovement")
 		task.spawn(function()
 			LerpCameraOffset(humanoid, 0, 0.5)
 		end)
