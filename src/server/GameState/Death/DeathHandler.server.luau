@@ -3,8 +3,11 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 local ServerStorage = game:GetService("ServerStorage")
 
-local GameState = require(ServerScriptService.GameState.GameState)
 local GameStateRunner = require(ServerScriptService.GameState.GameStateRunner)
+local BallStats = require(ServerScriptService.GameState.Rewriting.BallStats)
+local GameState = require(ServerScriptService.GameState.Rewriting.GameState)
+local StatePlayers = require(ServerScriptService.GameState.Rewriting.StatePlayers)
+
 local UtilityFunctions = require(ServerScriptService.Util.UtilityFunctions)
 
 local ReplicatedEvents = ReplicatedStorage.Events
@@ -16,17 +19,18 @@ local Death = require(script.Parent.DeathFunctions)
 function EndGame()
 	print("Ending game!")
 
-	GameState.roundStarted = false
-	GameState.buyPhase = false
-	GameState.currentRound = 0
-	GameState.gameStarted = false
+	GameState.PhaseRound = false
+	GameState.PhaseBuy = false
+	GameState.Round = 0
+	GameState.PhaseGame = false
 
-	GameState.AllGameReadiedPlayers = {}
-	GameState.AllRoundReadiedPlayers = {}
+	StatePlayers.Readied.Game = {}
+	StatePlayers.Readied.Round = {}
 
-	GameState.stats = GameState.OriginalStats
+	BallStats.action.actions = BallStats.original.actions
+	BallStats.weights = BallStats.original.weights
 
-	for _, v in ipairs(GameState.AllExistingBalls) do
+	for _, v in ipairs(BallStats.run.existingballs) do
 		if v == nil or v.Parent == nil then
 			continue
 		end
@@ -40,7 +44,7 @@ end
 function FindNextAlivePlayer()
 	-- Get every player that's not inside GameState.DeadPlayers
 	local AllPlayers = Players:GetPlayers()
-	local DeadPlayers = GameState.DeadPlayers
+	local DeadPlayers = StatePlayers.DeadPlayers
 
 	local Ref = {}
 	local Alive = {}
@@ -92,7 +96,7 @@ end
 function PlayerDiedWithinRound(Player: Player)
 	-- overwrite Death.WhoEveryoneSpectating[Player]
 
-	table.insert(GameState.DeadPlayers, Player)
+	table.insert(StatePlayers.DeadPlayers, Player)
 	-- players who are already spectating this player to be transferred
 	local AlreadySpectating = {}
 	for Spectator, Target in pairs(Death.WhoEveryoneSpectating) do
@@ -119,7 +123,7 @@ end
 
 local function PlayerAdded(Player: Player)
 	Player:LoadCharacter()
-	GameState.AllPlayers = Players:GetPlayers()
+	StatePlayers.AllPlayers = Players:GetPlayers()
 	Death.WhoEveryoneSpectating[Player] = Death.StillAlive
 
 	print("Waiting for character!")
@@ -135,7 +139,7 @@ local function PlayerAdded(Player: Player)
 		-- This event listener will be connected one time only
 		print("Humanoid died!")
 
-		if GameState.roundStarted then
+		if GameState.PhaseRound then
 			PlayerDiedWithinRound(Player)
 			return
 		end
@@ -150,7 +154,7 @@ local function PlayerAdded(Player: Player)
 			-- This event listener will be connected every time Character is added or Player dies and respawns
 			print("Humanoid died!")
 
-			if GameState.roundStarted then
+			if GameState.PhaseRound then
 				PlayerDiedWithinRound(Player)
 				return
 			end
@@ -161,11 +165,11 @@ local function PlayerAdded(Player: Player)
 end
 
 RespawnPlayers.Event:Connect(function(_: any)
-	for _, player in ipairs(GameState.DeadPlayers) do
+	for _, player in ipairs(StatePlayers.DeadPlayers) do
 		player:LoadCharacter()
 		Respawn:FireClient(player)
 	end
-	GameState.DeadPlayers = {}
+	StatePlayers.DeadPlayers = {}
 end)
 
 Players.PlayerAdded:Connect(PlayerAdded)
