@@ -1,24 +1,25 @@
 local ServerScriptService = game:GetService("ServerScriptService")
 
-local GameState = require(ServerScriptService.GameState.GameState)
 local GameStateRunner = require(ServerScriptService.GameState.GameStateRunner)
+local GameState = require(ServerScriptService.GameState.Rewriting.GameState)
+local StateFunctions = require(ServerScriptService.GameState.Rewriting.StateFunctions)
 
 while task.wait() do
-	if not GameState.gameStarted then
+	if not GameState.PhaseGame then
 		GameStateRunner.NotGameStarted()
 		continue
 	end
 
-	if GameState.buyPhase then
+	if GameState.PhaseBuy then
 		GameStateRunner.BuyPhase()
 		continue
 	end
 
-	if GameState.roundStarted then
+	if GameState.PhaseRound then
 		GameStateRunner.RoundStarted()
 		continue
 	end
 end
 
 task.wait(3)
-GameState.SpawnRoundWave(Vector3.new(0, 0.5, 0))
+StateFunctions.SpawnWave()
