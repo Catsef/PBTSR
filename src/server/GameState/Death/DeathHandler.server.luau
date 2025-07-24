@@ -4,9 +4,9 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local ServerStorage = game:GetService("ServerStorage")
 
 local GameStateRunner = require(ServerScriptService.GameState.GameStateRunner)
-local BallStats = require(ServerScriptService.GameState.Rewriting.BallStats)
-local GameState = require(ServerScriptService.GameState.Rewriting.GameState)
-local StatePlayers = require(ServerScriptService.GameState.Rewriting.StatePlayers)
+local BallStats = require(ServerScriptService.GameState.State.BallStats)
+local GameState = require(ServerScriptService.GameState.State.GameState)
+local StatePlayers = require(ServerScriptService.GameState.State.StatePlayers)
 
 local UtilityFunctions = require(ServerScriptService.Util.UtilityFunctions)
 

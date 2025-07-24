@@ -2,8 +2,8 @@ local ServerScriptService = game:GetService("ServerScriptService")
 
 local ServerStorage = game:GetService("ServerStorage")
 
-local GameState = require(ServerScriptService.GameState.Rewriting.GameState)
-local StatePlayers = require(ServerScriptService.GameState.Rewriting.StatePlayers)
+local GameState = require(ServerScriptService.GameState.State.GameState)
+local StatePlayers = require(ServerScriptService.GameState.State.StatePlayers)
 local UtilityFunctions = require(ServerScriptService.Util.UtilityFunctions)
 local ButtonEvent: BindableEvent = ServerStorage.Bindings.GUI.ButtonSend
 local g = {}

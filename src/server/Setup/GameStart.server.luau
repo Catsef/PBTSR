@@ -1,8 +1,8 @@
 local ServerScriptService = game:GetService("ServerScriptService")
 
 local GameStateRunner = require(ServerScriptService.GameState.GameStateRunner)
-local GameState = require(ServerScriptService.GameState.Rewriting.GameState)
-local StateFunctions = require(ServerScriptService.GameState.Rewriting.StateFunctions)
+local GameState = require(ServerScriptService.GameState.State.GameState)
+local StateFunctions = require(ServerScriptService.GameState.State.StateFunctions)
 
 while task.wait() do
 	if not GameState.PhaseGame then

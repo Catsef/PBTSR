@@ -5,10 +5,10 @@ local ServerStorage = game:GetService("ServerStorage")
 
 local ps = game:GetService("Players")
 
-local b = require(ServerScriptService.GameState.Rewriting.BallStats)
-local g = require(ServerScriptService.GameState.Rewriting.GameState)
-local f = require(ServerScriptService.GameState.Rewriting.StateFunctions)
-local p = require(ServerScriptService.GameState.Rewriting.StatePlayers)
+local b = require(ServerScriptService.GameState.State.BallStats)
+local g = require(ServerScriptService.GameState.State.GameState)
+local f = require(ServerScriptService.GameState.State.StateFunctions)
+local p = require(ServerScriptService.GameState.State.StatePlayers)
 
 local UtilityFunctions = require(ServerScriptService.Util.UtilityFunctions)
 
