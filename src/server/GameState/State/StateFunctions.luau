@@ -3,7 +3,7 @@ local ServerStorage = game:GetService("ServerStorage")
 
 local BallStats = require(script.Parent.BallStats)
 local GameState = require(script.Parent.GameState)
-local StatePlayers = require(script.Parent.StatePlayers)
+local _StatePlayers = require(script.Parent.StatePlayers)
 
 local BallActions = require(ServerScriptService.Balls.BallActionHandler)
 
@@ -22,6 +22,7 @@ local State = {}
 function State.StepDifficulty()
 	-- increase only slightly.
 	BallStats.wave.balls += 1
+
 	BallStats.wave.area += 10
 	BallStats.wave.delay = math.max(0.5, BallStats.wave.delay - 0.3)
 
@@ -29,11 +30,15 @@ function State.StepDifficulty()
 
 	if GameState.Round % 5 == 0 then
 		print("Stepping B-MODE")
+		BallStats.run.func.addNextChoiceToWeight()
+		print("Added: " .. BallStats.weights[#BallStats.weights]["value"])
 	end
+
+	BallStats.run.func.updateChoices()
 end
 
 function State.SpawnWave(Origin: Vector3?)
-	local SpawnPosition = Origin or (game.Workspace.Baseplate.Position + Vector3.new(0, 5, 0))
+	local SpawnPosition = Origin or (game.Workspace.Baseplate.Position + Vector3.new(0, 50, 0))
 
 	for _ = 1, BallStats.wave.balls do
 		task.wait(Random:NextNumber(0, 0.3))
