@@ -51,6 +51,7 @@ function slide(_an: string, inputState: Enum.UserInputState, _io: InputObject): 
 		if humanoid.FloorMaterial == Enum.Material.Air then
 			dashRE:FireServer(P.Character.HumanoidRootPart.CFrame.LookVector)
 			cam.Speedlines.Attachment.ParticleEmitter.Rate = 1500
+			print("Speedlines?")
 			local Tween = TweenService:Create(
 				cam.Speedlines.Attachment.ParticleEmitter,
 				TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
