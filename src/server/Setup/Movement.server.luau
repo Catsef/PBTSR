@@ -111,6 +111,7 @@ DashRE.OnServerEvent:Connect(function(P, LV)
 	VForce.MaxForce = 1000000
 	VForce.VectorVelocity = UnitSlideDirection * Humanoid.WalkSpeed * DashVelocityFactor
 		+ HumanoidRoot.AssemblyLinearVelocity
+		+ (Vector3.new(0, Humanoid.WalkSpeed, 0))
 	task.delay(0.05, function()
 		VForce:Destroy()
 	end)
