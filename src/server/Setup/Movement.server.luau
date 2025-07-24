@@ -6,7 +6,7 @@ local DashRE: RemoteEvent = ReplicatedStorage.Events.InsecureDash
 local JumpRE: RemoteEvent = ReplicatedStorage.Events.InsecureJump
 
 local SlideVelocityFactor = 1.5
-local DashVelocityFactor = 2
+local DashVelocityFactor = 5
 local PlayersSliding = {} -- [player] = bool
 local PlayersSlidingInfo = {} -- [player] = {t=tween, v=linvelo}
 
@@ -111,7 +111,7 @@ DashRE.OnServerEvent:Connect(function(P, LV)
 	VForce.MaxForce = 1000000
 	VForce.VectorVelocity = UnitSlideDirection * Humanoid.WalkSpeed * DashVelocityFactor
 		+ HumanoidRoot.AssemblyLinearVelocity
-	task.delay(1, function()
+	task.delay(0.3, function()
 		VForce:Destroy()
 	end)
 
