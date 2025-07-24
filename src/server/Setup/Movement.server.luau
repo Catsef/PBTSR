@@ -55,6 +55,7 @@ local function CreateSlide(P)
 		+ HumanoidRoot.AssemblyLinearVelocity
 	LinVelo.RelativeTo = Enum.ActuatorRelativeTo.World
 	LinVelo.Parent = HumanoidRoot
+	LinVelo.VelocityConstraintMode = Enum.VelocityConstraintMode.Line
 
 	LinVelo.MaxForce = 1000000 -- Controls slide strength
 
@@ -111,8 +112,9 @@ DashRE.OnServerEvent:Connect(function(P, LV)
 	VForce.MaxForce = 1000000
 	VForce.VectorVelocity = UnitSlideDirection * Humanoid.WalkSpeed * DashVelocityFactor
 		+ HumanoidRoot.AssemblyLinearVelocity
-	task.delay(0.3, function()
+	task.delay(1, function()
 		VForce:Destroy()
+		HumanoidRoot.AssemblyLinearVelocity = Vector3.zero
 	end)
 
 	local PGui = P.PlayerGui
