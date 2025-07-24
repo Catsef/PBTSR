@@ -55,7 +55,6 @@ local function CreateSlide(P)
 		+ HumanoidRoot.AssemblyLinearVelocity
 	LinVelo.RelativeTo = Enum.ActuatorRelativeTo.World
 	LinVelo.Parent = HumanoidRoot
-	LinVelo.VelocityConstraintMode = Enum.VelocityConstraintMode.Line
 
 	LinVelo.MaxForce = 1000000 -- Controls slide strength
 
