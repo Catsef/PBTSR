@@ -3,6 +3,7 @@ local ActionHandler = {}
 local DefaultTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
 local Players = game:GetService("Players")
 local ServerScriptService = game:GetService("ServerScriptService")
+local TouchInputService = game:GetService("TouchInputService")
 local TweenService = game:GetService("TweenService")
 local PlayerProfileManager = require(ServerScriptService.Data.PlayerProfileManager)
 
@@ -126,6 +127,91 @@ function ActionHandler.Default(
 	p:Destroy()
 end
 
+function ActionHandler.Boss(p: BasePart, actions, hasFace: boolean, TI: TweenInfo, lives, price, livesMinSize)
+	if p:FindFirstChild("ClickDetector") then
+		local CDT = p:FindFirstChild("ClickDetector")
+		if CDT == nil or (not CDT:IsA("ClickDetector")) then
+			warn("click detector is nil or click detector isin't a click detector")
+			return
+		end
+		local currentLives = lives
+		p:SetAttribute("lives", currentLives)
+		local function TickCheck()
+			while task.wait() do
+				if not p.Parent then
+					return
+				end
+				if not p:GetAttribute("playerLastClickedBy") then
+					continue
+				end
+				local playerLastClickedBy = Players:GetPlayerByUserId(p:GetAttribute("playerLastClickedBy"))
+				if currentLives <= 0 then
+					PlayerProfileManager.TransactMoney(playerLastClickedBy, price)
+					PlayerProfileManager.HANGING_UpdateBalanceGui(playerLastClickedBy)
+					p:Destroy()
+					return
+				end
+			end
+		end
+		CDT.MouseClick:Connect(function(player: Player)
+			currentLives -= 1
+			p:SetAttribute("lives", currentLives)
+			p:SetAttribute("playerLastClickedBy", player.UserId)
+
+			local scale = ((currentLives / lives) * (p.Size.Y - livesMinSize) + livesMinSize) / p.Size.Y
+			local newSize = p.Size * scale
+			p.Size = newSize
+		end)
+		p:GetAttributeChangedSignal("lives"):Connect(function()
+			currentLives = p:GetAttribute("lives")
+
+			local scale = ((currentLives / lives) * (p.Size.Y - livesMinSize) + livesMinSize) / p.Size.Y
+			local newSize = p.Size * scale
+			p.Size = newSize
+		end)
+
+		task.spawn(TickCheck)
+	else
+		error("Missing click detector for boss ball!")
+	end
+
+	local pA = TweenService:Create(p, TI, { Transparency = 0 })
+	pA:Play()
+	if hasFace and p:FindFirstChild("Face") then
+		local face = p:FindFirstChild("Face")
+		if not face:IsA("Decal") then
+			return
+		end
+
+		local pB = TweenService:Create(face, TI, { Transparency = 0 })
+		pB:Play()
+	end
+	pA.Completed:Wait()
+
+	-- actioning
+	while task.wait() do
+		local L = p:GetAttribute("lives")
+		if L > 0 then
+			ActionHandler.Actioner(p, actions)
+		else
+			break
+		end
+	end
+
+	local dA = TweenService:Create(p, TI, { Transparency = 1 })
+	dA:Play()
+	if hasFace and p:FindFirstChild("Face") then
+		local face = p:FindFirstChild("Face")
+		if not face:IsA("Decal") then
+			return
+		end
+		local dB = TweenService:Create(face, TI, { Transparency = 1 })
+		dB:Play()
+	end
+	dA.Completed:Wait()
+	p:Destroy()
+end
+
 ----- CUSTOM BALL FUNCTIONS -----
 
 --[[
@@ -149,6 +235,10 @@ end
 
 function ActionHandler.Bouncy(bouncy, actions)
 	ActionHandler.Default(bouncy, actions, true, DefaultTweenInfo, false)
+end
+
+function ActionHandler.Master(boss, actions)
+	ActionHandler.Boss(boss, actions, true, DefaultTweenInfo, 20, 100, 10)
 end
 
 return ActionHandler

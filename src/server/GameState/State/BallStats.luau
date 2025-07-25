@@ -86,6 +86,12 @@ b.action.actions = {
 		Delay.Create(0.2),
 		ToxinCloud.Create(50, 5, Color3.fromRGB(203, 72, 255)),
 	},
+	["Master"] = {
+		Grapple.Create("MULTIPLE_PLAYERS", 3000, 10000, 1000),
+		Delay.Create(0.5),
+		ToxinCloud.Create(75, 10),
+		TweenMove.Create("POSITION_OFFSET", 0.999, b.tweens.easy, true, 0, Vector3.new(0, 5, 0)),
+	},
 }
 b.action.stepactions = {
 	DoomlingA = function() -- list argument
@@ -116,6 +122,7 @@ b.run.func.addNextChoiceToWeight = function()
 		return false
 	end
 end
+b.run.customBallQueue = {}
 b.run.existingballs = {}
 
 b.original = {}
