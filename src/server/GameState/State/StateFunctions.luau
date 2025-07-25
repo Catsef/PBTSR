@@ -31,12 +31,38 @@ function State.StepDifficulty()
 	if GameState.Round % 5 == 0 then
 		print("Stepping B-MODE")
 		BallStats.run.func.addNextChoiceToWeight()
+		BallStats.run.customBallQueue = { "Master" }
 		print("Added: " .. BallStats.weights[#BallStats.weights]["value"])
 	end
 
 	BallStats.run.func.updateChoices()
 end
 
+function State.SpawnCustomQueue()
+	local SpawnPosition = game.Workspace.Baseplate.Position + Vector3.new(0, 50, 0)
+	for _, v in ipairs(BallStats.run.customBallQueue) do
+		local type = v
+		local model: Part = ServerStorage.Models[type]
+		local clone = model:Clone()
+		local actions = BallStats.action.actions[type]
+
+		table.insert(BallStats.run.existingballs, clone)
+		clone.Destroying:Connect(function(__: any)
+			OnBallDestroying(clone)
+		end)
+		clone.Position = SpawnPosition
+			+ Vector3.new(
+				Random:NextNumber(-BallStats.wave.area, BallStats.wave.area),
+				0,
+				Random:NextNumber(-BallStats.wave.area, BallStats.wave.area)
+			)
+
+		clone.Parent = game.Workspace.Balls
+
+		task.spawn(BallActions[type], clone, actions)
+	end
+	BallStats.run.customBallQueue = {}
+end
 function State.SpawnWave(Origin: Vector3?)
 	local SpawnPosition = Origin or (game.Workspace.Baseplate.Position + Vector3.new(0, 50, 0))
 

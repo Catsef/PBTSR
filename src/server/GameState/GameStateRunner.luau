@@ -105,6 +105,8 @@ function m.RoundStarted()
 	g.Round += 1
 	m.UpdateRoundCounter()
 
+	f.SpawnCustomQueue()
+
 	for _ = 1, b.wave.amount do
 		if not g.PhaseGame then
 			return
