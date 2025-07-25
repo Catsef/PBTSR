@@ -93,7 +93,7 @@ function t.Action(part: Part, Action)
 		end,
 		[PBTS.BallActions.Grapple.Options.MultiplePlayers] = function()
 			local AllPlayers = Players:GetPlayers()
-			local ShuffledPlayers = r:Shuffle(table.clone(AllPlayers))
+			local ShuffledPlayers = r:Shuffle(AllPlayers)
 			local PooledPlayers = {}
 			for _, player in ipairs(ShuffledPlayers) do
 				if #PooledPlayers <= Action.maxP then
