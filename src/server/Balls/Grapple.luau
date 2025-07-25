@@ -93,9 +93,9 @@ function t.Action(part: Part, Action)
 		end,
 		[PBTS.BallActions.Grapple.Options.MultiplePlayers] = function()
 			local AllPlayers = Players:GetPlayers()
-			local ShuffledPlayers = r:Shuffle(AllPlayers)
+			r:Shuffle(AllPlayers)
 			local PooledPlayers = {}
-			for _, player in ipairs(ShuffledPlayers) do
+			for _, player in ipairs(AllPlayers) do
 				if #PooledPlayers <= Action.maxP then
 					table.insert(PooledPlayers, player)
 					GrappleEventToClient:FireClient(player, part.Position, Action.force)
