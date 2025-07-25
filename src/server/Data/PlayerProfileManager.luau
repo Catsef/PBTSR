@@ -3,6 +3,8 @@ local PPM = {}
 -- services
 local Players = game:GetService("Players")
 local ServerScriptService = game:GetService("ServerScriptService")
+local TweenService = game:GetService("TweenService")
+
 local PBTS = require(ServerScriptService.Enumeration.PBTS)
 local ProfileService = require(ServerScriptService.ServerPackages.ProfileService)
 
@@ -32,6 +34,21 @@ function PPM.TransactMoney(player, amount)
 		end
 		profile.Data.Money = profile.Data.Money + amount
 		task.spawn(PPM.HANGING_UpdateBalanceGui, player)
+
+		-- Transact Effect:
+		local gui = player.PlayerGui:WaitForChild(PBTS.GuiNames.Balance).TextLabel
+		if amount > 0 then
+			gui.TextColor3 = Color3.fromRGB(18, 172, 57)
+		elseif amount < 0 then
+			gui.TextColor3 = Color3.fromRGB(209, 76, 76)
+		end
+		local TweenBackToWhite = TweenService:Create(
+			gui,
+			TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+			{ TextColor3 = Color3.fromRGB(0, 0, 0) }
+		)
+		TweenBackToWhite:Play()
+
 		return PBTS.MoneyTransactionResult.Success
 	else
 		warn("Attempted to transact money for player without a loaded profile: " .. tostring(player))

@@ -1,7 +1,7 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
-local TweenService = game:GetService("TweenService")
+local _TweenService = game:GetService("TweenService")
 local PBTS = require(ServerScriptService.Enumeration.PBTS)
 local UtilityFunctions = require(ServerScriptService.Util.UtilityFunctions)
 local r = Random.new()
@@ -93,9 +93,9 @@ function t.Action(part: Part, Action)
 		end,
 		[PBTS.BallActions.Grapple.Options.MultiplePlayers] = function()
 			local AllPlayers = Players:GetPlayers()
-			local ShuffledPlayers = r:Shuffle(AllPlayers:Clone())
+			r:Shuffle(AllPlayers)
 			local PooledPlayers = {}
-			for _, player in ipairs(ShuffledPlayers) do
+			for _, player in ipairs(AllPlayers) do
 				if #PooledPlayers <= Action.maxP then
 					table.insert(PooledPlayers, player)
 					GrappleEventToClient:FireClient(player, part.Position, Action.force)

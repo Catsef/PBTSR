@@ -35,6 +35,13 @@ function m.FindNearestPlayer(maxDist, refPart)
 	local mD = maxDist or 100000
 	local nearestDist, nearestPlayer
 	for _, v in pairs(game:GetService("Players"):GetPlayers()) do
+		if v.Character:FindFirstChild("Humanoid") then
+			if v.Character:FindFirstChild("Humanoid").Health == 0 then
+				continue
+			end
+		else
+			continue
+		end
 		local char = v.Character
 		local dist = v:DistanceFromCharacter(refPart.Position)
 		if not char or dist > mD or (nearestDist and dist >= nearestDist) then
@@ -44,11 +51,7 @@ function m.FindNearestPlayer(maxDist, refPart)
 		nearestPlayer = v
 	end
 
-	if
-		not nearestPlayer
-		or (not nearestPlayer:FindFirstChild("Character"))
-		or (not nearestPlayer:FindFirstChild("Character"):FindFirstChild("Humanoid"))
-	then
+	if not nearestPlayer or not nearestPlayer.Character or (not nearestPlayer.Character:FindFirstChild("Humanoid")) then
 		warn("Nearest player missing some components!")
 		return nil
 	end

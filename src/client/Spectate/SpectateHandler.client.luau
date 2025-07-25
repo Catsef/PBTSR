@@ -4,7 +4,7 @@ local cam = workspace.CurrentCamera
 
 SpectateRE.OnClientEvent:Connect(function(specTarget: Player)
 	if specTarget == nil then
-		warn("Tried to spectate nil? Fak yu mean")
+		warn("Tried to spectate nil!")
 		return
 	end
 	local char = specTarget.Character

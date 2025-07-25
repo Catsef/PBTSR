@@ -1,10 +1,19 @@
 local m = {}
 
 local ServerScriptService = game:GetService("ServerScriptService")
-local g = require(ServerScriptService.GameState.GameState)
+local ServerStorage = game:GetService("ServerStorage")
+
 local ps = game:GetService("Players")
-local GameState = require(script.Parent.GameState)
+
+local b = require(ServerScriptService.GameState.State.BallStats)
+local g = require(ServerScriptService.GameState.State.GameState)
+local f = require(ServerScriptService.GameState.State.StateFunctions)
+local p = require(ServerScriptService.GameState.State.StatePlayers)
+local MapHelperFunctions = require(ServerScriptService.Map.MapGen)
+
 local UtilityFunctions = require(ServerScriptService.Util.UtilityFunctions)
+
+local Respawn: BindableEvent = ServerStorage.Bindings.GameState.RespawnPlayer
 
 local BuyTrigger = workspace.Shop.Shop
 
@@ -14,15 +23,15 @@ function m.UpdatePlayerButtons()
 	for _, Player in ipairs(Players) do
 		local PlayerButtons = Player.PlayerGui:WaitForChild("StartButtons")
 
-		if not g.gameStarted then
+		if not g.PhaseGame then
 			PlayerButtons.Round.Visible = false
 			PlayerButtons.Game.Visible = true
 		end
-		if g.buyPhase then
+		if g.PhaseBuy then
 			PlayerButtons.Round.Visible = true
 			PlayerButtons.Game.Visible = false
 		end
-		if g.roundStarted then
+		if g.PhaseRound then
 			PlayerButtons.Round.Visible = false
 			PlayerButtons.Game.Visible = false
 		end
@@ -34,16 +43,16 @@ function m.UpdateRoundCounter()
 
 	for _, Player in ipairs(Players) do
 		local PlayerRoundCounter = Player.PlayerGui:WaitForChild("RoundCounter")
-		if not g.gameStarted then
+		if not g.PhaseGame then
 			PlayerRoundCounter.TextLabel.Visible = false
 		end
-		if g.buyPhase then
+		if g.PhaseBuy then
 			PlayerRoundCounter.TextLabel.Visible = true
-			PlayerRoundCounter.TextLabel.Text = "round " .. GameState.currentRound
+			PlayerRoundCounter.TextLabel.Text = "round " .. g.Round
 		end
-		if g.roundStarted then
+		if g.PhaseRound then
 			PlayerRoundCounter.TextLabel.Visible = true
-			PlayerRoundCounter.TextLabel.Text = "round " .. GameState.currentRound
+			PlayerRoundCounter.TextLabel.Text = "round " .. g.Round
 		end
 	end
 end
@@ -63,12 +72,13 @@ end
 	this function should ONLY be ran from GameStart.server.luau
 ]]
 function m.NotGameStarted()
-	g.AllPlayers = ps:GetPlayers()
-	if UtilityFunctions.CompareUnorderedSets(g.AllPlayers, g.AllGameReadiedPlayers) then
-		g.gameStarted = true
-		g.buyPhase = true
+	p.AllPlayers = ps:GetPlayers()
+	if UtilityFunctions.CompareUnorderedSets(p.AllPlayers, p.Readied.Game) then
+		g.PhaseGame = true
+		g.PhaseBuy = true
 		m.UpdatePlayerButtons()
 		m.UpdateRoundCounter()
+		Respawn:Fire()
 	end
 end
 
@@ -77,10 +87,10 @@ end
 ]]
 function m.BuyPhase()
 	BuyTrigger.Enabled = true
-	g.AllPlayers = ps:GetPlayers()
-	if UtilityFunctions.CompareUnorderedSets(g.AllPlayers, g.AllRoundReadiedPlayers) then
-		g.buyPhase = false
-		g.roundStarted = true
+	p.AllPlayers = ps:GetPlayers()
+	if UtilityFunctions.CompareUnorderedSets(p.AllPlayers, p.Readied.Round) then
+		g.PhaseBuy = false
+		g.PhaseRound = true
 		m.UpdatePlayerButtons()
 		m.UpdateRoundCounter()
 	end
@@ -91,35 +101,44 @@ end
 ]]
 function m.RoundStarted()
 	BuyTrigger.Enabled = false
+
+	MapHelperFunctions.RoundStart()
 	-- close all buyguis
 	m.CloseAllBuyGuis()
-	g.currentRound += 1
+	g.Round += 1
 	m.UpdateRoundCounter()
 
-	for _ = 1, g.stats.waves do
-		g.SpawnRoundWave(Vector3.new(0, 5, 0))
-		task.wait(g.stats.waveDelay)
+	f.SpawnCustomQueue()
+
+	for _ = 1, b.wave.amount do
+		if not g.PhaseGame then
+			return
+		end
+
+		f.SpawnWave()
+		task.wait(b.wave.delay)
 	end
 
 	while task.wait() do
-		if #g.AllExistingBalls == 0 then
+		if #b.run.existingballs == 0 then
 			break
 		else
 			warn("Stalling!")
 		end
 	end
 
-	if not g.gameStarted then
+	if not g.PhaseGame then
 		m.UpdatePlayerButtons()
 		warn("Resetting game, not stepping difficulty")
+		Respawn:Fire()
 		return
 	end
-
-	g.roundStarted = false
-	g.buyPhase = true
-	g.AllRoundReadiedPlayers = {}
+	g.PhaseRound = false
+	g.PhaseBuy = true
+	p.Readied.Round = {}
 	m.UpdatePlayerButtons()
-	g.StepDifficulty()
+	f.StepDifficulty()
+	Respawn:Fire()
 end
 
 return m

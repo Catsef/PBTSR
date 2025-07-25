@@ -2,18 +2,24 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
 local SlideRE: RemoteEvent = ReplicatedStorage.Events.InsecureSlide
+local DashRE: RemoteEvent = ReplicatedStorage.Events.InsecureDash
 local JumpRE: RemoteEvent = ReplicatedStorage.Events.InsecureJump
 
 local SlideVelocityFactor = 1.5
+local DashVelocityFactor = 3
 local PlayersSliding = {} -- [player] = bool
 local PlayersSlidingInfo = {} -- [player] = {t=tween, v=linvelo}
-local function DestroySlide(P: Player)
+
+local WhenDidYouDash = {}
+
+local function DestroySlide(P)
 	if not PlayersSliding[P] then
 		return
 	end
 	if not PlayersSlidingInfo[P] then
 		error("PlayersSliding[p] -> true but PlayersSlidingInfo[p] -> false")
 	end
+
 	PlayersSlidingInfo[P].t:Destroy()
 	PlayersSlidingInfo[P].v:Destroy()
 	PlayersSliding[P] = false
@@ -43,9 +49,6 @@ local function CreateSlide(P)
 		return
 	end
 
-	LinVelo.Visible = true
-	LinVelo.Color = BrickColor.Blue()
-
 	LinVelo.Attachment0 = HumanoidRoot.Root
 
 	LinVelo.VectorVelocity = (UnitSlideDirection * Humanoid.WalkSpeed * SlideVelocityFactor)
@@ -64,6 +67,8 @@ local function CreateSlide(P)
 	tween:Play()
 	PlayersSliding[P] = true
 	PlayersSlidingInfo[P] = { t = tween, v = LinVelo }
+
+	Humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
 end
 
 Players.PlayerAdded:Connect(function(P: Player)
@@ -73,6 +78,7 @@ Players.PlayerAdded:Connect(function(P: Player)
 
 		PlayersSliding[P] = false
 		PlayersSlidingInfo[P] = nil
+		WhenDidYouDash[P] = 0
 
 		Human.WalkSpeed = 25
 		Human.JumpHeight = 5
@@ -80,7 +86,52 @@ Players.PlayerAdded:Connect(function(P: Player)
 		Instance.new("Attachment", Root).Name = "Root"
 	end)
 end)
+DashRE.OnServerEvent:Connect(function(P, LV)
+	local Humanoid = P.Character.Humanoid
+	print("Dash")
+	local HumanoidRoot = P.Character:FindFirstChild("HumanoidRootPart")
+	local LookVector = LV
+	local UnitSlideDirection = Vector3.new(LookVector.X, 0, LookVector.Z).Unit
 
+	if not HumanoidRoot:FindFirstChild("Root") then
+		warn("Couldn't find Root attachment for attachment0 for VF")
+		return
+	end
+
+	if os.clock() - WhenDidYouDash[P] < 1 then
+		return
+	end
+
+	WhenDidYouDash[P] = os.clock()
+
+	local VForce = Instance.new("LinearVelocity")
+	VForce.Attachment0 = HumanoidRoot.Root
+	VForce.Parent = HumanoidRoot
+	VForce.RelativeTo = Enum.ActuatorRelativeTo.World
+	VForce.MaxForce = 1000000
+	VForce.VectorVelocity = UnitSlideDirection * Humanoid.WalkSpeed * DashVelocityFactor
+		+ HumanoidRoot.AssemblyLinearVelocity
+		+ (Vector3.new(0, Humanoid.WalkSpeed * DashVelocityFactor, 0))
+	task.delay(0.05, function()
+		VForce:Destroy()
+	end)
+
+	local PGui = P.PlayerGui
+	local IBLUR = Instance.new("ScreenGui")
+	IBLUR.Name = "DashCooldownEffect"
+	IBLUR.Parent = PGui
+	local F = Instance.new("Frame")
+	F.Parent = IBLUR
+	F.Size = UDim2.new(1, 0, 1, 0)
+	local TDN = TweenService:Create(
+		F,
+		TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+		{ BackgroundTransparency = 1 }
+	)
+	TDN:Play()
+	TDN.Completed:Wait()
+	IBLUR:Destroy()
+end)
 SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 	if not P.Character then
 		-- warn("Character not found, returning")
@@ -114,11 +165,6 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 		end
 	end
 
-	if Humanoid.FloorMaterial == Enum.Material.Air then
-		-- warn("Tried to slide when FloorMaterial is air?")
-		return
-	end
-
 	-- add more checks
 
 	local RayStart = HumanoidRoot.Position + Vector3.new(0, -0.5, 0)
@@ -131,8 +177,8 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 	local RayLength = (PlayerHeight / 2)
 
 	local RayResult = workspace:Raycast(RayStart, RayDirection * RayLength, RayParams)
-	if not RayResult then
-		-- warn("RayResult returned nothing!")
+
+	if Humanoid.FloorMaterial == Enum.Material.Air or not RayResult then
 		return
 	end
 
@@ -152,12 +198,9 @@ SlideRE.OnServerEvent:Connect(function(P, inpState: Enum.UserInputState)
 	end
 	task.spawn(CheckIfStillOnGround)
 
-	PlayersSlidingInfo[P].t.Completed:Connect(function()
-		DestroySlide(P)
-	end)
+	-- PlayersSlidingInfo[P].t.Completed:Connect(function() end)
 end)
-
-JumpRE.OnServerEvent:Connect(function(P: Player, ...: any)
+JumpRE.OnServerEvent:Connect(function(P: Player, _: any)
 	local PlayerSliding = PlayersSliding[P]
 	if not PlayerSliding then
 		return

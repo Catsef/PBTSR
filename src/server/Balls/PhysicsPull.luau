@@ -19,7 +19,12 @@ function t.Action(part: Part, Action)
 		error("Unsupported action type (PhysicsPull)")
 	end
 	local nearestPlayer = UtilityFunctions.FindNearestPlayer(1000000, part)
-	if not nearestPlayer then
+	if
+		not nearestPlayer
+		or (nearestPlayer.Character == nil)
+		or (nearestPlayer.Character.Humanoid == nil)
+		or (nearestPlayer.Character.HumanoidRootPart == nil)
+	then
 		return
 	end
 	local nPHRP = nearestPlayer.Character.HumanoidRootPart
