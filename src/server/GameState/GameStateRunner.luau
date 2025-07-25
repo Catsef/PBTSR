@@ -9,6 +9,7 @@ local b = require(ServerScriptService.GameState.State.BallStats)
 local g = require(ServerScriptService.GameState.State.GameState)
 local f = require(ServerScriptService.GameState.State.StateFunctions)
 local p = require(ServerScriptService.GameState.State.StatePlayers)
+local MapHelperFunctions = require(ServerScriptService.Map.MapGen)
 
 local UtilityFunctions = require(ServerScriptService.Util.UtilityFunctions)
 
@@ -100,6 +101,8 @@ end
 ]]
 function m.RoundStarted()
 	BuyTrigger.Enabled = false
+
+	MapHelperFunctions.RoundStart()
 	-- close all buyguis
 	m.CloseAllBuyGuis()
 	g.Round += 1

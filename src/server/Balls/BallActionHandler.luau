@@ -3,7 +3,7 @@ local ActionHandler = {}
 local DefaultTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
 local Players = game:GetService("Players")
 local ServerScriptService = game:GetService("ServerScriptService")
-local TouchInputService = game:GetService("TouchInputService")
+local _TouchInputService = game:GetService("TouchInputService")
 local TweenService = game:GetService("TweenService")
 local PlayerProfileManager = require(ServerScriptService.Data.PlayerProfileManager)
 
