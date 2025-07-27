@@ -11,6 +11,7 @@ RemoteEvents.MovementKey = ReplicatedStorage.Movement.MovementKey
 Players.PlayerAdded:Connect(function(p: Player)
 	-- set every player's state to be Standing
 	MovementState.Update(p, MovementState.States.Standing)
+	MovementState.PlayerMovementKeys[p] = {}
 
 	p.CharacterAdded:Connect(function(c: Model)
 		MovementState.Update(p, MovementState.States.Standing)

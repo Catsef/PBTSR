@@ -42,6 +42,7 @@ end
 Player.CharacterAdded:Connect(CharacterAdded)
 
 function MovementKey(Name: string, State: Enum.UserInputState, Object: InputObject): Enum.ContextActionResult
+	RemoteEvents.MovementKey:Fire(State, Object) -- handle all of movement on server side. the only thing client can control is the orientation and animations
 	return Enum.ContextActionResult.Sink
 end
 
