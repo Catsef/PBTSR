@@ -41,9 +41,10 @@ function LOOP()
 			end
 
 			if #MovementState.PlayerMovementKeys[player] == 0 then
+				-- temporary!
 				MovementState.Update(player, MovementState.States.Standing)
 			else
-				-- not all!!
+				-- temporary!
 				MovementState.Update(player, MovementState.States.Walking)
 			end
 		end

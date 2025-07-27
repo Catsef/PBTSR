@@ -12,9 +12,14 @@ S.States.Sneaking = "TAUNT" -- none [Q] [NO_MOVEMENT] [ANIMATION]
 S.States.Standing = "NONE" -- not pressing any button
 S.States.Dead = "IGNORE" -- humanoid/character dead [STATE]
 
+S.Limitations = {}
+S.Limitations.Slowed = "SLOWED"
+
 S.PlayerState = {} -- [player] = S.States.State
 
 S.PlayerMovementKeys = {} -- [player] = {Enum.KeyCode.Key ...}
+
+S.PlayerMovementLimitations = {} -- [player] = {S.Limitations.Limitation ...}
 
 local function ADD_KEY(Player, KeyCode, CTime)
 	table.insert(S.PlayerMovementKeys[Player], {
