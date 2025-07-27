@@ -43,6 +43,7 @@ function LOOP()
 			if #MovementState.PlayerMovementKeys[player] == 0 then
 				MovementState.Update(player, MovementState.States.Standing)
 			else
+				-- not all!!
 				MovementState.Update(player, MovementState.States.Walking)
 			end
 		end

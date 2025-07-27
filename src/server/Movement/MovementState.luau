@@ -52,7 +52,9 @@ S.KeysRemove = function(Player: Player, KeyCode: Enum.KeyCode)
 end
 
 S.Update = function(Player, State)
+	if S.PlayerState[Player] ~= State then
+		print("set player " .. Player.Name .. "'s state to " .. State)
+	end
 	S.PlayerState[Player] = State
-	print("set player " .. Player.Name .. "'s state to " .. State)
 end
 return S
