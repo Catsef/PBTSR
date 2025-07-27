@@ -1,6 +1,7 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
+local StarterPlayer = game:GetService("StarterPlayer")
 
 local UtilityFunctions = require(ServerScriptService.Util.UtilityFunctions)
 local MovementState = require(script.Parent.MovementState)
