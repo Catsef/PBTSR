@@ -1,7 +1,12 @@
+local ContextActionService = game:GetService("ContextActionService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local Player: Player = game.Players.LocalPlayer
 
 local RenderSteppedConnection = nil
+
+local RemoteEvents = {}
+RemoteEvents.MovementKey = ReplicatedStorage.Movement.MovementKey
 
 function CharacterAdded(Character: Model)
 	local Humanoid = Character:WaitForChild("Humanoid")
@@ -20,14 +25,14 @@ function CharacterAdded(Character: Model)
 			return
 		end
 
-		-- if Humanoid.MoveDirection.Magnitude > 0 then
-		-- 	-- override keybind state if available
-		-- else
+		local MoveDirection: Vector3 = Humanoid.MoveDirection
 
-		-- end
+		-- first get the seperate movement vector, horizontal and vertical
+		local Horizontal = Vector3.new(MoveDirection.X, 0, MoveDirection.Z)
+		local Vertical = Vector3.new(0, MoveDirection.Y, 0)
+		-- but these vectors can be overriden by server code. so lets not do anything with these yet
 	end)
 
-	-- if humanoid dies then disconnect to prevent mass erroring, also spectate system
 	Humanoid.Died:Connect(function(...: any)
 		RenderSteppedConnection:Disconnect()
 		RenderSteppedConnection = nil
@@ -35,3 +40,18 @@ function CharacterAdded(Character: Model)
 end
 
 Player.CharacterAdded:Connect(CharacterAdded)
+
+function MovementKey(Name: string, State: Enum.UserInputState, Object: InputObject): Enum.ContextActionResult
+	return Enum.ContextActionResult.Sink
+end
+
+ContextActionService:BindActionAtPriority(
+	"MovementKeys",
+	MovementKey,
+	false,
+	5,
+	Enum.KeyCode.W,
+	Enum.KeyCode.A,
+	Enum.KeyCode.S,
+	Enum.KeyCode.D
+)
