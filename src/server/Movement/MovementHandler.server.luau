@@ -1,3 +1,4 @@
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local MovementState = require(script.Parent.MovementState)
@@ -26,3 +27,24 @@ RemoteEvents.MovementKey.OnServerEvent:Connect(
 		end
 	end
 )
+
+-- tickloop
+function LOOP()
+	while task.wait() do
+		for _, player in Players:GetPlayers() do
+			if MovementState.PlayerState[player] == nil then
+				continue -- not initiated yet
+			end
+
+			if MovementState.PlayerMovementKeys[player] == nil then
+				continue -- not initiated yet
+			end
+
+			if #MovementState.PlayerMovementKeys[player] == 0 then
+				MovementState.Update(player, MovementState.States.Standing)
+			end
+		end
+	end
+end
+
+task.spawn(LOOP)
