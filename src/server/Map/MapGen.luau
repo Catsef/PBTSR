@@ -29,7 +29,7 @@ function F.GenerateVConfig(XZSizeMinMax, YSizeMinMax, TiltMax, HeightOffsetMax, 
 	return CF
 end
 
-F.gen.GrassV = F.GenerateVConfig({ 10, 15 }, { 20, 20 }, 5, 2, { "ChaoticGeneration" })
+F.gen.GrassV = F.GenerateVConfig({ 10, 15 }, { 20, 20 }, 5, 2, {})
 
 function F.GenerateGrassyLayer(Origin: Vector3, Area: number, Bricks: number, V)
 	local minimum = Vector3.new(Origin.X - Area, Origin.Y, Origin.Z - Area)
@@ -42,10 +42,6 @@ function F.GenerateGrassyLayer(Origin: Vector3, Area: number, Bricks: number, V)
 		local spawnV = Vector3.new(spawnX, spawnY, spawnZ)
 
 		-- distance between spawnV and Origin
-		if V.DistChaotic then
-			local dist = spawnV - Origin
-			V.maxTilt = dist.Magnitude * V.maxTilt * 0.03
-		end
 		local sizeX = r:NextNumber(V.minSizeHorizontal, V.maxSizeHorizontal)
 		local sizeZ = r:NextNumber(V.minSizeHorizontal, V.maxSizeHorizontal)
 		local sizeY = r:NextNumber(V.minSizeVertical, V.maxSizeVertical)
