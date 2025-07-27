@@ -44,7 +44,7 @@ function F.GenerateGrassyLayer(Origin: Vector3, Area: number, Bricks: number, V)
 		-- distance between spawnV and Origin
 		if V.DistChaotic then
 			local dist = spawnV - Origin
-			V.maxTilt = dist.Magnitude * V.maxTilt * 0.01
+			V.maxTilt = dist.Magnitude * V.maxTilt * 0.03
 		end
 		local sizeX = r:NextNumber(V.minSizeHorizontal, V.maxSizeHorizontal)
 		local sizeZ = r:NextNumber(V.minSizeHorizontal, V.maxSizeHorizontal)
