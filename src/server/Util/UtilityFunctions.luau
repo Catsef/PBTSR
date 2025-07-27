@@ -132,4 +132,16 @@ function m.DescendantGetter(parent: Instance, rumouredDescendant: string, classN
 	return result
 end
 
+function m.deepClone(original)
+	local copy = table.clone(original) -- shallow copy
+
+	for key, value in pairs(copy) do
+		if type(value) == "table" then
+			copy[key] = m.deepClone(value) -- recursively deep copy
+		end
+	end
+
+	return copy
+end
+
 return m

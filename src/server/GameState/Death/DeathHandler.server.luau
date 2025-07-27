@@ -26,7 +26,10 @@ function EndGame()
 
 	StatePlayers.Readied.Game = {}
 	StatePlayers.Readied.Round = {}
-
+	BallStats.action.actions = {}
+	BallStats.weights = {}
+	print(BallStats.original.actions)
+	print(BallStats.original.weights)
 	BallStats.action.actions = BallStats.original.actions
 	BallStats.weights = BallStats.original.weights
 
@@ -107,6 +110,7 @@ function PlayerDiedWithinRound(Player: Player)
 
 	local SelectedPlayer = FindNextAlivePlayer()
 	if SelectedPlayer == nil then
+		EndGame()
 		return -- no need warn messages, already warned in func FindNextAlivePlayer
 	end
 
