@@ -16,16 +16,35 @@ S.PlayerState = {} -- [player] = S.States.State
 
 S.PlayerMovementKeys = {} -- [player] = {Enum.KeyCode.Key ...}
 
+local function ADD_KEY(Player, KeyCode, CTime)
+	table.insert(S.PlayerMovementKeys[Player], {
+		key = KeyCode,
+		time = CTime,
+	})
+end
+
+local function GET_KEY(Player, KeyCode)
+	local index = nil
+	for i, v in ipairs(S.PlayerMovementKeys[Player]) do
+		if KeyCode == v.key then
+			index = i
+		end
+	end
+	return index
+end
+
 S.KeysAdd = function(Player: Player, KeyCode: Enum.KeyCode)
-	if table.find(S.PlayerMovementKeys[Player], KeyCode) then
+	local index = GET_KEY(Player, KeyCode)
+	if index then
 		error("ran KeysAdd to add a key to playermovementkeys, but key already exists?")
 		-- dual input == keysremove error as well
 	end
-	table.insert(S.PlayerMovementKeys[Player], KeyCode)
+	ADD_KEY(Player, KeyCode, os.clock())
+	print(S.PlayerMovementKeys[Player])
 end
 
 S.KeysRemove = function(Player: Player, KeyCode: Enum.KeyCode)
-	local index = table.find(S.PlayerMovementKeys[Player], KeyCode)
+	local index = GET_KEY(Player, KeyCode)
 	if not index then
 		error("ran KeysRemove to remove a key from playermovementkeys, but no key exists?")
 	end
