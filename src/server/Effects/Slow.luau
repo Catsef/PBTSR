@@ -1,5 +1,6 @@
 local ServerScriptService = game:GetService("ServerScriptService")
 local PBTS = require(ServerScriptService.Enumeration.PBTS)
+local MovementState = require(ServerScriptService.Movement.MovementState)
 local EffectsModule = require(script.Parent.EffectsHandler)
 local m = {}
 m.WalkSpeedModifier = 10
@@ -37,7 +38,7 @@ function m.Start(Player, Effect)
 		return
 	end
 	table.insert(EffectsModule.PlayersEffects[Player], Effect)
-
+	table.insert(MovementState.PlayerMovementLimitations[Player], MovementState.Limitations.Slowed)
 	local function EndWhenTimerExpires()
 		task.wait(Effect.time)
 		task.spawn(function()
@@ -73,6 +74,9 @@ function m.End(Player, Effect)
 			break
 		end
 	end
+
+	local d = table.find(MovementState.PlayerMovementLimitations[Player], MovementState.Limitations.Slowed)
+	table.remove(MovementState.PlayerMovementLimitations[Player], d)
 end
 
 return m

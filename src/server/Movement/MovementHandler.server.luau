@@ -1,3 +1,23 @@
+-- UTIL
+local function isOnGround(character)
+	local hrp = character:FindFirstChild("HumanoidRootPart")
+	if not hrp then
+		return false
+	end
+
+	local raycastParams = RaycastParams.new()
+	raycastParams.FilterDescendantsInstances = { character }
+	raycastParams.FilterType = Enum.RaycastFilterType.Exclude
+	raycastParams.IgnoreWater = true
+
+	local origin = hrp.Position
+	local downDirection = Vector3.new(0, -5, 0) -- cast 5 studs downward
+
+	local raycastResult = workspace:Raycast(origin, downDirection, raycastParams)
+
+	return raycastResult
+end
+
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
