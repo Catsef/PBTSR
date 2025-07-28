@@ -11,7 +11,7 @@ local function isOnGround(character)
 	raycastParams.IgnoreWater = true
 
 	local origin = hrp.Position
-	local downDirection = Vector3.new(0, -5, 0) -- cast 5 studs downward
+	local downDirection = Vector3.new(0, -3.1, 0) -- cast 5 studs downward
 
 	local raycastResult = workspace:Raycast(origin, downDirection, raycastParams)
 
@@ -21,6 +21,7 @@ end
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local MovementProcessor = require(script.Parent.MovementProcessor)
 local MovementState = require(script.Parent.MovementState)
 
 local RemoteEvents = {}
@@ -59,6 +60,8 @@ function LOOP()
 			if MovementState.PlayerMovementKeys[player] == nil then
 				continue -- not initiated yet
 			end
+
+			MovementProcessor.PROCESS(player, MovementState)
 
 			if #MovementState.PlayerMovementKeys[player] == 0 then
 				-- temporary!
