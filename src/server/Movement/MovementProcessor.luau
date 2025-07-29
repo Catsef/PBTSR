@@ -1,7 +1,10 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 
-local EffectsHandler = require(ServerScriptService.Effects.EffectsHandler)
+local _EffectsHandler = require(ServerScriptService.Effects.EffectsHandler)
 local m = {}
+
+local StateChange: RemoteEvent = ReplicatedStorage.Movement.StateChange
 
 local function isOnGround(character, hrp)
 	local raycastParams = RaycastParams.new()
@@ -63,6 +66,7 @@ function m.PROCESS(Player: Player, MovementState)
 			if (os.clock() - MovementState.PlayerMovementKeys[Player][Index]["time"]) > 1 then
 				-- 118600440110169
 				-- run
+
 				MovementState.Update(Player, MovementState.States.Running)
 			else
 				MovementState.Update(Player, MovementState.States.Walking)
