@@ -8,6 +8,7 @@ local ToxinCloud = require(ServerScriptService.Balls.ToxinCloud)
 local TweenMove = require(ServerScriptService.Balls.TweenMove)
 local Slow = require(ServerScriptService.Effects.Slow)
 local WeightedChoice = require(ServerScriptService.Util.Random.WeightedChoice)
+local UtilityFunctions = require(ServerScriptService.Util.UtilityFunctions)
 
 local b = {}
 
@@ -87,17 +88,16 @@ b.action.actions = {
 		ToxinCloud.Create(50, 5, Color3.fromRGB(203, 72, 255)),
 	},
 	["Master"] = {
-		Grapple.Create("MULTIPLE_PLAYERS", 3000, 10000, 1000),
+		Grapple.Create("MULTIPLE_PLAYERS", 500, 10000, 1000),
 		Delay.Create(0.5),
 		ToxinCloud.Create(75, 10),
-		TweenMove.Create("POSITION_OFFSET", 0.999, b.tweens.easy, true, 0, Vector3.new(0, 5, 0)),
 	},
 }
 b.action.stepactions = {
 	DoomlingA = function() -- list argument
 		local l = b.action.actions.Doomling
 		table.insert(l, TweenMove.Create("NEAREST_PLAYER", 0.3, b.tweens.medium, true, 100))
-		table.insert(l, ToxinCloud.Create(10, 5))
+		table.insert(l, ToxinCloud.Create(20, 5))
 	end,
 }
 
@@ -126,7 +126,7 @@ b.run.customBallQueue = {}
 b.run.existingballs = {}
 
 b.original = {}
-b.original.weights = table.clone(b.weights)
-b.original.actions = table.clone(b.action.actions)
+b.original.weights = UtilityFunctions.deepClone(b.weights)
+b.original.actions = UtilityFunctions.deepClone(b.action.actions)
 
 return b

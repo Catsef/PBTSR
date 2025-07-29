@@ -73,6 +73,7 @@ end
 ]]
 function m.NotGameStarted()
 	p.AllPlayers = ps:GetPlayers()
+	m.UpdatePlayerButtons()
 	if UtilityFunctions.CompareUnorderedSets(p.AllPlayers, p.Readied.Game) then
 		g.PhaseGame = true
 		g.PhaseBuy = true
@@ -87,6 +88,7 @@ end
 ]]
 function m.BuyPhase()
 	BuyTrigger.Enabled = true
+	m.UpdatePlayerButtons()
 	p.AllPlayers = ps:GetPlayers()
 	if UtilityFunctions.CompareUnorderedSets(p.AllPlayers, p.Readied.Round) then
 		g.PhaseBuy = false
@@ -101,16 +103,18 @@ end
 ]]
 function m.RoundStarted()
 	BuyTrigger.Enabled = false
-
+	p.AllPlayers = ps:GetPlayers()
 	MapHelperFunctions.RoundStart()
 	-- close all buyguis
 	m.CloseAllBuyGuis()
 	g.Round += 1
+	m.UpdatePlayerButtons()
 	m.UpdateRoundCounter()
 
 	f.SpawnCustomQueue()
 
 	for _ = 1, b.wave.amount do
+		p.AllPlayers = ps:GetPlayers()
 		if not g.PhaseGame then
 			return
 		end
@@ -123,6 +127,7 @@ function m.RoundStarted()
 		if #b.run.existingballs == 0 then
 			break
 		else
+			p.AllPlayers = ps:GetPlayers()
 			warn("Stalling!")
 		end
 	end
@@ -133,6 +138,7 @@ function m.RoundStarted()
 		Respawn:Fire()
 		return
 	end
+	p.AllPlayers = ps:GetPlayers()
 	g.PhaseRound = false
 	g.PhaseBuy = true
 	p.Readied.Round = {}
