@@ -28,7 +28,7 @@ local function ADD_KEY(Player, KeyCode, CTime)
 	})
 end
 
-local function GET_KEY(Player, KeyCode)
+function S.GET_KEY(Player, KeyCode)
 	local index = nil
 	for i, v in ipairs(S.PlayerMovementKeys[Player]) do
 		if KeyCode == v.key then
@@ -39,7 +39,7 @@ local function GET_KEY(Player, KeyCode)
 end
 
 S.KeysAdd = function(Player: Player, KeyCode: Enum.KeyCode)
-	local index = GET_KEY(Player, KeyCode)
+	local index = S.GET_KEY(Player, KeyCode)
 	if index then
 		error("ran KeysAdd to add a key to playermovementkeys, but key already exists?")
 		-- dual input == keysremove error as well
@@ -49,7 +49,7 @@ S.KeysAdd = function(Player: Player, KeyCode: Enum.KeyCode)
 end
 
 S.KeysRemove = function(Player: Player, KeyCode: Enum.KeyCode)
-	local index = GET_KEY(Player, KeyCode)
+	local index = S.GET_KEY(Player, KeyCode)
 	if not index then
 		error("ran KeysRemove to remove a key from playermovementkeys, but no key exists?")
 	end

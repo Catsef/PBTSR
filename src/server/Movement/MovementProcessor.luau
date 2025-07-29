@@ -21,6 +21,12 @@ local function isStilled(humanoid: Humanoid)
 	return humanoid.MoveDirection.Magnitude == 0
 end
 
+local function isStilledHorizontally (humanoid: Humanoid)
+    local MD = humanoid.MoveDirection
+    local MDH = Vector3.new(MD.X, 0, MD.Z)
+    return MDH.Magnitude == 0
+end
+
 function m.PROCESS(Player: Player, MovementState)
 	local C = Player.Character or Player.CharacterAdded:Wait()
 	if not C then
@@ -38,12 +44,30 @@ function m.PROCESS(Player: Player, MovementState)
 		return
 	end
 
-	local STILLED = isStilled(H)
+	local STILLED = isStilledHorizontally(H)
 	local GROUNDED = isOnGround(C, HRP)
 
 	if STILLED and GROUNDED and #MovementState.PlayerMovementKeys[Player] == 0 then
 		MovementState.Update(Player, MovementState.States.Standing)
+		return
 	end
+
+	if STILLED and GROUNDED then
+		warn("MovementKeys has a key pressed but the player is STILLED and GROUNDED.")
+	end
+
+    if GROUNDED and (not STILLED) and #MovementState.PlayerMovementKeys[Player] ~= 0 then
+        -- walk
+        MovementState.Update(Player, MovementState.States.Walking)
+        local Index = MovementState.GET_KEY(Player, Enum.KeyCode.W)
+        if Index then
+            if MovementState.PlayerMovementKeys[Player][Index]
+        end
+    end
+
+    if STILLED and (not GROUNDED) then
+        -- jump
+    end
 end
 
 return m
