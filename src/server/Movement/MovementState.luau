@@ -1,3 +1,4 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local S = {}
 
 S.States = {}
@@ -14,6 +15,9 @@ S.States.Dead = "IGNORE" -- humanoid/character dead [STATE]
 
 S.Limitations = {}
 S.Limitations.Slowed = "SLOWED"
+
+S.RemoteEvents = {}
+S.RemoteEvents.StateChange = ReplicatedStorage.Movement.StateChange
 
 S.PlayerState = {} -- [player] = S.States.State
 

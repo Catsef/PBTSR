@@ -58,17 +58,23 @@ function m.PROCESS(Player: Player, MovementState)
 
 	if GROUNDED and not STILLED and #MovementState.PlayerMovementKeys[Player] ~= 0 then
 		-- walk
-		MovementState.Update(Player, MovementState.States.Walking)
 		local Index = MovementState.GET_KEY(Player, Enum.KeyCode.W)
 		if Index then
 			if (os.clock() - MovementState.PlayerMovementKeys[Player][Index]["time"]) > 1 then
+				-- 118600440110169
+				-- run
 				MovementState.Update(Player, MovementState.States.Running)
+			else
+				MovementState.Update(Player, MovementState.States.Walking)
 			end
+		else
+			MovementState.Update(Player, MovementState.States.Walking)
 		end
 	end
 
-	if STILLED and not GROUNDED then
+	if not GROUNDED then
 		-- jump
+		MovementState.Update(Player, MovementState.States.Jumping)
 	end
 end
 
