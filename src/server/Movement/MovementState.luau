@@ -62,6 +62,7 @@ end
 
 S.Update = function(Player, State)
 	if S.PlayerState[Player] ~= State then
+		S.RemoteEvents.StateChange:FireClient(Player, S.PlayerState[Player], State)
 		print("set player " .. Player.Name .. "'s state to " .. State)
 	end
 	S.PlayerState[Player] = State
