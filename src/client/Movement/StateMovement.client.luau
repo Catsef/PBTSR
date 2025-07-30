@@ -2,19 +2,19 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local StateChange: RemoteEvent = ReplicatedStorage.Movement.StateChange
 local run_Track: AnimationTrack = nil
+local LocalP = Players.LocalPlayer
+LocalP.CharacterAppearanceLoaded:Wait()
+local C = LocalP.Character
+local H = C:WaitForChild("Humanoid")
+local A = H:WaitForChild("Animator")
+local run = Instance.new("Animation")
+run.AnimationId = "rbxassetid://118600440110169"
 
-Players.LocalPlayer.CharacterAdded:Connect(function(C: Model)
-	-- INITIALIZE ALL ANIMATIONS
-	local H = C:WaitForChild("Humanoid")
-	local A = H:WaitForChild("Animator")
-	local run = Instance.new("Animation")
-	run.AnimationId = "rbxassetid://118600440110169"
-
-	run_Track = A:LoadAnimation(run)
-end)
+run_Track = A:LoadAnimation(run)
+print("Initialized")
 
 StateChange.OnClientEvent:Connect(function(PREV_STATE, NEW_STATE)
-	print("Client: state change")
+	print("Client:SC::" .. PREV_STATE .. ";.." .. NEW_STATE .. "!")
 	-- 118600440110169
 	-- S.States.Jumping = "JUMPING" -- walking jump [STATE]
 	-- S.States.Leaping = "LEAPING" -- running jump [STATE] [ANIMATION]
@@ -26,9 +26,11 @@ StateChange.OnClientEvent:Connect(function(PREV_STATE, NEW_STATE)
 	-- S.States.Sneaking = "TAUNT" -- none [Q] [NO_MOVEMENT] [ANIMATION]
 	-- S.States.Standing = "NONE" -- not pressing any button
 	-- S.States.Dead = "IGNORE" -- humanoid/character dead [STATE]
-	if PREV_STATE == "WALK" and NEW_STATE == "RUN" then
-		if run_Track then
-			run_Track:Play(0, 100, 1)
-		end
+	if NEW_STATE == "RUN" then
+		print("WALK_RUN")
+		run_Track:Play(0, 100, 1.5)
+	end
+	if PREV_STATE == "RUN" then
+		run_Track:Stop(0)
 	end
 end)
