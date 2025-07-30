@@ -9,7 +9,6 @@ RemoteEvents.MovementKey = ReplicatedStorage.Movement.MovementKey
 
 RemoteEvents.MovementKey.OnServerEvent:Connect(
 	function(Player: Player, State: Enum.UserInputState, KeyCode: Enum.KeyCode, InputType: Enum.InputActionType)
-		print("MovementKey serverevent fired")
 		if MovementState.PlayerState[Player] == MovementState.States.Dead then
 			return
 		end
