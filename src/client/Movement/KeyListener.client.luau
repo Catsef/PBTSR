@@ -1,5 +1,7 @@
 local ContextActionService = game:GetService("ContextActionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local ClientPredictor = require(script.Parent.ClientPredictor)
 -- local RunService = game:GetService("RunService")
 local Player: Player = game.Players.LocalPlayer
 
@@ -43,6 +45,7 @@ Player.CharacterAdded:Connect(CharacterAdded)
 
 function MovementKey(Name: string, State: Enum.UserInputState, Object: InputObject): Enum.ContextActionResult
 	RemoteEvents.MovementKey:FireServer(State, Object.KeyCode, Object.UserInputType) -- handle all of movement on server side. the only thing client can control is the orientation and animations
+	ClientPredictor.ClientPredictorKeyListen(State, Object.KeyCode, Object.UserInputType)
 	return Enum.ContextActionResult.Sink
 end
 

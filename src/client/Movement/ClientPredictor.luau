@@ -1,3 +1,4 @@
+local RunService = game:GetService("RunService")
 local m = {}
 m.States = {}
 m.States.Jumping = "JUMPING" -- walking jump [STATE]
@@ -52,4 +53,21 @@ m.UPD = function(ST)
 	end
 	m.State = ST
 end
+
+function m.ClientPredictorKeyListen(State: Enum.UserInputState, Key: Enum.KeyCode, Type: Enum.UserInputType)
+	if m.State == m.States.Dead then
+		return
+	end
+
+	if State == Enum.UserInputState.Begin then
+		m.KEYSADD(Key)
+	elseif State == Enum.UserInputState.End then
+		m.KEYSREMOVE(Key)
+	end
+end
+
+function m.MAIN()
+	RunService.RenderStepped:Connect(function(a0: number) end)
+end
+
 return m
