@@ -8,8 +8,6 @@ local cas = game:GetService("ContextActionService")
 
 local cam = game.Workspace.CurrentCamera
 
-local SpeedlineHandler = require(script.Parent.SpeedlineHandler)
-
 local CurrentCamOffset = 0
 local CamOffsetAmount = -2
 local CamOffsetLerp = 1

@@ -14,7 +14,6 @@ run_Track = A:LoadAnimation(run)
 print("Initialized")
 
 StateChange.OnClientEvent:Connect(function(PREV_STATE, NEW_STATE)
-	print("Client:SC::" .. PREV_STATE .. ";.." .. NEW_STATE .. "!")
 	-- 118600440110169
 	-- S.States.Jumping = "JUMPING" -- walking jump [STATE]
 	-- S.States.Leaping = "LEAPING" -- running jump [STATE] [ANIMATION]
@@ -26,11 +25,4 @@ StateChange.OnClientEvent:Connect(function(PREV_STATE, NEW_STATE)
 	-- S.States.Sneaking = "TAUNT" -- none [Q] [NO_MOVEMENT] [ANIMATION]
 	-- S.States.Standing = "NONE" -- not pressing any button
 	-- S.States.Dead = "IGNORE" -- humanoid/character dead [STATE]
-	if NEW_STATE == "RUN" then
-		print("WALK_RUN")
-		run_Track:Play(0, 100, 1.5)
-	end
-	if PREV_STATE == "RUN" then
-		run_Track:Stop(0)
-	end
 end)
