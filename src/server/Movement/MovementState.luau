@@ -49,7 +49,6 @@ S.KeysAdd = function(Player: Player, KeyCode: Enum.KeyCode)
 		-- dual input == keysremove error as well
 	end
 	ADD_KEY(Player, KeyCode, os.clock())
-	print(S.PlayerMovementKeys[Player])
 end
 
 S.KeysRemove = function(Player: Player, KeyCode: Enum.KeyCode)
